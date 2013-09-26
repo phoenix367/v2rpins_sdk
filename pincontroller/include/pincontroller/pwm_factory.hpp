@@ -26,12 +26,12 @@ namespace pc
         
         static PWMFactory* getInstance();
         
-        std::shared_ptr<PWMImpl> createPWM(PWM_OUTPUT po);
+        std::shared_ptr<PWMImpl> createPWM(PWM_CHANNEL po);
         
     private:
         static std::unique_ptr<PWMFactory> instance;
         
-        std::unordered_map<int, std::shared_ptr<PWMImpl> > pwmMap;
+        std::unordered_map<PWM_CHANNEL, std::shared_ptr<PWMImpl> > pwmMap;
     };
 }
 

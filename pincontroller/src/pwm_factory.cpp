@@ -27,21 +27,21 @@ namespace pc
         return instance.get();
     }
     
-    std::shared_ptr<PWMImpl> PWMFactory::createPWM(PWM_OUTPUT po)
+    std::shared_ptr<PWMImpl> PWMFactory::createPWM(PWM_CHANNEL po)
     {
-        if (pwmMap.find((int) po) != pwmMap.end())
+        if (pwmMap.find(po) != pwmMap.end())
         {
             PC_EXCEPTION(PinLockedException, "Selected PWM pin already "
                     "locked.");
         }
         
-        if (po < PWM_OUTPUT::PWM_0 || po >= PWM_OUTPUT::PWM_MAX)
+        if (po < PWM_CHANNEL::PWM_0 || po >= PWM_CHANNEL::PWM_MAX)
         {
             PC_EXCEPTION(IncorrectParamException, "Invalid PWM pin index.");
         }
         
         auto sp = std::shared_ptr<PWMImpl>(new PWMImpl(po));
-        pwmMap[(int) po] = sp;
+        pwmMap[po] = sp;
         
         return sp;
     }

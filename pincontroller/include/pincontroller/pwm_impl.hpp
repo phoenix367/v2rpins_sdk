@@ -18,8 +18,10 @@ namespace pc
 {
     class PWMImpl
     {
+    private:
+        typedef std::unordered_map<PWM_CHANNEL, std::string> ConnectionMap;
     public:
-        PWMImpl(PWM_OUTPUT po);
+        PWMImpl(PWM_CHANNEL po);
         virtual ~PWMImpl();
         
         void setPulseParams(uint32_t duty, uint32_t period);
@@ -28,22 +30,22 @@ namespace pc
         
         uint32_t getDuty();
         uint32_t getPeriod();
-        PWM_OUTPUT getPWMPin();
+        PWM_CHANNEL getPWMPin();
         
     private:
         uint64_t time2tic(uint32_t t);
-        void setPwmClock(PWM_OUTPUT pin, uint64_t duty, uint64_t period);
+        void setPwmClock(PWM_CHANNEL pin, uint64_t duty, uint64_t period);
         uint32_t tic2time(uint64_t tic);
         
     private:
         static uint64_t PWM_GENERATOR_FRQ;
         
-        PWM_OUTPUT pwmPin;
+        PWM_CHANNEL pwmPin;
         uint64_t ticDuty;
         uint64_t ticPeriod;
         DevHelper devHelper;
         
-        const static std::unordered_map<int, std::string> conMap;
+        const static ConnectionMap conMap;
         const static std::string PWM_PREFIX;
     };
 }

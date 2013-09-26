@@ -54,7 +54,8 @@ namespace pc
     {
         if (!isOpened())
         {
-            
+            PC_EXCEPTION(InternalErrorException,
+                    "Device doesn't open.");
         }
         
         std::clog << "Write command to device: " << cmd << std::endl;

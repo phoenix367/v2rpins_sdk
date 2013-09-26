@@ -9,7 +9,7 @@ namespace pc
         
     }
     
-    PWM::PWM(PWM_OUTPUT output)
+    PWM::PWM(PWM_CHANNEL output)
     {
         auto instance = PWMFactory::getInstance();
         if (!instance)
@@ -56,7 +56,7 @@ namespace pc
         return sp->getPeriod();                
     }
     
-    PWM_OUTPUT PWM::getPWMPin()
+    PWM_CHANNEL PWM::getPWMPin()
     {
         auto sp = check();
         return sp->getPWMPin();                

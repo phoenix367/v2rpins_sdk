@@ -16,7 +16,7 @@ namespace pc
 {
     template<typename T> class Reference
     {
-    public:
+    protected:
         typedef std::shared_ptr<T> ImplPtr;
             
         ImplPtr check()
@@ -29,7 +29,7 @@ namespace pc
             
             return implPtr;
         }
-            
+
     protected:
         ImplPtr implPtr;
     };

@@ -8,15 +8,15 @@ namespace pc
 {
     uint64_t PWMImpl::PWM_GENERATOR_FRQ = 24000000ULL;
     
-    const std::unordered_map<int, std::string> PWMImpl::conMap =
+    const PWMImpl::ConnectionMap PWMImpl::conMap =
     {
-        {PWM_0, "con43"}, {PWM_1, "con44"}, {PWM_2, "con16"},
-        {PWM_3, "con42"}
+        {PWM_CHANNEL::PWM_0, "con43"}, {PWM_CHANNEL::PWM_1, "con44"}, 
+        {PWM_CHANNEL::PWM_2, "con16"}, {PWM_CHANNEL::PWM_3, "con42"}
     };
     
     const std::string PWMImpl::PWM_PREFIX = "pwm";
     
-    PWMImpl::PWMImpl(PWM_OUTPUT po)
+    PWMImpl::PWMImpl(PWM_CHANNEL po)
     : pwmPin(po)
     , ticDuty(0ULL)
     , ticPeriod(0ULL)
@@ -25,12 +25,14 @@ namespace pc
         std::string con = conMap.at(po);
         std::ostringstream stream;
         
-        stream << "set " << con << " " << PWM_PREFIX << pwmPin;
+        stream << "set " << con << " " << PWM_PREFIX << 
+                (int) pwmPin;
         devHelper.sendCommand(stream.str());
     }
     
     PWMImpl::~PWMImpl()
     {
+        stop();
         devHelper.close();
     }
     
@@ -60,12 +62,12 @@ namespace pc
         setPwmClock(pwmPin, 0, 0);
     }
     
-    void PWMImpl::setPwmClock(PWM_OUTPUT pin, uint64_t duty, 
+    void PWMImpl::setPwmClock(PWM_CHANNEL pin, uint64_t duty, 
             uint64_t period)
     {
         std::ostringstream stream;
         
-        stream << "set " << PWM_PREFIX << pin << " duty:" <<
+        stream << "set " << PWM_PREFIX << (int) pin << " duty:" <<
                 duty << " period:" << period;
         devHelper.sendCommand(stream.str());
     }
@@ -80,7 +82,7 @@ namespace pc
         return tic2time(ticPeriod);
     }
     
-    PWM_OUTPUT PWMImpl::getPWMPin()
+    PWM_CHANNEL PWMImpl::getPWMPin()
     {
         return pwmPin;
     }
