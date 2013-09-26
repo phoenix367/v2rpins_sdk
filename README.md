@@ -1,4 +1,6 @@
-v2rpins_sdk
+virt2real pins SDK
 ===========
 
-SDK to control GPIO and other pins on virt2real board
+Данный проект представляет собой SDK для управления пинами ввода вывода платы микроконтроллера virt2real. Подробности о данной плате можно найти на сайте разработчиков http://virt2real.ru, а также на Хабре по ссылке http://habrahabr.ru/company/virt2real/blog.
+
+SDK реализован на языке C++ с использованием расширений C++0x. Сборка проектов из данного проводится с помощью среды разработки NetBeans 7.3.1.
