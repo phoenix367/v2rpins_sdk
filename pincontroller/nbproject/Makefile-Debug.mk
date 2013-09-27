@@ -35,10 +35,10 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/src/dev_helper.o \
-	${OBJECTDIR}/src/pwm.o \
-	${OBJECTDIR}/src/pwm_factory.o \
-	${OBJECTDIR}/src/pwm_impl.o
+	${OBJECTDIR}/src/details/dev_helper.o \
+	${OBJECTDIR}/src/details/pwm_factory.o \
+	${OBJECTDIR}/src/details/pwm_impl.o \
+	${OBJECTDIR}/src/pwm.o
 
 
 # C Compiler Flags
@@ -65,25 +65,25 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libpincontroller.${CND_DLIB_EXT}: ${O
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libpincontroller.${CND_DLIB_EXT} ${OBJECTFILES} ${LDLIBSOPTIONS} -shared -fPIC
 
-${OBJECTDIR}/src/dev_helper.o: src/dev_helper.cpp 
-	${MKDIR} -p ${OBJECTDIR}/src
+${OBJECTDIR}/src/details/dev_helper.o: src/details/dev_helper.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/details
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/dev_helper.o src/dev_helper.cpp
+	$(COMPILE.cc) -g -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/dev_helper.o src/details/dev_helper.cpp
+
+${OBJECTDIR}/src/details/pwm_factory.o: src/details/pwm_factory.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/details
+	${RM} $@.d
+	$(COMPILE.cc) -g -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/pwm_factory.o src/details/pwm_factory.cpp
+
+${OBJECTDIR}/src/details/pwm_impl.o: src/details/pwm_impl.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/details
+	${RM} $@.d
+	$(COMPILE.cc) -g -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/pwm_impl.o src/details/pwm_impl.cpp
 
 ${OBJECTDIR}/src/pwm.o: src/pwm.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -g -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/pwm.o src/pwm.cpp
-
-${OBJECTDIR}/src/pwm_factory.o: src/pwm_factory.cpp 
-	${MKDIR} -p ${OBJECTDIR}/src
-	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/pwm_factory.o src/pwm_factory.cpp
-
-${OBJECTDIR}/src/pwm_impl.o: src/pwm_impl.cpp 
-	${MKDIR} -p ${OBJECTDIR}/src
-	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/pwm_impl.o src/pwm_impl.cpp
 
 # Subprojects
 .build-subprojects:

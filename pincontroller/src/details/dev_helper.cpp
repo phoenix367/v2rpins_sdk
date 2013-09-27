@@ -1,4 +1,4 @@
-#include "pincontroller/dev_helper.hpp"
+#include "dev_helper.hpp"
 #include "pincontroller/exceptions.hpp"
 
 #include <fcntl.h>

@@ -9,7 +9,6 @@
 #define	PINCONTROLLER_HPP
 
 #include "exceptions.hpp"
-#include "dev_helper.hpp"
 #include "pwm.hpp"
 
 #endif	/* PINCONTROLLER_HPP */

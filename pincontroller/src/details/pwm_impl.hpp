@@ -8,7 +8,7 @@
 #ifndef PWM_IMPL_HPP
 #define	PWM_IMPL_HPP
 
-#include "global.hpp"
+#include "pincontroller/global.hpp"
 #include "dev_helper.hpp"
 
 #include <unordered_map>

@@ -1,6 +1,6 @@
 #include "pincontroller/pwm.hpp"
-#include "pincontroller/pwm_impl.hpp"
-#include "pincontroller/pwm_factory.hpp"
+#include "details/pwm_impl.hpp"
+#include "details/pwm_factory.hpp"
 
 namespace pc
 {

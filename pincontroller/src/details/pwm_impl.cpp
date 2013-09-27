@@ -1,5 +1,5 @@
-#include "pincontroller/pwm_impl.hpp"
-#include "pincontroller/dev_helper.hpp"
+#include "pwm_impl.hpp"
+#include "dev_helper.hpp"
 #include "pincontroller/exceptions.hpp"
 
 #include <sstream>

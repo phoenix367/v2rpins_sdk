@@ -1,6 +1,6 @@
 #include <memory>
 
-#include "pincontroller/pwm_factory.hpp"
+#include "pwm_factory.hpp"
 #include "pincontroller/exceptions.hpp"
 
 namespace pc

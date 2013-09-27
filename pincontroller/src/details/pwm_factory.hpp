@@ -8,7 +8,7 @@
 #ifndef PWM_FACTORY_HPP
 #define	PWM_FACTORY_HPP
 
-#include "global.hpp"
+#include "pincontroller/global.hpp"
 #include "pwm_impl.hpp"
 
 #include <vector>

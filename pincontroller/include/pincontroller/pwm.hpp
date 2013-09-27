@@ -20,8 +20,11 @@
 namespace pc
 {
     class PWMImpl;
-    /* Класс предназначен для управления аппаратными PWM
-     * платы virt2real версии 1.1. Всего плата позволяет
+    
+    /* 
+     * Класс предназначен для управления аппаратным PWM
+     * (Pulse-width modulator)платы virt2real версии 1.1. 
+     * Всего данная плата позволяет
      * задействовать четыре канала PWM: pwm0, pwm1, pwm2
      * и pwm3.
      */
@@ -42,10 +45,36 @@ namespace pc
          * логике
          */
         PWM(PWM_CHANNEL output);
+        
+        /*
+         * Деструктор класса, вызывается во время разрушения
+         * объекта.
+         */
         virtual ~PWM();
         
+        /*
+         * Устанавливает параметры генерации импульсов
+         * 
+         * @param duty длительность импульса в микросекундах
+         * @param period период импульса в микросекундах
+         * 
+         * @throw 
+         * ObjectExpiredException в случае, если реализация
+         * объекта была разрушена
+         *        
+         * IncorrectParamException в случае, если устанавливаемая
+         * длительность периода меньше длительности импульса
+         */
         void setPulseParams(uint32_t duty, uint32_t period);
+        
+        /*
+         */
         void init();
+        
+        /*
+         * Останваливает выбачу импульсов на соответствующем 
+         * канале PWM
+         */
         void stop();
         
         /*
@@ -71,10 +100,7 @@ namespace pc
          * @throw ObjectExpiredException
          */
         PWM_CHANNEL getPWMPin();
-                
-    private:
     };
 }
 
 #endif	/* PWM_HPP */
-
