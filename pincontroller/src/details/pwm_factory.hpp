@@ -27,6 +27,7 @@ namespace pc
         static PWMFactory* getInstance();
         
         std::shared_ptr<PWMImpl> createPWM(PWM_CHANNEL po);
+        void releasePWM(PWM_CHANNEL po);
         
     private:
         static std::unique_ptr<PWMFactory> instance;

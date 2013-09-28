@@ -23,7 +23,7 @@ namespace pc
     
     PWM::~PWM()
     {
-        
+        dispose();
     }
     
     void PWM::setPulseParams(uint32_t duty, uint32_t period)
@@ -60,5 +60,39 @@ namespace pc
     {
         auto sp = check();
         return sp->getPWMPin();                
+    }
+    
+    void PWM::dispose()
+    {
+        if (implPtr.expired())
+        {
+            return;
+        }
+        
+        if (implPtr.use_count() == 1)
+        {
+            auto instance = PWMFactory::getInstance();
+            
+            if (instance)
+            {
+                instance->releasePWM(getPWMPin());
+            }
+        }
+        
+        implPtr.reset();
+    }
+    
+    void PWM::releasePwmChannel()
+    {
+        auto instance = PWMFactory::getInstance();
+
+        if (!instance)
+        {
+            PC_EXCEPTION(InternalErrorException, 
+                    "Can't get PWM factory instance");
+        }
+        
+        instance->releasePWM(getPWMPin());
+        implPtr.reset();
     }
 }

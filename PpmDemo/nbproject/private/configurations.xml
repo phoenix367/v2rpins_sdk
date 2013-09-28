@@ -15,7 +15,7 @@
         </gdb_interceptlist>
         <gdb_options>
           <DebugOptions>
-            <option name="debug_command" value="target remote 192.168.3.2:10060"/>
+            <option name="gdb_init_file" value="../.gdbinit"/>
           </DebugOptions>
         </gdb_options>
         <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>

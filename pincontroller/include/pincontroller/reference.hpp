@@ -18,20 +18,31 @@ namespace pc
     {
     protected:
         typedef std::shared_ptr<T> ImplPtr;
+        typedef std::weak_ptr<T> WeakPtr;
             
         ImplPtr check()
         {
-            if (!implPtr)
+            if (implPtr.expired())
             {
                 PC_EXCEPTION(ObjectExpiredException,
                         "Implementation object is expired.");
             }
             
-            return implPtr;
+            return implPtr.lock();
+        }
+        
+    public:
+        /**
+         * @brief Проверяет, действителен ли еще объект
+         * @return результат проверки
+         */
+        bool isExpired()
+        {
+            return implPtr.expired();
         }
 
     protected:
-        ImplPtr implPtr;
+        WeakPtr implPtr;
     };
 }
 

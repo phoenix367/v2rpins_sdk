@@ -45,4 +45,9 @@ namespace pc
         
         return sp;
     }
+    
+    void PWMFactory::releasePWM(PWM_CHANNEL po)
+    {
+        pwmMap.erase(po);
+    }
 }

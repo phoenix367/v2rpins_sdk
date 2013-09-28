@@ -30,10 +30,17 @@ namespace pc
         devHelper.sendCommand(stream.str());
     }
     
-    PWMImpl::~PWMImpl()
+    PWMImpl::~PWMImpl() noexcept
     {
-        stop();
-        devHelper.close();
+        try
+        {
+            stop();
+            devHelper.close();
+        }
+        catch (Exception&)
+        {
+            // Ignore exception
+        }
     }
     
     void PWMImpl::setPulseParams(uint32_t duty, uint32_t period)

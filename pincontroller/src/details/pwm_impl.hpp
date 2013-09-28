@@ -19,10 +19,12 @@ namespace pc
     class PWMImpl
     {
     private:
-        typedef std::unordered_map<PWM_CHANNEL, std::string> ConnectionMap;
+        typedef std::unordered_map<PWM_CHANNEL, std::string> 
+            ConnectionMap;
+        
     public:
         PWMImpl(PWM_CHANNEL po);
-        virtual ~PWMImpl();
+        virtual ~PWMImpl() noexcept;
         
         void setPulseParams(uint32_t duty, uint32_t period);
         void init();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="89">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
-    <logicalFolder name="f1" displayName="details" projectFiles="true" kind="ROOT">
+    <logicalFolder name="f1" displayName="details" projectFiles="true">
       <itemPath>src/details/dev_helper.cpp</itemPath>
       <itemPath>src/details/dev_helper.hpp</itemPath>
       <itemPath>src/details/pwm_factory.cpp</itemPath>

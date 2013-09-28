@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include <unistd.h>
-#include <unordered_map>
 #include "pincontroller/pincontroller.hpp"
 
 using namespace std;
@@ -19,27 +18,20 @@ int main(int argc, char** argv)
 {
     try
     {
-        pc::PWM pwm1(pc::PWM_CHANNEL::PWM_0), 
-                pwm2(pc::PWM_CHANNEL::PWM_1);
+        // Создаем объект для управления нулевым каналом PWM
+        pc::PWM pwm1(pc::PWM_CHANNEL::PWM_0);
         
-        while (true)
-        {
-            pwm1.setPulseParams(2200, 20000);
-            pwm1.init();
-            
-            pwm2.setPulseParams(2200, 10000);
-            pwm2.init();
-
-            sleep(2);
-
-            pwm1.setPulseParams(4200, 20000);
-            pwm1.init();
-            
-            pwm2.setPulseParams(4200, 10000);
-            pwm2.init();
-
-            sleep(2);
-        }
+        // Устанавливаем параметры выдаваемых импульсов:
+        // Длительность: 2200 микросекунд
+        // Период:       20000 микросекунд
+        pwm1.setPulseParams(2200, 20000);
+        
+        // Передаем параметры генерации в PWM
+        pwm1.init();
+        
+        // Ждем 5 секунд и завершаем работу. Генерация импульсов
+        // на нулевом канале PWM будет остановлена автоматически.
+        sleep(5);
     }
     catch (pc::Exception& e)
     {
