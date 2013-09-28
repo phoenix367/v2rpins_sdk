@@ -22,6 +22,7 @@ namespace pc
     class PWMImpl;
     
     /**
+     * @class PWM
      * @brief Класс предназначен для управления аппаратным PWM
      * (Pulse-width modulator)платы virt2real версии 1.1. 
      * Всего данная плата позволяет
@@ -87,7 +88,7 @@ namespace pc
          * @return длительность импульса PWM
          * @throw ObjectExpiredException
          */
-        uint32_t getDuty();
+        uint32_t getDuty() const;
 
         /**
          * @brief Функция возвращает текущее значение длительности
@@ -95,7 +96,7 @@ namespace pc
          * @return длительность периода PWM
          * @throw ObjectExpiredException
          */
-        uint32_t getPeriod();
+        uint32_t getPeriod() const;
 
         /**
          * @brief Функция возвращает идентификатор используемого 
@@ -103,7 +104,7 @@ namespace pc
          * @return идентификатор канала PWM
          * @throw ObjectExpiredException
          */
-        PWM_CHANNEL getPWMPin();
+        PWM_CHANNEL getPWMPin() const;
         
         /**
          * @brief Разрушает внутреннюю ссылку на объект управления PWM.

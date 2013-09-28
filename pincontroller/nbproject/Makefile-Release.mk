@@ -38,7 +38,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/details/dev_helper.o \
 	${OBJECTDIR}/src/details/pwm_factory.o \
 	${OBJECTDIR}/src/details/pwm_impl.o \
-	${OBJECTDIR}/src/pwm.o
+	${OBJECTDIR}/src/pwm.o \
+	${OBJECTDIR}/src/servo_rotator.o
 
 
 # C Compiler Flags
@@ -84,6 +85,11 @@ ${OBJECTDIR}/src/pwm.o: src/pwm.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -s -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/pwm.o src/pwm.cpp
+
+${OBJECTDIR}/src/servo_rotator.o: src/servo_rotator.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -s -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/servo_rotator.o src/servo_rotator.cpp
 
 # Subprojects
 .build-subprojects:

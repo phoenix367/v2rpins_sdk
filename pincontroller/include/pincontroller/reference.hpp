@@ -14,12 +14,16 @@
 
 namespace pc
 {
+    /**
+     * @class Reference
+     * @brief 
+     */
     template<typename T> class Reference
     {
     protected:
         typedef std::shared_ptr<T> ImplPtr;
         typedef std::weak_ptr<T> WeakPtr;
-            
+
         ImplPtr check()
         {
             if (implPtr.expired())
@@ -30,7 +34,18 @@ namespace pc
             
             return implPtr.lock();
         }
-        
+
+        const ImplPtr check() const
+        {
+            if (implPtr.expired())
+            {
+                PC_EXCEPTION(ObjectExpiredException,
+                        "Implementation object is expired.");
+            }
+            
+            return implPtr.lock();
+        }
+
     public:
         /**
          * @brief Проверяет, действителен ли еще объект

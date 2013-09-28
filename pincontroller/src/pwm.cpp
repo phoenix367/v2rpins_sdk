@@ -44,19 +44,19 @@ namespace pc
         sp->stop();        
     }
 
-    uint32_t PWM::getDuty()
+    uint32_t PWM::getDuty() const
     {
         auto sp = check();
         return sp->getDuty();                
     }
     
-    uint32_t PWM::getPeriod()
+    uint32_t PWM::getPeriod() const
     {
         auto sp = check();
         return sp->getPeriod();                
     }
     
-    PWM_CHANNEL PWM::getPWMPin()
+    PWM_CHANNEL PWM::getPWMPin() const
     {
         auto sp = check();
         return sp->getPWMPin();                
