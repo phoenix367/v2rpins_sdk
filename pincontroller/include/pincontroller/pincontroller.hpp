@@ -7,7 +7,11 @@
 
 /**
  * @file pincontroller.hpp
- * @brief
+ * @brief Основной заголовочный файл Virt2real pins SDK
+ * @details Данный заголовочный файл должен быть включен
+ * с помощью директивы #include в исходный код, которая использует
+ * Virt2real pins SDK. Включение других заголовочных файлов
+ * из SDK не требуется.
  */
 
 #ifndef PINCONTROLLER_HPP
