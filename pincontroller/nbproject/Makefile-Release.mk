@@ -36,7 +36,6 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/src/adc_reader.o \
-	${OBJECTDIR}/src/details/adc_reader_impl.o \
 	${OBJECTDIR}/src/details/dev_helper.o \
 	${OBJECTDIR}/src/details/pwm_factory.o \
 	${OBJECTDIR}/src/details/pwm_impl.o \
@@ -72,11 +71,6 @@ ${OBJECTDIR}/src/adc_reader.o: src/adc_reader.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -s -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/adc_reader.o src/adc_reader.cpp
-
-${OBJECTDIR}/src/details/adc_reader_impl.o: src/details/adc_reader_impl.cpp 
-	${MKDIR} -p ${OBJECTDIR}/src/details
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -s -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/adc_reader_impl.o src/details/adc_reader_impl.cpp
 
 ${OBJECTDIR}/src/details/dev_helper.o: src/details/dev_helper.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/details

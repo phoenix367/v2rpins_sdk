@@ -11,6 +11,7 @@ namespace pc
     const std::string DevHelper::PINS_DEVICE = "v2r_pins";
     const int DevHelper::INV_FILE_HANDLE = -1;
     const std::string DevHelper::DEV_PREFIX = "/dev/";
+    const std::string DevHelper::ADC_DEVICE = "v2r_adc";
     
     DevHelper::DevHelper(const std::string& devName)
     : devFileHandle(INV_FILE_HANDLE)
@@ -71,5 +72,16 @@ namespace pc
     {
         DevHelper devHelper(devName);
         devHelper.sendCommand(command);
+    }
+    
+    int DevHelper::readData(void* data, size_t readSize)
+    {
+        int r = ::read(devFileHandle, data, readSize);
+        if (r == -1)
+        {
+            PC_EXCEPTION(DeviceException, errno);
+        }
+        
+        return r;
     }
 }

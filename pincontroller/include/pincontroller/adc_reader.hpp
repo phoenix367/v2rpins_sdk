@@ -8,14 +8,10 @@
 #ifndef ADC_READER_HPP
 #define	ADC_READER_HPP
 
-#include <functional>
-#include <memory>
 #include <cstdint>
 
 namespace pc
 {
-    class ADCReaderImpl;
-    
     class ADCReader
     {
     public:
@@ -27,9 +23,26 @@ namespace pc
         /**
          * 
          */
+        static const float REFERENCE_VOLTAGE;
+        
+        /**
+         *
+         */
+        static const uint16_t MAX_RAW_VALUE;
+        
+        /**
+         * 
+         */
         struct ADCValue
         {
+            /**
+             * 
+             */
             uint16_t adcValuesRaw[ADC_COUNT];
+            
+            /**
+             * 
+             */
             float adcVoltages[ADC_COUNT];
         };
         
@@ -48,12 +61,7 @@ namespace pc
          * 
          * @param adValue
          */
-        static void readOnce(ADCValue& adValue);
-        
-    private:
-        
-    private:
-        std::shared_ptr<ADCReaderImpl> impl;
+        void read(ADCValue& adValue);
     };
 }
 

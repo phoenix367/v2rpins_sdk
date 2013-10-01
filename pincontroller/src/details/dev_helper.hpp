@@ -18,6 +18,7 @@ namespace pc
         static const std::string PINS_DEVICE;
         static const int INV_FILE_HANDLE;
         static const std::string DEV_PREFIX;
+        static const std::string ADC_DEVICE;
         
     public:
         DevHelper(const std::string& devName);
@@ -27,6 +28,7 @@ namespace pc
         void close();
         bool isOpened();
         void sendCommand(const std::string& cmd);
+        int readData(void* data, size_t readSize);
         
         static void doCommand(const std::string& devName,
                 const std::string& command);

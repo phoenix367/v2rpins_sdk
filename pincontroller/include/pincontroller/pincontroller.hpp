@@ -20,5 +20,6 @@
 #include "exceptions.hpp"
 #include "pwm.hpp"
 #include "servo_rotator.hpp"
+#include "adc_reader.hpp"
 
 #endif	/* PINCONTROLLER_HPP */

@@ -51,6 +51,12 @@ namespace pc
     class DeviceException : public Exception
     {
     public:
+        DeviceException(const std::string& msg, int line, 
+                const std::string& file) throw()
+                : Exception(msg, line, file)
+        {
+        }
+
         DeviceException(int errnoValue, int line, 
                 const std::string& file) throw()
                 : Exception(strerror(errnoValue), line, file)
