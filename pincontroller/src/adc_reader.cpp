@@ -4,10 +4,12 @@
 
 namespace pc
 {
-    const float ADCReader::REFERENCE_VOLTAGE = 1.43;
-    const uint16_t ADCReader::MAX_RAW_VALUE = 1 << 10;
+    const float ADCReader::REFERENCE_VOLTAGE = 3.6;
+    const uint16_t ADCReader::MAX_RAW_VALUE = (1 << 10) - 1;
     
     ADCReader::ADCReader()
+    : maxMeasurementVoltage(REFERENCE_VOLTAGE)
+    , minMeasurementVoltage(0.0f)
     {
         
     }
@@ -38,5 +40,44 @@ namespace pc
         }
         
         helper.close();
+    }
+    
+    float ADCReader::getMaxMeasurementVoltage() const
+    {
+        return maxMeasurementVoltage;
+    }
+    
+    void ADCReader::setMaxMeasurementVoltage(float v)
+    {
+        maxMeasurementVoltage = v;
+    }
+    
+    float ADCReader::getMinMeasurementVoltage() const
+    {
+        return minMeasurementVoltage;
+    }
+    
+    void ADCReader::setMinMeasurementVoltage(float v)
+    {
+        minMeasurementVoltage = v;
+    }
+    
+    void ADCReader::readScaled(ADCValue& adValue)
+    {
+        if (maxMeasurementVoltage <= minMeasurementVoltage)
+        {
+            PC_EXCEPTION(IncorrectParamException,
+                    "Maximal measurement voltage should be greater "
+                    "than minimal measurement voltage.");
+        }
+        
+        read(adValue);
+        
+        for (int i = 0; i < ADC_COUNT; i++)
+        {
+            adValue.adcVoltages[i] = adValue.adcValuesRaw[i] * 
+                    (maxMeasurementVoltage - minMeasurementVoltage) / 
+                    MAX_RAW_VALUE + minMeasurementVoltage;
+        }
     }
 }

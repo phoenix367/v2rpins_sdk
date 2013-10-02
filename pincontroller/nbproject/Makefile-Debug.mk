@@ -47,8 +47,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=-std=c++0x
-CXXFLAGS=-std=c++0x
+CCFLAGS=
+CXXFLAGS=
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -70,32 +70,32 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libpincontroller.${CND_DLIB_EXT}: ${O
 ${OBJECTDIR}/src/adc_reader.o: src/adc_reader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/adc_reader.o src/adc_reader.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/adc_reader.o src/adc_reader.cpp
 
 ${OBJECTDIR}/src/details/dev_helper.o: src/details/dev_helper.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/details
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/dev_helper.o src/details/dev_helper.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/dev_helper.o src/details/dev_helper.cpp
 
 ${OBJECTDIR}/src/details/pwm_factory.o: src/details/pwm_factory.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/details
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/pwm_factory.o src/details/pwm_factory.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/pwm_factory.o src/details/pwm_factory.cpp
 
 ${OBJECTDIR}/src/details/pwm_impl.o: src/details/pwm_impl.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/details
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/pwm_impl.o src/details/pwm_impl.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/pwm_impl.o src/details/pwm_impl.cpp
 
 ${OBJECTDIR}/src/pwm.o: src/pwm.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/pwm.o src/pwm.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/pwm.o src/pwm.cpp
 
 ${OBJECTDIR}/src/servo_rotator.o: src/servo_rotator.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/servo_rotator.o src/servo_rotator.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/servo_rotator.o src/servo_rotator.cpp
 
 # Subprojects
 .build-subprojects:

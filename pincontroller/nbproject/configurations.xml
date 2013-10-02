@@ -54,10 +54,10 @@
       </toolsSet>
       <compileType>
         <ccTool>
+          <standard>8</standard>
           <incDir>
             <pElem>include</pElem>
           </incDir>
-          <commandLine>-std=c++0x</commandLine>
           <warningLevel>3</warningLevel>
         </ccTool>
       </compileType>
