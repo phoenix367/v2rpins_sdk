@@ -1,0 +1,10 @@
+AdcDemo/dist/
+AdcDemo/build/
+PpmDemo/dist/
+PpmDemo/build/
+pincontroller/dist/
+pincontroller/build/
+*.o
+*.o.d
+*.inc
+
