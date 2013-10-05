@@ -8,10 +8,12 @@ namespace pc
     const uint16_t ADCReader::MAX_RAW_VALUE = (1 << 10) - 1;
     
     ADCReader::ADCReader()
-    : maxMeasurementVoltage(REFERENCE_VOLTAGE)
-    , minMeasurementVoltage(0.0f)
     {
-        
+        for (size_t i = 0; i < ADC_COUNT; i++)
+        {
+            maxMeasurementVoltage[i] = REFERENCE_VOLTAGE;
+            minMeasurementVoltage[i] = 0.0f;
+        }
     }
     
     ADCReader::~ADCReader()
@@ -42,26 +44,62 @@ namespace pc
         helper.close();
     }
     
-    float ADCReader::getMaxMeasurementVoltage() const
+    float ADCReader::getMaxMeasurementVoltage(size_t channel) const
     {
-        return maxMeasurementVoltage;
+        if (channel >= ADC_COUNT)
+        {
+            PC_EXCEPTION(OutOfRangeException, "Invalid ADC channel index.");
+        }
+
+        return maxMeasurementVoltage[channel];
     }
     
     void ADCReader::setMaxMeasurementVoltage(float v)
     {
-        maxMeasurementVoltage = v;
+        for (size_t i = 0; i < ADC_COUNT; i++)
+        {
+            setMaxMeasurementVoltage(v, i);
+        }
     }
     
-    float ADCReader::getMinMeasurementVoltage() const
+    void ADCReader::setMaxMeasurementVoltage(float v, size_t channel)
     {
-        return minMeasurementVoltage;
+        if (channel >= ADC_COUNT)
+        {
+            PC_EXCEPTION(OutOfRangeException, "Invalid ADC channel index.");
+        }
+        
+        maxMeasurementVoltage[channel] = v;
+    }
+
+    float ADCReader::getMinMeasurementVoltage(size_t channel) const
+    {
+        if (channel >= ADC_COUNT)
+        {
+            PC_EXCEPTION(OutOfRangeException, "Invalid ADC channel index.");
+        }
+
+        return minMeasurementVoltage[channel];
     }
     
     void ADCReader::setMinMeasurementVoltage(float v)
     {
-        minMeasurementVoltage = v;
+        for (size_t i = 0; i < ADC_COUNT; i++)
+        {
+            setMinMeasurementVoltage(v, i);
+        }
     }
     
+    void ADCReader::setMinMeasurementVoltage(float v, size_t channel)
+    {
+        if (channel >= ADC_COUNT)
+        {
+            PC_EXCEPTION(OutOfRangeException, "Invalid ADC channel index.");
+        }
+        
+        minMeasurementVoltage[channel] = v;
+    }
+
     void ADCReader::readScaled(ADCValue& adValue)
     {
         if (maxMeasurementVoltage <= minMeasurementVoltage)
@@ -76,8 +114,8 @@ namespace pc
         for (int i = 0; i < ADC_COUNT; i++)
         {
             adValue.adcVoltages[i] = adValue.adcValuesRaw[i] * 
-                    (maxMeasurementVoltage - minMeasurementVoltage) / 
-                    MAX_RAW_VALUE + minMeasurementVoltage;
+                    (maxMeasurementVoltage[i] - minMeasurementVoltage[i]) / 
+                    MAX_RAW_VALUE + minMeasurementVoltage[i];
         }
     }
 }

@@ -13,6 +13,7 @@
 #define	ADC_READER_HPP
 
 #include <cstdint>
+#include <cstddef>
 
 namespace pc
 {
@@ -35,7 +36,7 @@ namespace pc
         /**
          * @brief Число доступных каналов АЦП
          */
-        static const int ADC_COUNT = 6;
+        static const size_t ADC_COUNT = 6;
         
         /**
          * @brief Величина опорного напряжения Vref=3,6 В
@@ -111,9 +112,11 @@ namespace pc
          * напряжение производится по формуле 
          * Vin=ADC_value * (Vmax - Vmin) / 1023, где ADC_value - двоичное
          * значение, прочитанное с АЦП, Vmax - значение максимального
-         * измеряемого напряжения, установленного ранее с помощью
+         * измеряемого напряжения на соответствующем канале АЦП, 
+         * установленного ранее с помощью
          * функции setMaxMeasurementVoltage, а Vmin - значение минимального
-         * измеряемого напряжения установленного ранее с помощью
+         * измеряемого напряжения на соответствующем канале АЦП,
+         * установленного ранее с помощью
          * функции setMinMeasurementVoltage. По умолчанию Vmax=Vref, а
          * Vmin=0 В. В этому случае результат, возвращаемый функцией 
          * идентичен тому, который вернет read.
@@ -127,35 +130,66 @@ namespace pc
         
         /**
          * @brief Возвращает установленное значение максимального
-         * измеряемого напряжения на входе АЦП
+         * измеряемого напряжения на входе АЦП на заданном
+         * канале
+         * @param channel номер канала АЦП в диапазоне от 0 до 5
          * @return максимальное измеряемое напряжение в вольтах
+         * @throw OutOfRangeException в случае, если номер
+         * канала АЦП указан неправильно
          */
-        float getMaxMeasurementVoltage() const;
+        float getMaxMeasurementVoltage(size_t channel) const;
         
         /**
          * @brief Устанавливает значение максимального
-         * измеряемого напряжения на входе АЦП
+         * измеряемого напряжения на входе АЦП одновременно
+         * для всех каналов
          * @param v максимальное измеряемое напряжение в вольтах
          */
         void setMaxMeasurementVoltage(float v);
         
         /**
+         * @brief Устанавливает значение максимального
+         * измеряемого напряжения на входе АЦП только для
+         * заданного канала
+         * @param v максимальное измеряемое напряжение в вольтах
+         * @param channel номер канала АЦП в диапазоне от 0 до 5
+         * @throw OutOfRangeException в случае, если номер
+         * канала АЦП указан неправильно
+         */
+        void setMaxMeasurementVoltage(float v, size_t channel);
+        
+        /**
          * @brief Возвращает установленное значение минимального
          * измеряемого напряжения на входе АЦП
+         * @param channel номер канала АЦП в диапазоне от 0 до 5
          * @return минимальное измеряемое напряжение в вольтах
+         * @throw OutOfRangeException в случае, если номер
+         * канала АЦП указан неправильно
          */
-        float getMinMeasurementVoltage() const;
+        float getMinMeasurementVoltage(size_t channel) const;
         
         /**
          * @brief Устанавливает значение минимального
-         * измеряемого напряжения на входе АЦП
+         * измеряемого напряжения на входе АЦП одновременно
+         * для всех каналов
          * @param v минимальное измеряемое напряжение в вольтах
          */
         void setMinMeasurementVoltage(float v);
         
+        /**
+         * @brief Устанавливает значение минимального
+         * измеряемого напряжения на входе АЦП только для
+         * заданного канала
+         * @param v минимальное измеряемое напряжение в вольтах
+         * @param channel номер канала АЦП в диапазоне от 0 до 5
+         * @throw OutOfRangeException в случае, если номер
+         * канала АЦП указан неправильно
+         */
+        void setMinMeasurementVoltage(float v, size_t channel);
+        
     private:
-        float maxMeasurementVoltage;
-        float minMeasurementVoltage;
+        float maxMeasurementVoltage[ADC_COUNT];
+        float minMeasurementVoltage[ADC_COUNT];
     };
 }
 
