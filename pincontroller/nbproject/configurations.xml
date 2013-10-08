@@ -4,6 +4,10 @@
     <logicalFolder name="f1" displayName="details" projectFiles="true">
       <itemPath>src/details/dev_helper.cpp</itemPath>
       <itemPath>src/details/dev_helper.hpp</itemPath>
+      <itemPath>src/details/gpio_manager.cpp</itemPath>
+      <itemPath>src/details/gpio_manager.hpp</itemPath>
+      <itemPath>src/details/hash.hpp</itemPath>
+      <itemPath>src/details/internal_enums.hpp</itemPath>
       <itemPath>src/details/pwm_factory.cpp</itemPath>
       <itemPath>src/details/pwm_factory.hpp</itemPath>
       <itemPath>src/details/pwm_impl.cpp</itemPath>
@@ -96,6 +100,14 @@
       </item>
       <item path="src/details/dev_helper.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/details/gpio_manager.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/details/gpio_manager.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/details/hash.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/details/internal_enums.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/details/pwm_factory.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/details/pwm_factory.hpp" ex="false" tool="3" flavor2="0">
@@ -172,6 +184,14 @@
       <item path="src/details/dev_helper.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/details/dev_helper.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/details/gpio_manager.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/details/gpio_manager.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/details/hash.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/details/internal_enums.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/details/pwm_factory.cpp" ex="false" tool="1" flavor2="0">
       </item>

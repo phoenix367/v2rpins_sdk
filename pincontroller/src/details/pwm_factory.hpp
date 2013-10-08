@@ -10,6 +10,7 @@
 
 #include "pincontroller/global.hpp"
 #include "pwm_impl.hpp"
+#include "hash.hpp"
 
 #include <vector>
 #include <unordered_map>

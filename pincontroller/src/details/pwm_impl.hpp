@@ -10,6 +10,7 @@
 
 #include "pincontroller/global.hpp"
 #include "dev_helper.hpp"
+#include "hash.hpp"
 
 #include <unordered_map>
 #include <string>
