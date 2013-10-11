@@ -32,6 +32,7 @@ namespace pc
         
     private:
         static std::unique_ptr<PWMFactory> instance;
+        static const std::unordered_map<PWM_CHANNEL, Contact> contactMap;
         
         std::unordered_map<PWM_CHANNEL, std::shared_ptr<PWMImpl> > pwmMap;
     };

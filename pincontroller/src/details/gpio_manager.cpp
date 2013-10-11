@@ -1,100 +1,10 @@
 #include "gpio_manager.hpp"
+#include "pincontroller/exceptions.hpp"
 
 namespace pc
 {
-    std::unordered_map<Contact, ContactState> GPIOManager::contacts =
-    {
-        {Contact::con1_1, ContactState::notAvailable},
-        {Contact::con1_2, ContactState::notAvailable},
-        {Contact::con1_3, ContactState::notAvailable},
-        {Contact::con1_4, ContactState::notAvailable},
-        {Contact::con1_5, ContactState::notAvailable},
-        {Contact::con1_6, ContactState::notAvailable},
-        {Contact::con1_7, ContactState::notAvailable},
-        {Contact::con1_8, ContactState::notAvailable},
-        {Contact::con1_9, ContactState::notAvailable},
-        {Contact::con1_10, ContactState::notAquired},
-        {Contact::con1_11, ContactState::notAquired},
-        {Contact::con1_12, ContactState::notAquired},
-        {Contact::con1_13, ContactState::notAquired},
-        {Contact::con1_14, ContactState::notAquired},
-        {Contact::con1_15, ContactState::notAquired},
-        {Contact::con1_16, ContactState::notAquired},
-        {Contact::con1_17, ContactState::notAquired},
-        {Contact::con1_18, ContactState::notAquired},
-        {Contact::con1_19, ContactState::notAquired},
-        {Contact::con1_20, ContactState::notAquired},
-        {Contact::con1_21, ContactState::notAvailable},
-        {Contact::con1_22, ContactState::notAvailable},
-        
-        {Contact::con1_23, ContactState::notAvailable},
-        {Contact::con1_24, ContactState::notAvailable},
-        {Contact::con1_25, ContactState::notAquired},
-        {Contact::con1_26, ContactState::notAquired},
-        {Contact::con1_27, ContactState::notAquired},
-        {Contact::con1_28, ContactState::notAquired},
-        {Contact::con1_29, ContactState::notAquired},
-        {Contact::con1_30, ContactState::notAquired},
-        {Contact::con1_31, ContactState::notAquired},
-        {Contact::con1_32, ContactState::notAquired},
-        {Contact::con1_33, ContactState::notAquired},
-        {Contact::con1_34, ContactState::notAquired},
-        {Contact::con1_35, ContactState::notAquired},
-        {Contact::con1_36, ContactState::notAquired},
-        {Contact::con1_37, ContactState::notAquired},
-        {Contact::con1_38, ContactState::notAquired},
-        {Contact::con1_39, ContactState::notAquired},
-        {Contact::con1_40, ContactState::notAquired},
-        {Contact::con1_41, ContactState::notAquired},
-        {Contact::con1_42, ContactState::notAquired},
-        {Contact::con1_43, ContactState::notAquired},
-        {Contact::con1_44, ContactState::notAquired},
-
-        {Contact::con1_45, ContactState::notAvailable},
-        {Contact::con1_46, ContactState::notAvailable},
-        {Contact::con1_47, ContactState::notAvailable},
-        {Contact::con1_48, ContactState::notAvailable},
-        {Contact::con1_49, ContactState::notAvailable},
-        {Contact::con1_50, ContactState::notAvailable},
-        {Contact::con1_51, ContactState::notAvailable},
-        {Contact::con1_52, ContactState::notAvailable},
-        {Contact::con1_53, ContactState::notAvailable},
-        {Contact::con1_54, ContactState::notAquired},
-        {Contact::con1_55, ContactState::notAquired},
-        {Contact::con1_56, ContactState::notAquired},
-        {Contact::con1_57, ContactState::notAquired},
-        {Contact::con1_58, ContactState::notAquired},
-        {Contact::con1_59, ContactState::notAquired},
-        {Contact::con1_60, ContactState::notAquired},
-        {Contact::con1_61, ContactState::notAquired},
-        {Contact::con1_62, ContactState::notAquired},
-        {Contact::con1_63, ContactState::notAquired},
-        {Contact::con1_64, ContactState::notAquired},
-        {Contact::con1_65, ContactState::notAquired},
-
-        {Contact::con1_66, ContactState::notAvailable},
-        {Contact::con1_67, ContactState::notAvailable},
-        {Contact::con1_68, ContactState::notAvailable},
-        {Contact::con1_69, ContactState::notAvailable},
-        {Contact::con1_70, ContactState::notAvailable},
-        {Contact::con1_71, ContactState::notAvailable},
-        {Contact::con1_72, ContactState::notAvailable},
-        {Contact::con1_73, ContactState::notAvailable},
-        {Contact::con1_74, ContactState::notAvailable},
-        {Contact::con1_75, ContactState::notAquired},
-        {Contact::con1_76, ContactState::notAquired},
-        {Contact::con1_77, ContactState::notAquired},
-        {Contact::con1_78, ContactState::notAquired},
-        {Contact::con1_79, ContactState::notAquired},
-        {Contact::con1_80, ContactState::notAquired},
-        {Contact::con1_81, ContactState::notAquired},
-        {Contact::con1_82, ContactState::notAquired},
-        {Contact::con1_83, ContactState::notAquired},
-        {Contact::con1_84, ContactState::notAquired},
-        {Contact::con1_85, ContactState::notAquired},
-        {Contact::con1_86, ContactState::notAvailable}
-    };
-
+    std::unique_ptr<GPIOManager> GPIOManager::instance;
+    
     const std::unordered_map<GPIO_PIN, Contact> GPIOManager::gpioMap =
     {
         { GPIO_PIN::gpio1, Contact::con1_25 },
@@ -150,4 +60,149 @@ namespace pc
         { GPIO_PIN::gpio91, Contact::con1_44 },
         { GPIO_PIN::gpio92, Contact::con1_43 }
     };
+    
+    GPIOManager::GPIOManager()
+    {
+        contacts = {
+            {Contact::con1_1, ContactState::notAvailable},
+            {Contact::con1_2, ContactState::notAvailable},
+            {Contact::con1_3, ContactState::notAvailable},
+            {Contact::con1_4, ContactState::notAvailable},
+            {Contact::con1_5, ContactState::notAvailable},
+            {Contact::con1_6, ContactState::notAvailable},
+            {Contact::con1_7, ContactState::notAvailable},
+            {Contact::con1_8, ContactState::notAvailable},
+            {Contact::con1_9, ContactState::notAvailable},
+            {Contact::con1_10, ContactState::notAquired},
+            {Contact::con1_11, ContactState::notAquired},
+            {Contact::con1_12, ContactState::notAquired},
+            {Contact::con1_13, ContactState::notAquired},
+            {Contact::con1_14, ContactState::notAquired},
+            {Contact::con1_15, ContactState::notAquired},
+            {Contact::con1_16, ContactState::notAquired},
+            {Contact::con1_17, ContactState::notAquired},
+            {Contact::con1_18, ContactState::notAquired},
+            {Contact::con1_19, ContactState::notAquired},
+            {Contact::con1_20, ContactState::notAquired},
+            {Contact::con1_21, ContactState::notAvailable},
+            {Contact::con1_22, ContactState::notAvailable},
+
+            {Contact::con1_23, ContactState::notAvailable},
+            {Contact::con1_24, ContactState::notAvailable},
+            {Contact::con1_25, ContactState::notAquired},
+            {Contact::con1_26, ContactState::notAquired},
+            {Contact::con1_27, ContactState::notAquired},
+            {Contact::con1_28, ContactState::notAquired},
+            {Contact::con1_29, ContactState::notAquired},
+            {Contact::con1_30, ContactState::notAquired},
+            {Contact::con1_31, ContactState::notAquired},
+            {Contact::con1_32, ContactState::notAquired},
+            {Contact::con1_33, ContactState::notAquired},
+            {Contact::con1_34, ContactState::notAquired},
+            {Contact::con1_35, ContactState::notAquired},
+            {Contact::con1_36, ContactState::notAquired},
+            {Contact::con1_37, ContactState::notAquired},
+            {Contact::con1_38, ContactState::notAquired},
+            {Contact::con1_39, ContactState::notAquired},
+            {Contact::con1_40, ContactState::notAquired},
+            {Contact::con1_41, ContactState::notAquired},
+            {Contact::con1_42, ContactState::notAquired},
+            {Contact::con1_43, ContactState::notAquired},
+            {Contact::con1_44, ContactState::notAquired},
+
+            {Contact::con1_45, ContactState::notAvailable},
+            {Contact::con1_46, ContactState::notAvailable},
+            {Contact::con1_47, ContactState::notAvailable},
+            {Contact::con1_48, ContactState::notAvailable},
+            {Contact::con1_49, ContactState::notAvailable},
+            {Contact::con1_50, ContactState::notAvailable},
+            {Contact::con1_51, ContactState::notAvailable},
+            {Contact::con1_52, ContactState::notAvailable},
+            {Contact::con1_53, ContactState::notAvailable},
+            {Contact::con1_54, ContactState::notAquired},
+            {Contact::con1_55, ContactState::notAquired},
+            {Contact::con1_56, ContactState::notAquired},
+            {Contact::con1_57, ContactState::notAquired},
+            {Contact::con1_58, ContactState::notAquired},
+            {Contact::con1_59, ContactState::notAquired},
+            {Contact::con1_60, ContactState::notAquired},
+            {Contact::con1_61, ContactState::notAquired},
+            {Contact::con1_62, ContactState::notAquired},
+            {Contact::con1_63, ContactState::notAquired},
+            {Contact::con1_64, ContactState::notAquired},
+            {Contact::con1_65, ContactState::notAquired},
+
+            {Contact::con1_66, ContactState::notAvailable},
+            {Contact::con1_67, ContactState::notAvailable},
+            {Contact::con1_68, ContactState::notAvailable},
+            {Contact::con1_69, ContactState::notAvailable},
+            {Contact::con1_70, ContactState::notAvailable},
+            {Contact::con1_71, ContactState::notAvailable},
+            {Contact::con1_72, ContactState::notAvailable},
+            {Contact::con1_73, ContactState::notAvailable},
+            {Contact::con1_74, ContactState::notAvailable},
+            {Contact::con1_75, ContactState::notAquired},
+            {Contact::con1_76, ContactState::notAquired},
+            {Contact::con1_77, ContactState::notAquired},
+            {Contact::con1_78, ContactState::notAquired},
+            {Contact::con1_79, ContactState::notAquired},
+            {Contact::con1_80, ContactState::notAquired},
+            {Contact::con1_81, ContactState::notAquired},
+            {Contact::con1_82, ContactState::notAquired},
+            {Contact::con1_83, ContactState::notAquired},
+            {Contact::con1_84, ContactState::notAquired},
+            {Contact::con1_85, ContactState::notAquired},
+            {Contact::con1_86, ContactState::notAvailable}
+        };
+    }
+    
+    GPIOManager::~GPIOManager()
+    {
+        
+    }
+    
+    GPIOManager* GPIOManager::getInstance()
+    {
+        if (!instance)
+        {
+            instance = std::unique_ptr<GPIOManager>(new GPIOManager());
+        }
+        
+        return instance.get();
+    }
+
+    void GPIOManager::aquire(Contact c)
+    {
+        try
+        {
+            if (contacts.at(c) == ContactState::notAvailable ||
+                contacts.at(c) == ContactState::aquired)
+            {
+                PC_EXCEPTION(PinLockedException, "Can't aquire pin.");
+            }
+            
+            contacts[c] = ContactState::aquired;
+        }
+        catch (std::out_of_range& e)
+        {
+            PC_EXCEPTION(IncorrectParamException, e.what());
+        }
+    }
+    
+    void GPIOManager::release(Contact c)
+    {
+        try
+        {
+            if (contacts.at(c) == ContactState::notAvailable)
+            {
+                PC_EXCEPTION(PinLockedException, "Can't release pin.");
+            }
+            
+            contacts[c] = ContactState::notAquired;
+        }
+        catch (std::out_of_range& e)
+        {
+            PC_EXCEPTION(IncorrectParamException, e.what());
+        }
+    }
 }
