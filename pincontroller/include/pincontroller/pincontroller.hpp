@@ -21,5 +21,6 @@
 #include "pwm.hpp"
 #include "servo_rotator.hpp"
 #include "adc_reader.hpp"
+#include "gpio_pin.hpp"
 
 #endif	/* PINCONTROLLER_HPP */

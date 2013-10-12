@@ -6,6 +6,8 @@
       <itemPath>src/details/dev_helper.hpp</itemPath>
       <itemPath>src/details/gpio_manager.cpp</itemPath>
       <itemPath>src/details/gpio_manager.hpp</itemPath>
+      <itemPath>src/details/gpio_pin_impl.cpp</itemPath>
+      <itemPath>src/details/gpio_pin_impl.hpp</itemPath>
       <itemPath>src/details/hash.hpp</itemPath>
       <itemPath>src/details/internal_enums.hpp</itemPath>
       <itemPath>src/details/pwm_factory.cpp</itemPath>
@@ -17,6 +19,7 @@
                    displayName="Исходные файлы"
                    projectFiles="true">
       <itemPath>src/adc_reader.cpp</itemPath>
+      <itemPath>src/gpio_pin.cpp</itemPath>
       <itemPath>src/pwm.cpp</itemPath>
       <itemPath>src/servo_rotator.cpp</itemPath>
     </logicalFolder>
@@ -26,6 +29,7 @@
       <itemPath>include/pincontroller/adc_reader.hpp</itemPath>
       <itemPath>include/pincontroller/exceptions.hpp</itemPath>
       <itemPath>include/pincontroller/global.hpp</itemPath>
+      <itemPath>include/pincontroller/gpio_pin.hpp</itemPath>
       <itemPath>include/pincontroller/pincontroller.hpp</itemPath>
       <itemPath>include/pincontroller/pwm.hpp</itemPath>
       <itemPath>include/pincontroller/reference.hpp</itemPath>
@@ -77,6 +81,8 @@
       </item>
       <item path="include/pincontroller/global.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/pincontroller/gpio_pin.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/pincontroller/pincontroller.hpp"
             ex="false"
             tool="3"
@@ -104,6 +110,10 @@
       </item>
       <item path="src/details/gpio_manager.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/details/gpio_pin_impl.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/details/gpio_pin_impl.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/details/hash.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/details/internal_enums.hpp" ex="false" tool="3" flavor2="0">
@@ -115,6 +125,8 @@
       <item path="src/details/pwm_impl.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/details/pwm_impl.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/gpio_pin.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/pwm.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -162,6 +174,8 @@
       </item>
       <item path="include/pincontroller/global.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/pincontroller/gpio_pin.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/pincontroller/pincontroller.hpp"
             ex="false"
             tool="3"
@@ -189,6 +203,10 @@
       </item>
       <item path="src/details/gpio_manager.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/details/gpio_pin_impl.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/details/gpio_pin_impl.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/details/hash.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/details/internal_enums.hpp" ex="false" tool="3" flavor2="0">
@@ -200,6 +218,8 @@
       <item path="src/details/pwm_impl.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/details/pwm_impl.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/gpio_pin.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/pwm.cpp" ex="false" tool="1" flavor2="0">
       </item>

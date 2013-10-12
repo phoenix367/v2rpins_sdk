@@ -38,8 +38,10 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/adc_reader.o \
 	${OBJECTDIR}/src/details/dev_helper.o \
 	${OBJECTDIR}/src/details/gpio_manager.o \
+	${OBJECTDIR}/src/details/gpio_pin_impl.o \
 	${OBJECTDIR}/src/details/pwm_factory.o \
 	${OBJECTDIR}/src/details/pwm_impl.o \
+	${OBJECTDIR}/src/gpio_pin.o \
 	${OBJECTDIR}/src/pwm.o \
 	${OBJECTDIR}/src/servo_rotator.o
 
@@ -83,6 +85,11 @@ ${OBJECTDIR}/src/details/gpio_manager.o: src/details/gpio_manager.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -s -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/gpio_manager.o src/details/gpio_manager.cpp
 
+${OBJECTDIR}/src/details/gpio_pin_impl.o: src/details/gpio_pin_impl.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/details
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -s -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/gpio_pin_impl.o src/details/gpio_pin_impl.cpp
+
 ${OBJECTDIR}/src/details/pwm_factory.o: src/details/pwm_factory.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/details
 	${RM} $@.d
@@ -92,6 +99,11 @@ ${OBJECTDIR}/src/details/pwm_impl.o: src/details/pwm_impl.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/details
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -s -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/pwm_impl.o src/details/pwm_impl.cpp
+
+${OBJECTDIR}/src/gpio_pin.o: src/gpio_pin.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -s -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/gpio_pin.o src/gpio_pin.cpp
 
 ${OBJECTDIR}/src/pwm.o: src/pwm.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src

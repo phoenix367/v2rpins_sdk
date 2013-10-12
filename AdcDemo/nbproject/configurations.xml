@@ -43,6 +43,7 @@
           </incDir>
         </ccTool>
         <linkerTool>
+          <commandlineTool>arm-none-linux-gnueabi-g++</commandlineTool>
           <linkerLibItems>
             <linkerLibProjectItem>
               <makeArtifact PL="../pincontroller"

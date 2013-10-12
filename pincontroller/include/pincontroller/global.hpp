@@ -82,5 +82,14 @@ namespace pc
         gpio91,
         gpio92
     };
+    
+    /**
+     * @enum GPIO_DIRECTION
+     */
+    enum class GPIO_DIRECTION
+    {
+        input,
+        output
+    };
 }
 #endif	/* PC_GLOBAL_HPP */

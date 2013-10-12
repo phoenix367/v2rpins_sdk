@@ -62,7 +62,7 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/adcdemo: ../pincontroller/dist/Debug/
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/adcdemo: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/adcdemo ${OBJECTFILES} ${LDLIBSOPTIONS}
+	arm-none-linux-gnueabi-g++ -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/adcdemo ${OBJECTFILES} ${LDLIBSOPTIONS}
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
