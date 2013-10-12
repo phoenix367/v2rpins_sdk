@@ -51,7 +51,10 @@ namespace pc
         }
         
         ticDuty = time2tic(duty);
-        ticPeriod = time2tic(period);
+        
+        // We subtract 1 from period value because PWM
+        // controller automatically add it
+        ticPeriod = time2tic(period) - 1;
     }
     
     uint64_t PWMImpl::time2tic(uint32_t t)
