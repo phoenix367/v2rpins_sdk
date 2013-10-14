@@ -19,6 +19,7 @@ namespace pc
         static const int INV_FILE_HANDLE;
         static const std::string DEV_PREFIX;
         static const std::string ADC_DEVICE;
+        static const std::string GPIO_DEVICE;
         
     public:
         DevHelper(const std::string& devName);

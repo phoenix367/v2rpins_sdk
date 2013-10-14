@@ -50,11 +50,8 @@ namespace pc
             PC_EXCEPTION(IncorrectParamException, "Invalid PWM parameters.");
         }
         
-        ticDuty = time2tic(duty);
-        
-        // We subtract 1 from period value because PWM
-        // controller automatically add it
-        ticPeriod = time2tic(period) - 1;
+        ticDuty = time2tic(duty);        
+        ticPeriod = time2tic(period);
     }
     
     uint64_t PWMImpl::time2tic(uint32_t t)
@@ -77,8 +74,10 @@ namespace pc
     {
         std::ostringstream stream;
         
+        // We subtract 1 from period value because PWM
+        // controller automatically add it
         stream << "set " << PWM_PREFIX << (int) pin << " duty:" <<
-                duty << " period:" << period;
+                duty << " period:" << period - 1;
         devHelper.sendCommand(stream.str());
     }
 

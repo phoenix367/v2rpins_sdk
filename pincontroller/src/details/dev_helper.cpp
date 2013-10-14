@@ -12,6 +12,7 @@ namespace pc
     const int DevHelper::INV_FILE_HANDLE = -1;
     const std::string DevHelper::DEV_PREFIX = "/dev/";
     const std::string DevHelper::ADC_DEVICE = "v2r_adc";
+    const std::string DevHelper::GPIO_DEVICE = "v2r_gpio";
     
     DevHelper::DevHelper(const std::string& devName)
     : devFileHandle(INV_FILE_HANDLE)
