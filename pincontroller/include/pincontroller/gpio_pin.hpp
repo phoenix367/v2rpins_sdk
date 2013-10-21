@@ -31,7 +31,8 @@ namespace pc
          * @param p
          * @param d
          */
-        GPIOPin(GPIO_PIN p, GPIO_DIRECTION d);
+        GPIOPin(GPIO_PIN p, GPIO_DIRECTION d, 
+            GPIO_LOGIC_LEVEL ll = GPIO_LOGIC_LEVEL::low);
         
         /**
          * 
