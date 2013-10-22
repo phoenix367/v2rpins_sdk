@@ -25,6 +25,7 @@ namespace pc
         
         void setValue(GPIO_LOGIC_LEVEL ll);
         GPIO_LOGIC_LEVEL getValue() const;
+        GPIO_PIN getPinIndex();
         
     private:
         void exportGpio(int gpioNumber);

@@ -38,6 +38,17 @@ namespace pc
          * 
          */
         virtual ~GPIOPin();
+        
+        /**
+         *
+         */
+        void dispose();
+        
+        /**
+         * 
+         * @return 
+         */
+        GPIO_PIN getPinIndex() const;
     };
 }
 

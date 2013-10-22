@@ -205,4 +205,41 @@ namespace pc
             PC_EXCEPTION(IncorrectParamException, e.what());
         }
     }
+    
+    std::shared_ptr<GPIOPinImpl> GPIOManager::createGpioPin(GPIO_PIN p, 
+            GPIO_DIRECTION d, GPIO_LOGIC_LEVEL ll)
+    {
+        Contact c = gpioMap.at(p);
+        
+        aquire(c);
+        
+        try
+        {
+            std::shared_ptr<GPIOPinImpl> ptr = std::shared_ptr<GPIOPinImpl>(
+                    new GPIOPinImpl(p, c, d, ll));
+            gpioPins[p] = ptr;
+            return ptr;
+        }
+        catch (Exception&)
+        {
+            release(c);
+            throw;
+        }
+    }
+    
+    void GPIOManager::freeGpioPin(GPIO_PIN p)
+    {
+        auto itr = gpioPins.find(p);
+        
+        if (itr == gpioPins.end())
+        {
+            PC_EXCEPTION(InternalErrorException, 
+                    "Selected GPIO pin not found.");
+        }
+        
+        Contact c = gpioMap.at(p);
+        
+        gpioPins.erase(itr);
+        release(c);
+    }
 }

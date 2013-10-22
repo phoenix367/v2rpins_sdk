@@ -23,6 +23,32 @@ namespace pc
     
     GPIOPin::~GPIOPin()
     {
+        dispose();
+    }
+
+    void GPIOPin::dispose()
+    {
+        if (implPtr.expired())
+        {
+            return;
+        }
         
+        if (implPtr.use_count() == 1)
+        {
+            auto instance = GPIOManager::getInstance();
+            
+            if (instance)
+            {
+                instance->freeGpioPin(getPinIndex());
+            }
+        }
+        
+        implPtr.reset();
+    }
+    
+    GPIO_PIN GPIOPin::getPinIndex() const
+    {
+        auto p = check();
+        return p->getPinIndex();
     }
 }

@@ -103,4 +103,9 @@ namespace pc
             return GPIO_LOGIC_LEVEL();
         }
     }
+    
+    GPIO_PIN GPIOPinImpl::getPinIndex()
+    {
+        return pin;
+    }
 }
