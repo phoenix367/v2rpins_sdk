@@ -76,8 +76,9 @@ namespace pc
         
         // We subtract 1 from period value because PWM
         // controller automatically add it
+        uint64_t hwPeriod = (period > 0) ? period - 1 : 0;
         stream << "set " << PWM_PREFIX << (int) pin << " duty:" <<
-                duty << " period:" << period - 1;
+                duty << " period:" << hwPeriod;
         devHelper.sendCommand(stream.str());
     }
 
