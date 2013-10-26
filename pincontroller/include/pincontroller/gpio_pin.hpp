@@ -49,6 +49,9 @@ namespace pc
          * @return 
          */
         GPIO_PIN getPinIndex() const;
+
+        void setLogicalLevel(GPIO_LOGIC_LEVEL ll);
+        GPIO_LOGIC_LEVEL getLogicalLevel() const;
     };
 }
 

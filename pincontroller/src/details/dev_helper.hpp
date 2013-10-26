@@ -8,11 +8,11 @@
 #ifndef DEV_HELPER_HPP
 #define	DEV_HELPER_HPP
 
-#include <string>
+#include "file_helper.hpp"
 
 namespace pc
 {
-    class DevHelper
+    class DevHelper : public FileHelper
     {
     public:
         static const std::string PINS_DEVICE;
@@ -25,17 +25,10 @@ namespace pc
         DevHelper(const std::string& devName);
         virtual ~DevHelper();
         
-        void open(const std::string& devName);
-        void close();
-        bool isOpened();
         void sendCommand(const std::string& cmd);
-        int readData(void* data, size_t readSize);
         
         static void doCommand(const std::string& devName,
                 const std::string& command);
-        
-    private:
-        int devFileHandle;
     };
 }
 

@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/src/adc_reader.o \
 	${OBJECTDIR}/src/details/dev_helper.o \
+	${OBJECTDIR}/src/details/file_helper.o \
 	${OBJECTDIR}/src/details/gpio_manager.o \
 	${OBJECTDIR}/src/details/gpio_pin_impl.o \
 	${OBJECTDIR}/src/details/pwm_factory.o \
@@ -79,6 +80,11 @@ ${OBJECTDIR}/src/details/dev_helper.o: src/details/dev_helper.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/details
 	${RM} $@.d
 	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/dev_helper.o src/details/dev_helper.cpp
+
+${OBJECTDIR}/src/details/file_helper.o: src/details/file_helper.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/details
+	${RM} $@.d
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/file_helper.o src/details/file_helper.cpp
 
 ${OBJECTDIR}/src/details/gpio_manager.o: src/details/gpio_manager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/details

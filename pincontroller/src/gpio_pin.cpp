@@ -19,6 +19,8 @@ namespace pc
             PC_EXCEPTION(InternalErrorException,
                     "GPIO manager instance is NULL.");
         }
+        
+        implPtr = instance->createGpioPin(p, d, ll);
     }
     
     GPIOPin::~GPIOPin()
@@ -50,5 +52,17 @@ namespace pc
     {
         auto p = check();
         return p->getPinIndex();
+    }
+
+    void GPIOPin::setLogicalLevel(GPIO_LOGIC_LEVEL ll)
+    {
+        auto p = check();
+        p->setValue(ll);
+    }
+    
+    GPIO_LOGIC_LEVEL GPIOPin::getLogicalLevel() const
+    {
+        auto p = check();
+        return p->getValue();
     }
 }

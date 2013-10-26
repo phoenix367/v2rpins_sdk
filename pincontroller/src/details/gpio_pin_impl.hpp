@@ -9,7 +9,7 @@
 #define	GPIO_PIN_IMPL_HPP
 
 #include "pincontroller/global.hpp"
-#include "dev_helper.hpp"
+#include "file_helper.hpp"
 #include "internal_enums.hpp"
 
 #include <memory>
@@ -30,6 +30,8 @@ namespace pc
     private:
         void exportGpio(int gpioNumber);
         void unExportGpio(int gpioNumber);
+        void doCommand(const std::string& file,
+            const std::string& command);
         
     private:
         static const std::string BASE_GPIO_FOLDER;
@@ -44,7 +46,7 @@ namespace pc
         GPIO_LOGIC_LEVEL logicLevel;
         std::string baseGpioPinFolder;
         
-        std::unique_ptr<DevHelper> devHelper;
+        std::unique_ptr<FileHelper> fileHelper;
     };
 }
 

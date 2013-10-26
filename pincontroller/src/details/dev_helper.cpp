@@ -15,41 +15,12 @@ namespace pc
     const std::string DevHelper::GPIO_DEVICE = "v2r_gpio";
     
     DevHelper::DevHelper(const std::string& devName)
-    : devFileHandle(INV_FILE_HANDLE)
+    : FileHelper(DEV_PREFIX + devName)
     {
-        open(devName);
     }
     
     DevHelper::~DevHelper()
     {
-        close();
-    }
-    
-    void DevHelper::open(const std::string& devName)
-    {
-        close();
-        
-        std::string name = DEV_PREFIX + devName;
-        int handle = ::open(name.c_str(), O_RDWR | O_NDELAY);
-        if (handle == INV_FILE_HANDLE)
-        {
-            PC_EXCEPTION(DeviceException, errno);
-        }
-        
-        devFileHandle = handle;
-    }
-    
-    void DevHelper::close()
-    {
-        if (isOpened())
-        {
-            ::close(devFileHandle);
-        }
-    }
-    
-    bool DevHelper::isOpened()
-    {
-        return devFileHandle != INV_FILE_HANDLE;
     }
     
     void DevHelper::sendCommand(const std::string& cmd)
@@ -61,11 +32,7 @@ namespace pc
         }
         
         std::clog << "Write command to device: " << cmd << std::endl;
-
-        if (::write(devFileHandle, cmd.c_str(), cmd.size()) == -1)
-        {
-            PC_EXCEPTION(DeviceException, errno);
-        }
+        writeData(cmd.c_str(), cmd.size());
     }
     
     void DevHelper::doCommand(const std::string& devName, 
@@ -73,16 +40,5 @@ namespace pc
     {
         DevHelper devHelper(devName);
         devHelper.sendCommand(command);
-    }
-    
-    int DevHelper::readData(void* data, size_t readSize)
-    {
-        int r = ::read(devFileHandle, data, readSize);
-        if (r == -1)
-        {
-            PC_EXCEPTION(DeviceException, errno);
-        }
-        
-        return r;
     }
 }

@@ -4,6 +4,8 @@
     <logicalFolder name="f1" displayName="details" projectFiles="true">
       <itemPath>src/details/dev_helper.cpp</itemPath>
       <itemPath>src/details/dev_helper.hpp</itemPath>
+      <itemPath>src/details/file_helper.cpp</itemPath>
+      <itemPath>src/details/file_helper.hpp</itemPath>
       <itemPath>src/details/gpio_manager.cpp</itemPath>
       <itemPath>src/details/gpio_manager.hpp</itemPath>
       <itemPath>src/details/gpio_pin_impl.cpp</itemPath>
@@ -106,6 +108,10 @@
       </item>
       <item path="src/details/dev_helper.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/details/file_helper.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/details/file_helper.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/details/gpio_manager.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/details/gpio_manager.hpp" ex="false" tool="3" flavor2="0">
@@ -198,6 +204,10 @@
       <item path="src/details/dev_helper.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/details/dev_helper.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/details/file_helper.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/details/file_helper.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/details/gpio_manager.cpp" ex="false" tool="1" flavor2="0">
       </item>

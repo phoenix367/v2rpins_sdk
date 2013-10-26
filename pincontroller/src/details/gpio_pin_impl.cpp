@@ -1,5 +1,6 @@
 #include "gpio_pin_impl.hpp"
 #include "pincontroller/exceptions.hpp"
+#include "dev_helper.hpp"
 
 namespace pc
 {
@@ -14,8 +15,22 @@ namespace pc
     : pin(p)
     , direction(d)
     {
-        exportGpio((int) pin);
+        std::ostringstream stream;
+        
+        if (direction == GPIO_DIRECTION::input)
+        {
+            stream << "set gpio" << (int) p << " input";
+        }
+        else
+        {
+            stream << "set gpio" << (int) p << " output:" << 
+                    (int) ll;
+        }
+        
+        DevHelper::doCommand(DevHelper::GPIO_DEVICE, stream.str());
+        //exportGpio((int) pin);
 
+        /*
         try
         {
             std::ostringstream stream;
@@ -25,33 +40,34 @@ namespace pc
             switch (direction)
             {
                 case GPIO_DIRECTION::input:
-                    DevHelper::doCommand(baseGpioPinFolder + DIRECTION_FILE,
+                    doCommand(baseGpioPinFolder + DIRECTION_FILE,
                             "in");
                     break;
                 case GPIO_DIRECTION::output:
-                    DevHelper::doCommand(baseGpioPinFolder + DIRECTION_FILE,
+                    doCommand(baseGpioPinFolder + DIRECTION_FILE,
                             "out");
                     break;
             }
 
-            devHelper = std::unique_ptr<DevHelper>(new DevHelper(
+            fileHelper = std::unique_ptr<FileHelper>(new FileHelper(
                     baseGpioPinFolder + VALUE_FILE));
             setValue(ll);
         }
         catch (Exception&)
         {
-            devHelper.reset();
+            fileHelper.reset();
             unExportGpio((int) pin);
             throw;
         }
+        */
     }
     
     GPIOPinImpl::~GPIOPinImpl()
     {
         try
         {
-            devHelper.reset();
-            unExportGpio((int) pin);
+            //fileHelper.reset();
+            //unExportGpio((int) pin);
         }
         catch (Exception&)
         {
@@ -64,7 +80,7 @@ namespace pc
         std::ostringstream stream;
         
         stream << gpioNumber;
-        DevHelper::doCommand(BASE_GPIO_FOLDER + EXPORT_FILE,
+        doCommand(BASE_GPIO_FOLDER + EXPORT_FILE,
                 stream.str());
     }
     
@@ -73,23 +89,39 @@ namespace pc
         std::ostringstream stream;
         
         stream << gpioNumber;
-        DevHelper::doCommand(BASE_GPIO_FOLDER + UNEXPORT_FILE,
+        doCommand(BASE_GPIO_FOLDER + UNEXPORT_FILE,
                 stream.str());
     }
 
     void GPIOPinImpl::setValue(GPIO_LOGIC_LEVEL ll)
     {
+        if (direction == GPIO_DIRECTION::input)
+        {
+            PC_EXCEPTION(IncorrectParamException, 
+                    "Can't set value for GPIO pin configured as input");
+        }
+        
+        std::ostringstream stream;
+        stream << "set gpio" << (int) pin << " output:" << (int) ll;
+        
+        DevHelper::doCommand(DevHelper::GPIO_DEVICE, stream.str());
+        logicLevel = ll;
+        /*
+        static const char lowValue = '0';
+        static const char highValue = '1';
+        
         switch (ll)
         {
         case GPIO_LOGIC_LEVEL::low:
-            devHelper->sendCommand("0");
+            fileHelper->writeData(&lowValue, sizeof(char));
             break;
         case GPIO_LOGIC_LEVEL::high:
-            devHelper->sendCommand("1");
+            fileHelper->writeData(&highValue, sizeof(char));
             break;
         }
         
         logicLevel = ll;
+        */
     }
     
     GPIO_LOGIC_LEVEL GPIOPinImpl::getValue() const
@@ -107,5 +139,13 @@ namespace pc
     GPIO_PIN GPIOPinImpl::getPinIndex()
     {
         return pin;
+    }
+    
+    void GPIOPinImpl::doCommand(const std::string& file, 
+            const std::string& command)
+    {
+        FileHelper helper(file, O_WRONLY);
+        helper.writeData(command.c_str(), command.size());
+        helper.close();
     }
 }
