@@ -57,11 +57,13 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=-Wl,-rpath,../pincontroller/dist/Debug/V2R-Linux-x86 -L../pincontroller/dist/Debug/V2R-Linux-x86 -lpincontroller
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libsensors.${CND_DLIB_EXT}
+
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libsensors.${CND_DLIB_EXT}: ../pincontroller/dist/Debug/V2R-Linux-x86/libpincontroller.so
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libsensors.${CND_DLIB_EXT}: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
@@ -70,35 +72,36 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libsensors.${CND_DLIB_EXT}: ${OBJECTF
 ${OBJECTDIR}/src/adxl345-sensor.o: src/adxl345-sensor.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/adxl345-sensor.o src/adxl345-sensor.cpp
+	$(COMPILE.cc) -g -Iinclude -I../pincontroller/src/details -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/adxl345-sensor.o src/adxl345-sensor.cpp
 
 ${OBJECTDIR}/src/bm085-sensor.o: src/bm085-sensor.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/bm085-sensor.o src/bm085-sensor.cpp
+	$(COMPILE.cc) -g -Iinclude -I../pincontroller/src/details -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/bm085-sensor.o src/bm085-sensor.cpp
 
 ${OBJECTDIR}/src/hmc5883l-sensor.o: src/hmc5883l-sensor.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/hmc5883l-sensor.o src/hmc5883l-sensor.cpp
+	$(COMPILE.cc) -g -Iinclude -I../pincontroller/src/details -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/hmc5883l-sensor.o src/hmc5883l-sensor.cpp
 
 ${OBJECTDIR}/src/i2c-controller.o: src/i2c-controller.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/i2c-controller.o src/i2c-controller.cpp
+	$(COMPILE.cc) -g -Iinclude -I../pincontroller/src/details -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/i2c-controller.o src/i2c-controller.cpp
 
 ${OBJECTDIR}/src/i2c-sensor.o: src/i2c-sensor.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/i2c-sensor.o src/i2c-sensor.cpp
+	$(COMPILE.cc) -g -Iinclude -I../pincontroller/src/details -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/i2c-sensor.o src/i2c-sensor.cpp
 
 ${OBJECTDIR}/src/itg3200-sensor.o: src/itg3200-sensor.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/itg3200-sensor.o src/itg3200-sensor.cpp
+	$(COMPILE.cc) -g -Iinclude -I../pincontroller/src/details -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/itg3200-sensor.o src/itg3200-sensor.cpp
 
 # Subprojects
 .build-subprojects:
+	cd ../pincontroller && ${MAKE}  -f Makefile CONF=Debug
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
@@ -107,6 +110,7 @@ ${OBJECTDIR}/src/itg3200-sensor.o: src/itg3200-sensor.cpp
 
 # Subprojects
 .clean-subprojects:
+	cd ../pincontroller && ${MAKE}  -f Makefile CONF=Debug clean
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl

@@ -18,10 +18,16 @@ namespace sn
     class I2CSensor
     {
     public:
+        static const std::string I2C_BASE_FOLDER;
+        
+    public:
         std::string getName();
         uint16_t getId();
         virtual SENSOR_DEVICE getSensorDevice() = 0;
         
+    protected:
+        void doCommand(const std::string& file,
+                std::string& command);
     protected:
         std::string name;
         uint16_t id;

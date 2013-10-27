@@ -15,6 +15,9 @@ namespace sn
     class ADXL345Sensor : public I2CSensor
     {
     public:
+        ADXL345Sensor();
+        virtual ~ADXL345Sensor();
+        
         virtual SENSOR_DEVICE getSensorDevice();
     };
 }

@@ -6,4 +6,15 @@ namespace sn
     {
         return SENSOR_DEVICE::ADXL345;
     }
+    
+    ADXL345Sensor::ADXL345Sensor()
+    {
+        name = "adxl345";
+        id = 0x53;
+    }
+    
+    ADXL345Sensor::~ADXL345Sensor()
+    {
+        
+    }
 }

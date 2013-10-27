@@ -9,12 +9,16 @@
 #define	BM085_SENSOR_HPP
 
 #include "i2c-sensor.hpp"
+#include <memory>
 
 namespace sn
-{
+{   
     class BM085Sensor : public I2CSensor
     {
     public:
+        BM085Sensor();
+        virtual ~BM085Sensor();
+        
         virtual SENSOR_DEVICE getSensorDevice();
     };
 }
