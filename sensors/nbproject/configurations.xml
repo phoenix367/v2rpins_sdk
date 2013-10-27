@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="89">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="f1" displayName="details" projectFiles="true" kind="ROOT">
+    </logicalFolder>
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>include/sensors/adxl345-sensor.hpp</itemPath>
+      <itemPath>include/sensors/bm085-sensor.hpp</itemPath>
+      <itemPath>include/sensors/global.hpp</itemPath>
+      <itemPath>include/sensors/hmc5883l-sensor.hpp</itemPath>
+      <itemPath>include/sensors/i2c-controller.hpp</itemPath>
+      <itemPath>include/sensors/i2c-sensor.hpp</itemPath>
+      <itemPath>include/sensors/itg3200-sensor.hpp</itemPath>
+      <itemPath>include/sensors/sensors.hpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <itemPath>src/adxl345-sensor.cpp</itemPath>
+      <itemPath>src/bm085-sensor.cpp</itemPath>
+      <itemPath>src/hmc5883l-sensor.cpp</itemPath>
+      <itemPath>src/i2c-controller.cpp</itemPath>
+      <itemPath>src/i2c-sensor.cpp</itemPath>
+      <itemPath>src/itg3200-sensor.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="2">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>V2R|GNU</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <standard>8</standard>
+          <incDir>
+            <pElem>include</pElem>
+          </incDir>
+        </ccTool>
+      </compileType>
+      <item path="include/sensors/adxl345-sensor.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/sensors/bm085-sensor.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/sensors/global.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/sensors/hmc5883l-sensor.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="include/sensors/i2c-controller.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/sensors/i2c-sensor.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/sensors/itg3200-sensor.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/sensors/sensors.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/adxl345-sensor.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/bm085-sensor.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/hmc5883l-sensor.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/i2c-controller.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/i2c-sensor.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/itg3200-sensor.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="2">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>V2R|GNU</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="include/sensors/adxl345-sensor.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/sensors/bm085-sensor.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/sensors/global.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/sensors/hmc5883l-sensor.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="include/sensors/i2c-controller.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/sensors/i2c-sensor.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/sensors/itg3200-sensor.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/sensors/sensors.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/adxl345-sensor.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/bm085-sensor.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/hmc5883l-sensor.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/i2c-controller.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/i2c-sensor.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/itg3200-sensor.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
