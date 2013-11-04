@@ -8,3 +8,7 @@ pincontroller/build/
 *.o.d
 *.inc
 
+/GpioDemo/dist/
+/GpioDemo/build/
+/sensors/build/
+/sensors/dist/
