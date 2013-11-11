@@ -38,7 +38,7 @@ namespace pc
         {
             adValue.adcValuesRaw[i] = buffer[i];
             adValue.adcVoltages[i] = adValue.adcValuesRaw[i] * 
-                    REFERENCE_VOLTAGE / MAX_RAW_VALUE;
+                    REFERENCE_VOLTAGE / (MAX_RAW_VALUE + 1);
         }
         
         helper.close();
@@ -115,7 +115,7 @@ namespace pc
         {
             adValue.adcVoltages[i] = adValue.adcValuesRaw[i] * 
                     (maxMeasurementVoltage[i] - minMeasurementVoltage[i]) / 
-                    MAX_RAW_VALUE + minMeasurementVoltage[i];
+                    (MAX_RAW_VALUE + 1) + minMeasurementVoltage[i];
         }
     }
 }
