@@ -14,13 +14,12 @@ using namespace std;
 
 void printfADCState(pc::ADCReader& adcReader)
 {
-    std::system("clear");
 
     // Читаем значение напряжения на входах АЦП
     pc::ADCReader::ADCValue adcValue;
     adcReader.read(adcValue);
 
-    std::cout << "Virt2real ADC state..." << std::endl << std::endl;
+    std::cout << "\x1B[0;0fVirt2real ADC state..." << std::endl << std::endl;
     
     // Выводим прочитанные значения в удобном для восприятия
     // формате.
@@ -44,11 +43,12 @@ int main(int argc, char** argv)
     // Создаем объект типа ADCReader
     pc::ADCReader adcReader;
     
+    std::system("clear");
     // В бесконечном цикле выводим на экран состояние АЦП платы
     while (true)
     {   
         printfADCState(adcReader);
-        usleep(1000000);
+        usleep(250000);
     }
     
     return 0;
