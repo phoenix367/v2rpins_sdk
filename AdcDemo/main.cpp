@@ -18,8 +18,10 @@ void printfADCState(pc::ADCReader& adcReader)
     // Читаем значение напряжения на входах АЦП
     pc::ADCReader::ADCValue adcValue;
     adcReader.read(adcValue);
+    
+    static std::string eol = "\x1B[K\n";
 
-    std::cout << "\x1B[0;0fVirt2real ADC state..." << std::endl << std::endl;
+    std::cout << "\x1B[0;0fVirt2real ADC state..." << eol << eol;
     
     // Выводим прочитанные значения в удобном для восприятия
     // формате.
@@ -28,10 +30,10 @@ void printfADCState(pc::ADCReader& adcReader)
         std::cout << "ADC channel " << i << ". raw value=" <<
                 std::setw(4) << adcValue.adcValuesRaw[i] << 
                 "; voltage=" << std::setw(5) << std::setprecision(4) <<
-                adcValue.adcVoltages[i] << " volts" << std::endl;
+                adcValue.adcVoltages[i] << " volts" << eol;
     }
     
-    std::cout << std::endl << "Press Ctrl+C to exit." << std::endl;
+    std::cout << eol << "Press Ctrl+C to exit." << eol << "\x1B[J";
 }
 
 /*
