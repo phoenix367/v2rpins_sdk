@@ -12,3 +12,5 @@ pincontroller/build/
 /GpioDemo/build/
 /sensors/build/
 /sensors/dist/
+/cherokey-robot/commserver/build/
+/cherokey-robot/commserver/dist/
