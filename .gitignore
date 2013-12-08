@@ -14,3 +14,6 @@ pincontroller/build/
 /sensors/dist/
 /cherokey-robot/commserver/build/
 /cherokey-robot/commserver/dist/
+/cherokey-robot/RobotControl/build/
+/cherokey-robot/RobotControl/dist/
+/cherokey-robot/commserver/messages/

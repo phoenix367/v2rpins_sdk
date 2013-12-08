@@ -1,0 +1,10 @@
+package cherokey.common;
+
+message Ping {
+    required int64 seqNo = 1;
+}
+
+message Pong {
+    required int64 seqNo = 1;
+}
+
