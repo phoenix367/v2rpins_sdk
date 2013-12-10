@@ -4,6 +4,8 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>include/ConfigManager.hpp</itemPath>
+      <itemPath>include/Exceptions.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="messages" displayName="messages" projectFiles="true">
       <itemPath>messages/common.pb.cc</itemPath>
@@ -16,7 +18,8 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>main.cpp</itemPath>
+      <itemPath>src/ConfigManager.cpp</itemPath>
+      <itemPath>src/main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -44,9 +47,11 @@
       </toolsSet>
       <compileType>
         <ccTool>
+          <standard>8</standard>
           <incDir>
             <pElem>../../3pty/include</pElem>
             <pElem>../../3pty/include/zeromq</pElem>
+            <pElem>include</pElem>
           </incDir>
         </ccTool>
         <linkerTool>
@@ -61,11 +66,17 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
-      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      <item path="include/ConfigManager.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Exceptions.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="messages/common.pb.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="messages/common.pb.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/ConfigManager.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -89,11 +100,17 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      <item path="include/ConfigManager.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Exceptions.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="messages/common.pb.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="messages/common.pb.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/ConfigManager.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>
