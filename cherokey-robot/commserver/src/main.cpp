@@ -8,12 +8,30 @@
 #include <cstdlib>
 #include <zmq.hpp>
 
+#include "ConfigManager.hpp"
+#include "Exceptions.hpp"
+
 using namespace std;
 /*
  * 
  */
 int main(int argc, char** argv) 
 {
+    try
+    {
+        auto instance = ConfigManager::getInstance();
+
+        if (!instance)
+        {
+            COMM_EXCEPTION(NullPointerException, "Instance of configuration "
+                    "manager is NULL");
+        }
+    }
+    catch (Exception&)
+    {
+        exit(-1);
+    }
+    
     // Prepare our context and publisher
     zmq::context_t context(1);
     zmq::socket_t publisher(context, ZMQ_PUB);

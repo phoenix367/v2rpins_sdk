@@ -9,6 +9,7 @@
 #define	CONFIGMANAGER_HPP
 
 #include <memory>
+#include <boost/program_options/options_description.hpp>
 
 class ConfigManager 
 {
@@ -24,6 +25,8 @@ public:
     
 private:
     static std::unique_ptr<ConfigManager> instance;
+    
+    boost::program_options::options_description desc;
 };
 
 #endif	/* CONFIGMANAGER_HPP */

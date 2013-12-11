@@ -54,7 +54,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L../../3pty/lib -lprotobuf -lpthread -lz -lzmq
+LDLIBSOPTIONS=-L../../3pty/lib -lprotobuf -lpthread -lz -lzmq -lboost_program_options
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
