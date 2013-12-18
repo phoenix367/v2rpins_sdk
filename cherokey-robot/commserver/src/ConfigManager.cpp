@@ -11,15 +11,21 @@
 #include <fstream>
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options.hpp>
+#include <boost/exception/diagnostic_information.hpp>
 
 std::unique_ptr<ConfigManager> ConfigManager::instance;
 
+const std::string ConfigManager::IP_ADDRESS_KEY = "Connection.IPAddress";
+const std::string ConfigManager::PORT_KEY = "Connection.Port";
+
 ConfigManager::ConfigManager() 
-: desc("Connection")
+: desc("Options")
 {
     desc.add_options()
-        ("IPAddress,i","IP Address")
-        ("Port,p","Port");
+        (IP_ADDRESS_KEY.c_str(), boost::program_options::value<std::string>()->required(), 
+            "IP Address")
+        (PORT_KEY.c_str(), boost::program_options::value<uint16_t>()->required(), 
+            "Port");
 }
 
 ConfigManager::~ConfigManager() 
@@ -45,6 +51,42 @@ void ConfigManager::loadConfiguration(const std::string& fileName)
         COMM_EXCEPTION(FileException, "Can't open configuration file");
     }
     
-    boost::program_options::parse_config_file(configStream,
-            desc);
+    boost::program_options::variables_map vm;
+    
+    try
+    {
+        boost::program_options::store(
+            boost::program_options::parse_config_file(configStream, desc), vm);
+
+        connectionInfo = std::make_shared<ConnectionInfo>();
+        if (vm.count(IP_ADDRESS_KEY))
+        {
+            connectionInfo->ipAddress = boost::asio::ip::address::from_string(
+                    vm[IP_ADDRESS_KEY].as<std::string>());
+        }
+        else
+        {
+            COMM_EXCEPTION(ConfigurationException, 
+                    "Server IP address is not specified.");
+        }
+
+        if (vm.count(PORT_KEY))
+        {
+            connectionInfo->port = vm[PORT_KEY].as<uint16_t>();
+        }
+        else
+        {
+            COMM_EXCEPTION(ConfigurationException, 
+                    "Server PORT is not specified.");
+        }
+    }
+    catch (std::exception& e)
+    {
+        COMM_EXCEPTION(ConfigurationException, e.what());
+    }
+}
+
+std::shared_ptr<ConnectionInfo> ConfigManager::getConnectionInfo()
+{
+    return connectionInfo;
 }

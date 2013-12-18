@@ -54,7 +54,7 @@ CCADMIN=CCadmin
 build: .build-post
 
 .build-pre:
-# Add your pre 'build' code here...
+	protoc --cpp_out=./messages --proto_path=${CND_BASEDIR}/../messages ${CND_BASEDIR}/../messages/common.proto
 
 .build-post: .build-impl
 # Add your post 'build' code here...

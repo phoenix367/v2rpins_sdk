@@ -6,17 +6,27 @@
  */
 
 #include <cstdlib>
-#include <zmq.hpp>
+
+#include <string>
 
 #include "ConfigManager.hpp"
 #include "Exceptions.hpp"
+#include "ConnectionListener.hpp"
 
-using namespace std;
+const std::string DEFAULT_CONFIG_FILE = "commserver.cfg";
+
 /*
  * 
  */
 int main(int argc, char** argv) 
 {
+    std::string configFile = DEFAULT_CONFIG_FILE;
+    
+    if (argc > 1)
+    {
+        
+    }
+    
     try
     {
         auto instance = ConfigManager::getInstance();
@@ -26,12 +36,20 @@ int main(int argc, char** argv)
             COMM_EXCEPTION(NullPointerException, "Instance of configuration "
                     "manager is NULL");
         }
+        
+        instance->loadConfiguration(configFile);
+        auto ci = instance->getConnectionInfo();
+        
+        ConnectionListener listener(ci);
+        listener.run();
     }
-    catch (Exception&)
+    catch (Exception& e)
     {
+        std::cerr << e.what() << std::endl;
         exit(-1);
     }
     
+    /*
     // Prepare our context and publisher
     zmq::context_t context(1);
     zmq::socket_t publisher(context, ZMQ_PUB);
@@ -46,6 +64,7 @@ int main(int argc, char** argv)
         publisher.send(message);
 
     }
+    */
     
     return 0;
 }

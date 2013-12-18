@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="89">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
-    <logicalFolder name="f1" displayName="Configs" projectFiles="true" kind="ROOT">
+    <logicalFolder name="f1" displayName="Configs" projectFiles="true">
       <itemPath>configs/commserver.cfg</itemPath>
     </logicalFolder>
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>include/ConfigManager.hpp</itemPath>
+      <itemPath>include/ConnectionListener.hpp</itemPath>
       <itemPath>include/Exceptions.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="messages" displayName="messages" projectFiles="true">
@@ -22,6 +23,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>src/ConfigManager.cpp</itemPath>
+      <itemPath>src/ConnectionListener.cpp</itemPath>
       <itemPath>src/main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -55,6 +57,7 @@
             <pElem>../../3pty/include</pElem>
             <pElem>../../3pty/include/zeromq</pElem>
             <pElem>include</pElem>
+            <pElem>messages</pElem>
           </incDir>
         </ccTool>
         <linkerTool>
@@ -67,12 +70,15 @@
             <linkerLibStdlibItem>DataCompression</linkerLibStdlibItem>
             <linkerLibLibItem>zmq</linkerLibLibItem>
             <linkerLibLibItem>boost_program_options</linkerLibLibItem>
+            <linkerLibLibItem>boost_system</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
       <item path="configs/commserver.cfg" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/ConfigManager.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/ConnectionListener.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/Exceptions.hpp" ex="false" tool="3" flavor2="0">
       </item>
@@ -81,6 +87,8 @@
       <item path="messages/common.pb.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/ConfigManager.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ConnectionListener.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -110,6 +118,8 @@
       </item>
       <item path="include/ConfigManager.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/ConnectionListener.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/Exceptions.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="messages/common.pb.cc" ex="false" tool="1" flavor2="0">
@@ -117,6 +127,8 @@
       <item path="messages/common.pb.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/ConfigManager.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ConnectionListener.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>

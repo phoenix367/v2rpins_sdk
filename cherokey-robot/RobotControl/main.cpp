@@ -6,6 +6,7 @@
  */
 
 #include <QtGui/QApplication>
+#include "MainForm.hpp"
 
 int main(int argc, char *argv[]) {
     // initialize resources, if needed
@@ -13,7 +14,8 @@ int main(int argc, char *argv[]) {
 
     QApplication app(argc, argv);
 
-    // create and show your widgets here
+    MainForm mainForm;
+    mainForm.show();
 
     return app.exec();
 }
