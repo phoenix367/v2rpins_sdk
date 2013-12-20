@@ -17,3 +17,5 @@ pincontroller/build/
 /cherokey-robot/RobotControl/build/
 /cherokey-robot/RobotControl/dist/
 /cherokey-robot/commserver/messages/
+/cherokey-robot/RobotControl/moc/
+/cherokey-robot/RobotControl/messages/
