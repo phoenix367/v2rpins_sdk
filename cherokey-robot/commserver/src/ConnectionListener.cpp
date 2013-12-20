@@ -7,9 +7,8 @@
 
 #include "ConnectionListener.hpp"
 #include "Exceptions.hpp"
-#include "common.pb.h"
 
-#include <zmq.hpp>
+namespace cc = cherokey::common;
 
 ConnectionListener::ConnectionListener(
     std::shared_ptr<ConnectionInfo>& infoPtr) 
@@ -45,26 +44,44 @@ void ConnectionListener::run()
         zmq::message_t message;
         socket.recv(&message);
         
-        cherokey::common::Ping pingMsg;
-        if (!pingMsg.ParseFromArray(message.data(), message.size()))
+        cc::CommandMessage commandMsg;
+        if (!commandMsg.ParseFromArray(message.data(), message.size()))
         {
             std::cout << "Invalid message" << std::endl;
         }
         else
         {
-            auto seqno = pingMsg.seqno();
-            
-            std::cout << "Received ping message with seqno=" << seqno <<
-                    std::endl;
-            cherokey::common::Pong pongMsg;
-            pongMsg.set_seqno(seqno);
-            
-            int messageSize = pongMsg.ByteSize();
-            std::vector<uint8_t> outArray(messageSize);
-            pongMsg.SerializeToArray(&outArray[0], messageSize);
-            
-            socket.send(&outArray[0], messageSize);
-            std::cout << "Sent pong message with seqno=" << seqno << std::endl;
+            switch (commandMsg.type())
+            {
+                case cc::CommandMessage::PING:
+                    processPing(socket, commandMsg);
+                    break;
+                default:
+                    std::cout << "Received unknown message with type " <<
+                          commandMsg.type() << std::endl;  
+            }
         }
     }
+}
+
+void ConnectionListener::processPing(zmq::socket_t& socket, 
+        const cherokey::common::CommandMessage& msg)
+{
+    auto pingMsg = msg.ping();
+    auto seqno = pingMsg.seqno();
+
+    std::cout << "Received ping message with seqno=" << seqno <<
+            std::endl;
+    cc::CommandReply replyMsg;
+    replyMsg.set_type(cc::CommandReply::PONG);
+    
+    auto pongMsg = replyMsg.mutable_pong();
+    pongMsg->set_seqno(seqno);
+
+    int messageSize = replyMsg.ByteSize();
+    std::vector<uint8_t> outArray(messageSize);
+    replyMsg.SerializeToArray(&outArray[0], messageSize);
+
+    socket.send(&outArray[0], messageSize);
+    std::cout << "Sent pong message with seqno=" << seqno << std::endl;
 }

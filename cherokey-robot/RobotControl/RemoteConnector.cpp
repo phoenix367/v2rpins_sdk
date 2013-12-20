@@ -8,6 +8,10 @@
 #include "RemoteConnector.hpp"
 #include "common.pb.h"
 
+#include <iostream>
+
+namespace cc = cherokey::common;
+
 RemoteConnector::RemoteConnector(QObject *parent) 
 : QThread(parent)
 , started(false)
@@ -30,12 +34,14 @@ void RemoteConnector::run()
 
         while (started)
         {
-            cherokey::common::Ping pingMsg;
-            pingMsg.set_seqno(seqno);
+            cc::CommandMessage commandMessage;
+            commandMessage.set_type(cc::CommandMessage::PING);
+            cc::Ping* pingMsg = commandMessage.mutable_ping();
+            pingMsg->set_seqno(seqno);
 
-            int messageSize = pingMsg.ByteSize();
+            int messageSize = commandMessage.ByteSize();
             std::vector<uint8_t> outArray(messageSize);
-            pingMsg.SerializeToArray(&outArray[0], messageSize);
+            commandMessage.SerializeToArray(&outArray[0], messageSize);
 
             zmq::message_t outMessage(messageSize);
             memcpy(outMessage.data(), &outArray[0], messageSize);
@@ -46,16 +52,23 @@ void RemoteConnector::run()
             
             if (!socketPtr->recv(&message))
             {
-                
+                std::cout << "Failed to receive message from remote host" <<
+                        std::endl;
             }
 
             sleep(1);
             seqno++;
         }
     }
-    catch (std::exception& e)
+    catch (zmq::error_t& e)
     {
+        std::cout << "Exception occured: " << e.what() <<
+                        std::endl;
         
+        if (e.num() != ETERM)
+        {
+            emit ConversationTerminated(e.what());
+        }
     }
 }
 
@@ -69,6 +82,9 @@ void RemoteConnector::connectToServer(const QString& uri)
     contextPtr = QSharedPointer<zmq::context_t>(new zmq::context_t(1));
     socketPtr = QSharedPointer<zmq::socket_t>(new zmq::socket_t(
             *contextPtr, ZMQ_REQ));
+    
+    int lingerValue = 0;
+    socketPtr->setsockopt(ZMQ_LINGER, &lingerValue, sizeof(int));
     started = true;
     serverUri = uri;
     start();

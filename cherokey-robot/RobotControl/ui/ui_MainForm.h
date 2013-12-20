@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'MainForm.ui'
 **
-** Created: Fri Dec 20 01:07:05 2013
-**      by: Qt User Interface Compiler version 4.8.1
+** Created: Fri Dec 20 21:28:00 2013
+**      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -81,7 +81,7 @@ public:
         MainForm->setWindowTitle(QApplication::translate("MainForm", "MainForm", 0, QApplication::UnicodeUTF8));
         btnConnect->setText(QApplication::translate("MainForm", "Connect...", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainForm", "Connection string:", 0, QApplication::UnicodeUTF8));
-        txtConnectionString->setInputMask(QApplication::translate("MainForm", "*.*.*.*:*; ", 0, QApplication::UnicodeUTF8));
+        txtConnectionString->setInputMask(QApplication::translate("MainForm", "000.000.000.000:0000; ", 0, QApplication::UnicodeUTF8));
         btnBackward->setText(QString());
         btnRotateLeft->setText(QString());
         btnForward->setText(QString());

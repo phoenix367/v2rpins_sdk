@@ -9,6 +9,8 @@
 #define	CONNECTIONLISTENER_HPP
 
 #include "ConfigManager.hpp"
+#include "common.pb.h"
+#include <zmq.hpp>
 
 class ConnectionListener 
 {
@@ -17,6 +19,10 @@ public:
     virtual ~ConnectionListener();
     
     void run();
+    
+private:
+    void processPing(zmq::socket_t& socket, 
+            const cherokey::common::CommandMessage& msg);
     
 private:
     std::shared_ptr<ConnectionInfo> connectionParams;

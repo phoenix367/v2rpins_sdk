@@ -8,3 +8,23 @@ message Pong {
     required int64 seqNo = 1;
 }
 
+message CommandMessage {
+    enum Type { PING = 1; }
+
+    // Identifies which field is filled in.
+    required Type type = 1;
+
+    // One of the following will be filled in.
+    optional Ping ping = 2;
+}
+
+message CommandReply {
+    enum Type { PONG = 1; }
+
+    // Identifies which field is filled in.
+    required Type type = 1;
+
+    // One of the following will be filled in.
+    optional Pong pong = 2;
+}
+

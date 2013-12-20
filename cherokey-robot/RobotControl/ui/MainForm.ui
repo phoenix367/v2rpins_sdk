@@ -49,7 +49,7 @@
     </rect>
    </property>
    <property name="inputMask">
-    <string>*.*.*.*:*; </string>
+    <string>000.000.000.000:0000; </string>
    </property>
   </widget>
   <widget class="QFrame" name="frame">

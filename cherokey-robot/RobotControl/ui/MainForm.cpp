@@ -8,6 +8,9 @@
 #include "MainForm.hpp"
 #include <QIcon>
 #include <QStyle>
+#include <QRegExpValidator>
+#include <QRegExp>
+#include <QMessageBox>
 
 MainForm::MainForm()
 : connected(false)
@@ -21,6 +24,8 @@ MainForm::MainForm()
     connect(widget.btnRotateRight, SIGNAL(clicked()), SLOT(onRotateRight()));
     
     connectorPtr = new RemoteConnector(this);
+    connect(connectorPtr, SIGNAL(ConversationTerminated(const QString&)),
+            SLOT(onConnectionTerminated(const QString&)));
     
     QStyle *stylePtr = qApp->style();
     
@@ -39,21 +44,22 @@ MainForm::MainForm()
 
 MainForm::~MainForm() 
 {
+    connectorPtr->disconnectFromServer();
 }
 
 void MainForm::onConnect()
 {
     if (!connected)
     {
-        connectorPtr->connectToServer("tcp://192.168.1.128:1230");
+        QString ipAddress = widget.txtConnectionString->text();
+        
+        connectorPtr->connectToServer("tcp://" + ipAddress);
         connected = true;
         widget.btnConnect->setText("Disconnect...");
     }
     else
     {
-        connectorPtr->disconnectFromServer();
-        connected = false;
-        widget.btnConnect->setText("Connect...");
+        doDisconnect();
     }
 }
 
@@ -75,4 +81,21 @@ void MainForm::onRotateLeft()
 void MainForm::onRotateRight()
 {
     
+}
+
+void MainForm::onConnectionTerminated(const QString& msg)
+{
+    QMessageBox::warning(this, "Warning", "Connection error: " + msg);
+    
+    if (connected)
+    {
+        doDisconnect();
+    }
+}
+
+void MainForm::doDisconnect()
+{
+    connectorPtr->disconnectFromServer();
+    connected = false;
+    widget.btnConnect->setText("Connect...");
 }

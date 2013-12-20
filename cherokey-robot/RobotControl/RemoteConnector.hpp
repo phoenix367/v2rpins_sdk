@@ -23,6 +23,9 @@ public:
     void connectToServer(const QString& uri);
     void disconnectFromServer();
     
+public:
+    Q_SIGNAL void ConversationTerminated(const QString& msg);
+    
 protected:
     virtual void run();
     

@@ -23,6 +23,10 @@ private:
     Q_SLOT void onMoveBackward();
     Q_SLOT void onRotateLeft();
     Q_SLOT void onRotateRight();
+    Q_SLOT void onConnectionTerminated(const QString& msg);
+    
+private:
+    void doDisconnect();
     
 private:
     Ui::MainForm widget;

@@ -8,6 +8,7 @@
 #include <cstdlib>
 
 #include <string>
+#include "common.pb.h"
 
 #include "ConfigManager.hpp"
 #include "Exceptions.hpp"
@@ -20,6 +21,8 @@ const std::string DEFAULT_CONFIG_FILE = "commserver.cfg";
  */
 int main(int argc, char** argv) 
 {
+    GOOGLE_PROTOBUF_VERIFY_VERSION;
+
     std::string configFile = DEFAULT_CONFIG_FILE;
     
     if (argc > 1)
@@ -49,22 +52,7 @@ int main(int argc, char** argv)
         exit(-1);
     }
     
-    /*
-    // Prepare our context and publisher
-    zmq::context_t context(1);
-    zmq::socket_t publisher(context, ZMQ_PUB);
-    publisher.bind("tcp://*:5556");
-
-    while (1) 
-    {
-        // Send message to all subscribers
-        zmq::message_t message(20);
-        //snprintf((char *) message.data(), 20,
-        //        "%05d %d %d", zipcode, temperature, relhumidity);
-        publisher.send(message);
-
-    }
-    */
+    google::protobuf::ShutdownProtobufLibrary();
     
     return 0;
 }
