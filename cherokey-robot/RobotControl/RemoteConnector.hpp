@@ -30,6 +30,7 @@ private:
     QSharedPointer<zmq::context_t> contextPtr;
     bool started;
     QString serverUri;
+    QSharedPointer<zmq::socket_t> socketPtr;
 };
 
 #endif	/* REMOTECONNECTOR_HPP */

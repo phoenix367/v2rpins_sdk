@@ -19,10 +19,15 @@ public:
     
 private:
     Q_SLOT void onConnect();
+    Q_SLOT void onMoveForward();
+    Q_SLOT void onMoveBackward();
+    Q_SLOT void onRotateLeft();
+    Q_SLOT void onRotateRight();
     
 private:
     Ui::MainForm widget;
     RemoteConnector *connectorPtr;
+    bool connected;
 };
 
 #endif	/* _MAINFORM_HPP */
