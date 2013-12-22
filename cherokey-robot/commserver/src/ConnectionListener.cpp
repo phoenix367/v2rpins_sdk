@@ -7,6 +7,7 @@
 
 #include "ConnectionListener.hpp"
 #include "Exceptions.hpp"
+#include "DriveController.hpp"
 
 namespace cc = cherokey::common;
 
@@ -31,7 +32,7 @@ void ConnectionListener::run()
     
     stream << "tcp://" << connectionParams->ipAddress.to_string() << ":" <<
             connectionParams->port;
-    // Prepare our context and publisher
+
     zmq::context_t context(1);
     zmq::socket_t socket(context, ZMQ_REP);
     
@@ -56,6 +57,9 @@ void ConnectionListener::run()
                 case cc::CommandMessage::PING:
                     processPing(socket, commandMsg);
                     break;
+                case cc::CommandMessage::MOVE:
+                    processMove(socket, commandMsg);
+                    break;
                 default:
                     std::cout << "Received unknown message with type " <<
                           commandMsg.type() << std::endl;  
@@ -67,6 +71,7 @@ void ConnectionListener::run()
 void ConnectionListener::processPing(zmq::socket_t& socket, 
         const cherokey::common::CommandMessage& msg)
 {
+    auto cookie = msg.cookie();
     auto pingMsg = msg.ping();
     auto seqno = pingMsg.seqno();
 
@@ -74,6 +79,7 @@ void ConnectionListener::processPing(zmq::socket_t& socket,
             std::endl;
     cc::CommandReply replyMsg;
     replyMsg.set_type(cc::CommandReply::PONG);
+    replyMsg.set_cookie(cookie);
     
     auto pongMsg = replyMsg.mutable_pong();
     pongMsg->set_seqno(seqno);
@@ -84,4 +90,59 @@ void ConnectionListener::processPing(zmq::socket_t& socket,
 
     socket.send(&outArray[0], messageSize);
     std::cout << "Sent pong message with seqno=" << seqno << std::endl;
+}
+
+void ConnectionListener::processMove(zmq::socket_t& socket, 
+        const cherokey::common::CommandMessage& msg)
+{
+    auto cookie = msg.cookie();
+    
+    try
+    {
+        auto driveInstance = DriveController::getInstance();
+        
+        if (!driveInstance)
+        {
+            COMM_EXCEPTION(NullPointerException, "Drive controller instance "
+                    "is null.");
+        }
+        
+        cc::CommandReply replyMsg;
+        replyMsg.set_cookie(cookie);
+        replyMsg.set_type(cc::CommandReply::ACK);
+    }
+    catch (std::exception& e)
+    {
+        sendNack(e.what(), cookie, socket);
+    }
+}
+
+void ConnectionListener::sendNack(const std::string& reason, int64_t cookie,
+        zmq::socket_t& socket)
+{
+    cc::CommandReply replyMsg;
+    replyMsg.set_cookie(cookie);
+    replyMsg.set_type(cc::CommandReply::NACK);
+
+    auto nackMsg = replyMsg.mutable_nack();
+    nackMsg->set_reason(reason);
+
+    int messageSize = replyMsg.ByteSize();
+    std::vector<uint8_t> outArray(messageSize);
+    replyMsg.SerializeToArray(&outArray[0], messageSize);
+
+    socket.send(&outArray[0], messageSize);
+}
+
+void ConnectionListener::sendAck(int64_t cookie, zmq::socket_t& socket)
+{
+    cc::CommandReply replyMsg;
+    replyMsg.set_cookie(cookie);
+    replyMsg.set_type(cc::CommandReply::ACK);
+
+    int messageSize = replyMsg.ByteSize();
+    std::vector<uint8_t> outArray(messageSize);
+    replyMsg.SerializeToArray(&outArray[0], messageSize);
+
+    socket.send(&outArray[0], messageSize);
 }

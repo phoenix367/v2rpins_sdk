@@ -1,30 +1,62 @@
 package cherokey.common;
 
-message Ping {
+message Ping 
+{
     required int64 seqNo = 1;
 }
 
-message Pong {
+message Pong 
+{
     required int64 seqNo = 1;
 }
 
-message CommandMessage {
-    enum Type { PING = 1; }
+message RunDriveGroup
+{
+    enum Direction { FORWARD = 1; BACKWARD = 2; }
+    
+    required Direction direction = 1;
+
+    // power is in range [0 ... 1]
+    required float power = 2;
+}
+
+message MoveAction
+{
+    required RunDriveGroup runGroupA = 1;
+    required RunDriveGroup runGroupB = 2;
+}
+
+message Nack
+{
+    required string reason = 1;
+}
+
+message CommandMessage 
+{
+    enum Type { PING = 1; MOVE = 2; RUN_DRIVE = 3; }
 
     // Identifies which field is filled in.
     required Type type = 1;
 
+    required int64 cookie = 2;
+
     // One of the following will be filled in.
-    optional Ping ping = 2;
+    optional Ping ping = 3;
+    optional MoveAction moveAction = 4;
+    optional RunDriveGroup runDrive = 5;
 }
 
 message CommandReply {
-    enum Type { PONG = 1; }
+    enum Type { PONG = 1; ACK = 2; NACK = 3; }
 
     // Identifies which field is filled in.
     required Type type = 1;
 
+    required int64 cookie = 2;
+
     // One of the following will be filled in.
-    optional Pong pong = 2;
+    optional Pong pong = 3;
+
+    optional Nack nack = 4;
 }
 

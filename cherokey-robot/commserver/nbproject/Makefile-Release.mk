@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/messages/common.pb.o \
 	${OBJECTDIR}/src/ConfigManager.o \
 	${OBJECTDIR}/src/ConnectionListener.o \
+	${OBJECTDIR}/src/DriveController.o \
 	${OBJECTDIR}/src/main.o
 
 
@@ -79,6 +80,11 @@ ${OBJECTDIR}/src/ConnectionListener.o: src/ConnectionListener.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/ConnectionListener.o src/ConnectionListener.cpp
+
+${OBJECTDIR}/src/DriveController.o: src/DriveController.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/DriveController.o src/DriveController.cpp
 
 ${OBJECTDIR}/src/main.o: src/main.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src

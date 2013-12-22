@@ -9,6 +9,7 @@
                    projectFiles="true">
       <itemPath>include/ConfigManager.hpp</itemPath>
       <itemPath>include/ConnectionListener.hpp</itemPath>
+      <itemPath>include/DriveController.hpp</itemPath>
       <itemPath>include/Exceptions.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="messages" displayName="messages" projectFiles="true">
@@ -24,6 +25,7 @@
                    projectFiles="true">
       <itemPath>src/ConfigManager.cpp</itemPath>
       <itemPath>src/ConnectionListener.cpp</itemPath>
+      <itemPath>src/DriveController.cpp</itemPath>
       <itemPath>src/main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -58,6 +60,7 @@
             <pElem>../../3pty/include/zeromq</pElem>
             <pElem>include</pElem>
             <pElem>messages</pElem>
+            <pElem>../../pincontroller/include</pElem>
           </incDir>
         </ccTool>
         <linkerTool>
@@ -71,6 +74,18 @@
             <linkerLibLibItem>zmq</linkerLibLibItem>
             <linkerLibLibItem>boost_program_options</linkerLibLibItem>
             <linkerLibLibItem>boost_system</linkerLibLibItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../../pincontroller"
+                            CT="2"
+                            CN="Debug"
+                            AC="true"
+                            BL="true"
+                            WD="../../pincontroller"
+                            BC="${MAKE}  -f Makefile CONF=Debug"
+                            CC="${MAKE}  -f Makefile CONF=Debug clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libpincontroller.${CND_DLIB_EXT}">
+              </makeArtifact>
+            </linkerLibProjectItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
@@ -79,6 +94,8 @@
       <item path="include/ConfigManager.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/ConnectionListener.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/DriveController.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/Exceptions.hpp" ex="false" tool="3" flavor2="0">
       </item>
@@ -89,6 +106,8 @@
       <item path="src/ConfigManager.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/ConnectionListener.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/DriveController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -120,6 +139,8 @@
       </item>
       <item path="include/ConnectionListener.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/DriveController.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/Exceptions.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="messages/common.pb.cc" ex="false" tool="1" flavor2="0">
@@ -129,6 +150,8 @@
       <item path="src/ConfigManager.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/ConnectionListener.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/DriveController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
