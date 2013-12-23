@@ -99,17 +99,15 @@ void ConnectionListener::processMove(zmq::socket_t& socket,
     
     try
     {
-        auto driveInstance = DriveController::getInstance();
+        auto moveAction = msg.moveaction();
         
-        if (!driveInstance)
-        {
-            COMM_EXCEPTION(NullPointerException, "Drive controller instance "
-                    "is null.");
-        }
+        auto groupA = moveAction.rungroupa();
+        runDriveGroup(groupA, DriveController::DriveGroup::GROUP_A);
         
-        cc::CommandReply replyMsg;
-        replyMsg.set_cookie(cookie);
-        replyMsg.set_type(cc::CommandReply::ACK);
+        auto groupB = moveAction.rungroupb();
+        runDriveGroup(groupB, DriveController::DriveGroup::GROUP_B);
+
+        sendAck(cookie, socket);
     }
     catch (std::exception& e)
     {
@@ -145,4 +143,31 @@ void ConnectionListener::sendAck(int64_t cookie, zmq::socket_t& socket)
     replyMsg.SerializeToArray(&outArray[0], messageSize);
 
     socket.send(&outArray[0], messageSize);
+}
+
+void ConnectionListener::runDriveGroup(
+    const cherokey::common::RunDriveGroup& group,
+    DriveController::DriveGroup groupType)
+{
+    auto driveInstance = DriveController::getInstance();
+
+    if (!driveInstance)
+    {
+        COMM_EXCEPTION(NullPointerException, "Drive controller instance "
+                "is null.");
+    }
+
+    DriveController::MoveDirection direction;
+
+    switch (group.direction())
+    {
+        case cc::RunDriveGroup::FORWARD:
+            direction = DriveController::MoveDirection::MOVE_FORWARD;
+            break;
+        case cc::RunDriveGroup::BACKWARD:
+            direction = DriveController::MoveDirection::MOVE_BACKWARD;
+            break;
+    }
+
+    driveInstance->runDriveGroup(groupType, direction, group.power());
 }

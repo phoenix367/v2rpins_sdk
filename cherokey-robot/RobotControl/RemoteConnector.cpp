@@ -9,13 +9,21 @@
 #include "common.pb.h"
 
 #include <iostream>
+#include <QMutexLocker>
+#include <qt4/QtCore/qmutex.h>
 
 namespace cc = cherokey::common;
+
+#define PING_INTERVAL           1000
 
 RemoteConnector::RemoteConnector(QObject *parent) 
 : QThread(parent)
 , started(false)
+, pingTimer(this)
+, queueMutex(new QMutex(QMutex::Recursive))
 {
+    pingTimer.setInterval(PING_INTERVAL);
+    connect(&pingTimer, SIGNAL(timeout()), SLOT(onPingTimeout()));
 }
 
 RemoteConnector::~RemoteConnector() 
@@ -30,34 +38,29 @@ void RemoteConnector::run()
         socketPtr->connect(serverUri.toStdString().c_str());
 
         zmq::message_t message;
-        qint64 seqno = 0;
+        
+        pingTimer.start();
 
         while (started)
         {
-            cc::CommandMessage commandMessage;
-            commandMessage.set_type(cc::CommandMessage::PING);
-            cc::Ping* pingMsg = commandMessage.mutable_ping();
-            pingMsg->set_seqno(seqno);
-
-            int messageSize = commandMessage.ByteSize();
-            std::vector<uint8_t> outArray(messageSize);
-            commandMessage.SerializeToArray(&outArray[0], messageSize);
-
-            zmq::message_t outMessage(messageSize);
-            memcpy(outMessage.data(), &outArray[0], messageSize);
-            if (!socketPtr->send(outMessage))
             {
-                
+                QMutexLocker lock(queueMutex.data());
+                while (!commandQueue.empty())
+                {
+                    QSharedPointer<SocketCommand> commandItem = 
+                            commandQueue.dequeue();
+
+                    if (commandItem != NULL)
+                    {
+                        if (!commandItem->doCommand(*socketPtr))
+                        {
+                            
+                        }
+                    }
+                }
             }
             
-            if (!socketPtr->recv(&message))
-            {
-                std::cout << "Failed to receive message from remote host" <<
-                        std::endl;
-            }
-
-            sleep(1);
-            seqno++;
+            msleep(1);
         }
     }
     catch (zmq::error_t& e)
@@ -70,6 +73,8 @@ void RemoteConnector::run()
             emit ConversationTerminated(e.what());
         }
     }
+    
+    pingTimer.stop();
 }
 
 void RemoteConnector::connectToServer(const QString& uri)
@@ -102,4 +107,16 @@ void RemoteConnector::disconnectFromServer()
     contextPtr.clear();
     
     wait();
+}
+
+void RemoteConnector::onPingTimeout()
+{
+    QSharedPointer<SocketCommand> pingCommand(new PingCommand());
+    handleCommand(pingCommand);
+}
+
+void RemoteConnector::handleCommand(QSharedPointer<SocketCommand>& commandPtr)
+{
+    QMutexLocker lock(queueMutex.data());
+    commandQueue.enqueue(commandPtr);
 }

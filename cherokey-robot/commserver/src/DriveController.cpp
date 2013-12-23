@@ -8,6 +8,7 @@
 #include <boost/math/special_functions/round.hpp>
 
 #include "DriveController.hpp"
+#include "Exceptions.hpp"
 
 #define PWM_FREQUENCY 400                           // PWM frequency is 400 Hz
 #define PWM_PERIOD (1000000 / PWM_FREQUENCY)        // PWM period in 
@@ -18,6 +19,10 @@ std::unique_ptr<DriveController> DriveController::instance;
 DriveController::DriveController()
 : pwmA(new pc::PWM(pc::PWM_CHANNEL::PWM_0))
 , pwmB(new pc::PWM(pc::PWM_CHANNEL::PWM_1))
+, gpioDirectionA(new pc::GPIOPin(pc::GPIO_PIN::gpio85, 
+                pc::GPIO_DIRECTION::output))
+, gpioDirectionB(new pc::GPIOPin(pc::GPIO_PIN::gpio86, 
+                pc::GPIO_DIRECTION::output))
 {
 
 }
@@ -41,7 +46,8 @@ void DriveController::runDriveGroup(DriveGroup group, MoveDirection direction,
 {
     if (drivePower > 1.0f || drivePower < 0.0f)
     {
-        
+        COMM_EXCEPTION(OutOfRangeException, "Drive power value is "
+                "out of range");
     }
     
     uint32_t period = (uint32_t) boost::math::round(drivePower * PWM_PERIOD);
@@ -49,8 +55,37 @@ void DriveController::runDriveGroup(DriveGroup group, MoveDirection direction,
     switch (direction)
     {
         case MoveDirection::MOVE_FORWARD:
+            setGroupDirection(group, true);
             break;
         case MoveDirection::MOVE_BACKWARD:
+            setGroupDirection(group, false);
+            break;
+    }
+
+    switch (group)
+    {
+        case DriveGroup::GROUP_A:
+            pwmA->setPulseParams(period, PWM_PERIOD);
+            pwmA->init();
+            break;
+        case DriveGroup::GROUP_B:
+            pwmB->setPulseParams(period, PWM_PERIOD);
+            pwmB->init();
+            break;
+    }
+}
+
+void DriveController::setGroupDirection(DriveGroup group, bool isForward)
+{
+    switch (group)
+    {
+        case DriveGroup::GROUP_A:
+            gpioDirectionA->setLogicalLevel((isForward) ? 
+                pc::GPIO_LOGIC_LEVEL::low : pc::GPIO_LOGIC_LEVEL::high);
+            break;
+        case DriveGroup::GROUP_B:
+            gpioDirectionB->setLogicalLevel((isForward) ? 
+                pc::GPIO_LOGIC_LEVEL::low : pc::GPIO_LOGIC_LEVEL::high);
             break;
     }
 }

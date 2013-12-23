@@ -10,7 +10,7 @@
 
 #include <memory>
 
-#include "pincontroller/pwm.hpp"
+#include "pincontroller/pincontroller.hpp"
 
 class DriveController 
 {
@@ -37,12 +37,17 @@ public:
     
     void runDriveGroup(DriveGroup group, MoveDirection direction,
         float drivePower);
+    
+private:
+    void setGroupDirection(DriveGroup group, bool isForward);
 
 private:
     static std::unique_ptr<DriveController> instance;
     
     std::unique_ptr<pc::PWM> pwmA;
     std::unique_ptr<pc::PWM> pwmB;
+    std::unique_ptr<pc::GPIOPin> gpioDirectionA;
+    std::unique_ptr<pc::GPIOPin> gpioDirectionB;
 };
 
 #endif	/* DRIVECONTROLLER_HPP */

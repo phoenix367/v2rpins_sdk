@@ -6,11 +6,14 @@
  */
 
 #include "MainForm.hpp"
+#include "../Commands.hpp"
+
 #include <QIcon>
 #include <QStyle>
 #include <QRegExpValidator>
 #include <QRegExp>
 #include <QMessageBox>
+#include <QSharedPointer>
 
 MainForm::MainForm()
 : connected(false)
@@ -18,10 +21,22 @@ MainForm::MainForm()
     widget.setupUi(this);
     
     connect(widget.btnConnect, SIGNAL(clicked()), SLOT(onConnect()));
-    connect(widget.btnForward, SIGNAL(clicked()), SLOT(onMoveForward()));
-    connect(widget.btnBackward, SIGNAL(clicked()), SLOT(onMoveBackward()));
-    connect(widget.btnRotateLeft, SIGNAL(clicked()), SLOT(onRotateLeft()));
-    connect(widget.btnRotateRight, SIGNAL(clicked()), SLOT(onRotateRight()));
+    connect(widget.btnForward, SIGNAL(pressed()), 
+            SLOT(onMoveForwardPressed()));
+    connect(widget.btnForward, SIGNAL(released()),
+            SLOT(onMoveForwardReleased()));
+    connect(widget.btnBackward, SIGNAL(pressed()), 
+            SLOT(onMoveBackwardPressed()));
+    connect(widget.btnBackward, SIGNAL(released()),
+            SLOT(onMoveBackwardReleased()));
+    connect(widget.btnRotateRight, SIGNAL(pressed()), 
+            SLOT(onRotateRightPressed()));
+    connect(widget.btnRotateRight, SIGNAL(released()),
+            SLOT(onRotateRightReleased()));
+    connect(widget.btnRotateLeft, SIGNAL(pressed()), 
+            SLOT(onRotateLeftPressed()));
+    connect(widget.btnRotateLeft, SIGNAL(released()),
+            SLOT(onRotateLeftReleased()));
     
     connectorPtr = new RemoteConnector(this);
     connect(connectorPtr, SIGNAL(ConversationTerminated(const QString&)),
@@ -63,26 +78,6 @@ void MainForm::onConnect()
     }
 }
 
-void MainForm::onMoveForward()
-{
-    
-}
-
-void MainForm::onMoveBackward()
-{
-    
-}
-
-void MainForm::onRotateLeft()
-{
-    
-}
-
-void MainForm::onRotateRight()
-{
-    
-}
-
 void MainForm::onConnectionTerminated(const QString& msg)
 {
     QMessageBox::warning(this, "Warning", "Connection error: " + msg);
@@ -98,4 +93,54 @@ void MainForm::doDisconnect()
     connectorPtr->disconnectFromServer();
     connected = false;
     widget.btnConnect->setText("Connect...");
+}
+
+void MainForm::onMoveForwardPressed()
+{
+    QSharedPointer<SocketCommand> forwardCommand(new MoveForward(1.0));
+    connectorPtr->handleCommand(forwardCommand);
+}
+
+void MainForm::onMoveForwardReleased()
+{
+    QSharedPointer<SocketCommand> forwardCommand(new MoveForward(0.0));
+    connectorPtr->handleCommand(forwardCommand);
+}
+
+void MainForm::onMoveBackwardPressed()
+{
+    QSharedPointer<SocketCommand> backwardCommand(new MoveBackward(1.0));
+    connectorPtr->handleCommand(backwardCommand);
+}
+
+void MainForm::onMoveBackwardReleased()
+{
+    QSharedPointer<SocketCommand> backwardCommand(new MoveBackward(0.0));
+    connectorPtr->handleCommand(backwardCommand);
+}
+
+void MainForm::onRotateRightPressed()
+{
+    QSharedPointer<SocketCommand> backwardCommand(new RotateClockwise(1.0));
+    connectorPtr->handleCommand(backwardCommand);
+}
+
+void MainForm::onRotateRightReleased()
+{
+    QSharedPointer<SocketCommand> backwardCommand(new RotateClockwise(0.0));
+    connectorPtr->handleCommand(backwardCommand);
+}
+
+void MainForm::onRotateLeftPressed()
+{
+    QSharedPointer<SocketCommand> backwardCommand(
+        new RotateCounterClockwise(1.0));
+    connectorPtr->handleCommand(backwardCommand);
+}
+
+void MainForm::onRotateLeftReleased()
+{
+    QSharedPointer<SocketCommand> backwardCommand(
+        new RotateCounterClockwise(0.0));
+    connectorPtr->handleCommand(backwardCommand);
 }

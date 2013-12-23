@@ -9,6 +9,7 @@
 #define	CONNECTIONLISTENER_HPP
 
 #include "ConfigManager.hpp"
+#include "DriveController.hpp"
 #include "common.pb.h"
 #include <zmq.hpp>
 
@@ -28,6 +29,8 @@ private:
     void sendNack(const std::string& reason, int64_t cookie,
             zmq::socket_t& socket);
     void sendAck(int64_t cookie, zmq::socket_t& socket);
+    void runDriveGroup(const cherokey::common::RunDriveGroup& group,
+            DriveController::DriveGroup groupType);
     
 private:
     std::shared_ptr<ConnectionInfo> connectionParams;

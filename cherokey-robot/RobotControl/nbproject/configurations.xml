@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>Commands.hpp</itemPath>
       <itemPath>RemoteConnector.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="messages" displayName="messages" projectFiles="true">
@@ -17,6 +18,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>Commands.cpp</itemPath>
       <itemPath>RemoteConnector.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
@@ -69,6 +71,10 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="Commands.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Commands.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="RemoteConnector.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="RemoteConnector.hpp" ex="false" tool="3" flavor2="0">
@@ -111,6 +117,10 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="Commands.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Commands.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="RemoteConnector.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="RemoteConnector.hpp" ex="false" tool="3" flavor2="0">

@@ -65,4 +65,14 @@ public:
     }
 };
 
+class OutOfRangeException : public Exception
+{
+public:
+    OutOfRangeException(const std::string& msg, int line, const char* file) throw()
+    : Exception(msg, line, file)
+    {
+        
+    }
+};
+
 #endif	/* COMM_SERVER_EXCEPTIONS_HPP */
