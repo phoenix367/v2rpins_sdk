@@ -34,6 +34,7 @@ public:
     
 private:
     Q_SLOT void onPingTimeout();
+    Q_SLOT void onPingFail();
     
 protected:
     virtual void run();
@@ -46,6 +47,7 @@ private:
     QTimer pingTimer;
     QQueue<QSharedPointer<SocketCommand> > commandQueue;
     QSharedPointer<QMutex> queueMutex;
+    QTimer failTimer;
 };
 
 #endif	/* REMOTECONNECTOR_HPP */

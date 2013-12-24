@@ -55,6 +55,8 @@ MainForm::MainForm()
     
     icon = stylePtr->standardIcon(QStyle::SP_ArrowDown);
     widget.btnBackward->setIcon(icon);
+    
+    widget.frmMove->setEnabled(false);
 }
 
 MainForm::~MainForm() 
@@ -71,6 +73,8 @@ void MainForm::onConnect()
         connectorPtr->connectToServer("tcp://" + ipAddress);
         connected = true;
         widget.btnConnect->setText("Disconnect...");
+        
+        widget.frmMove->setEnabled(true);
     }
     else
     {
@@ -80,12 +84,12 @@ void MainForm::onConnect()
 
 void MainForm::onConnectionTerminated(const QString& msg)
 {
-    QMessageBox::warning(this, "Warning", "Connection error: " + msg);
-    
     if (connected)
     {
         doDisconnect();
     }
+
+    QMessageBox::warning(this, "Warning", "Connection error: " + msg);
 }
 
 void MainForm::doDisconnect()
@@ -93,6 +97,8 @@ void MainForm::doDisconnect()
     connectorPtr->disconnectFromServer();
     connected = false;
     widget.btnConnect->setText("Connect...");
+    
+    widget.frmMove->setEnabled(false);
 }
 
 void MainForm::onMoveForwardPressed()

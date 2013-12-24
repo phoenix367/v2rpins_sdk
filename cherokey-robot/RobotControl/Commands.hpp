@@ -9,6 +9,8 @@
 #define	COMMANDS_HPP
 
 #include <zmq.hpp>
+#include <QTimer>
+
 #include "messages/common.pb.h"
 
 namespace cc = cherokey::common;
@@ -26,61 +28,69 @@ protected:
 class PingCommand : public SocketCommand
 {
 public:
-    PingCommand(int64_t sn = 0);
+    PingCommand(QTimer& t, int64_t sn = 0);
     virtual ~PingCommand();
     
     virtual bool doCommand(zmq::socket_t& socket);
     
 private:
+    bool commandHandler(zmq::socket_t& socket);
+    
+private:
     int64_t seqno;
+    QTimer& timer;
 };
 
-class MoveForward : public SocketCommand
+class MoveCommand : public SocketCommand
+{
+protected:
+    enum GroupDirection
+    {
+        forward,
+        backward
+    };
+    
+protected:
+    MoveCommand(GroupDirection directionA, GroupDirection directionB,
+            float power);
+    
+public:
+    virtual ~MoveCommand();
+    
+    virtual bool doCommand(zmq::socket_t& socket);
+    
+private:
+    GroupDirection groupDirectionA;
+    GroupDirection groupDirectionB;
+    float drivePower;
+};
+
+class MoveForward : public MoveCommand
 {
 public:
     MoveForward(float power);
     virtual ~MoveForward();
-    
-    virtual bool doCommand(zmq::socket_t& socket);
-    
-private:
-    float drivePower;
 };
 
-class MoveBackward : public SocketCommand
+class MoveBackward : public MoveCommand
 {
 public:
     MoveBackward(float power);
     virtual ~MoveBackward();
-    
-    virtual bool doCommand(zmq::socket_t& socket);
-    
-private:
-    float drivePower;
 };
 
-class RotateClockwise : public SocketCommand
+class RotateClockwise : public MoveCommand
 {
 public:
     RotateClockwise(float power);
     virtual ~RotateClockwise();
-    
-    virtual bool doCommand(zmq::socket_t& socket);
-    
-private:
-    float drivePower;
 };
 
-class RotateCounterClockwise : public SocketCommand
+class RotateCounterClockwise : public MoveCommand
 {
 public:
     RotateCounterClockwise(float power);
     virtual ~RotateCounterClockwise();
-    
-    virtual bool doCommand(zmq::socket_t& socket);
-    
-private:
-    float drivePower;
 };
 
 #endif	/* COMMANDS_HPP */

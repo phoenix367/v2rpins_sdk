@@ -52,7 +52,7 @@
     <string>000.000.000.000:0000; </string>
    </property>
   </widget>
-  <widget class="QFrame" name="frame">
+  <widget class="QFrame" name="frmMove">
    <property name="geometry">
     <rect>
      <x>70</x>

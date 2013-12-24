@@ -10,20 +10,26 @@
 
 #include <iostream>
 #include <QMutexLocker>
-#include <qt4/QtCore/qmutex.h>
 
 namespace cc = cherokey::common;
 
 #define PING_INTERVAL           1000
+#define FAIL_CONN_TIMEOUT       3000
 
 RemoteConnector::RemoteConnector(QObject *parent) 
 : QThread(parent)
 , started(false)
 , pingTimer(this)
 , queueMutex(new QMutex(QMutex::Recursive))
+, failTimer(this)
 {
     pingTimer.setInterval(PING_INTERVAL);
+    
+    failTimer.setSingleShot(true);
+    failTimer.setInterval(FAIL_CONN_TIMEOUT);
+    
     connect(&pingTimer, SIGNAL(timeout()), SLOT(onPingTimeout()));
+    connect(&failTimer, SIGNAL(timeout()), SLOT(onPingFail()));
 }
 
 RemoteConnector::~RemoteConnector() 
@@ -37,9 +43,8 @@ void RemoteConnector::run()
     {
         socketPtr->connect(serverUri.toStdString().c_str());
 
-        zmq::message_t message;
-        
         pingTimer.start();
+        failTimer.start(failTimer.interval());
 
         while (started)
         {
@@ -49,14 +54,18 @@ void RemoteConnector::run()
                 {
                     QSharedPointer<SocketCommand> commandItem = 
                             commandQueue.dequeue();
+                    lock.unlock();
 
                     if (commandItem != NULL)
                     {
                         if (!commandItem->doCommand(*socketPtr))
                         {
-                            
+                            std::cout << "Failed to handle command" << 
+                                    std::endl;
                         }
                     }
+                    
+                    lock.relock();
                 }
             }
             
@@ -75,6 +84,7 @@ void RemoteConnector::run()
     }
     
     pingTimer.stop();
+    failTimer.stop();
 }
 
 void RemoteConnector::connectToServer(const QString& uri)
@@ -111,7 +121,8 @@ void RemoteConnector::disconnectFromServer()
 
 void RemoteConnector::onPingTimeout()
 {
-    QSharedPointer<SocketCommand> pingCommand(new PingCommand());
+    QSharedPointer<SocketCommand> pingCommand(new PingCommand(
+        failTimer));
     handleCommand(pingCommand);
 }
 
@@ -119,4 +130,9 @@ void RemoteConnector::handleCommand(QSharedPointer<SocketCommand>& commandPtr)
 {
     QMutexLocker lock(queueMutex.data());
     commandQueue.enqueue(commandPtr);
+}
+
+void RemoteConnector::onPingFail()
+{
+    emit ConversationTerminated("No answer to PING request");
 }
