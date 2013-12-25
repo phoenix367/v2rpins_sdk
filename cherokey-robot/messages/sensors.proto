@@ -1,0 +1,15 @@
+package cherokey.sensors;
+
+enum DataTypes 
+{
+    STRING = 1; INTEGER = 2; REAL = 3;
+}
+
+message SensorValue
+{
+    required DataTypes dataType = 1;
+
+    optional string strValue = 2;
+    optional int64 intValue = 3;
+    optional double realValue = 4;
+}
