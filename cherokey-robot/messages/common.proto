@@ -1,13 +1,18 @@
 package cherokey.common;
 
+enum SwitchState
+{
+    ON = 1; OFF = 2;
+}
+
 message Ping 
 {
-    required int64 seqNo = 1;
+    required int64 seq_no = 1;
 }
 
 message Pong 
 {
-    required int64 seqNo = 1;
+    required int64 seq_no = 1;
 }
 
 message RunDriveGroup
@@ -22,8 +27,8 @@ message RunDriveGroup
 
 message MoveAction
 {
-    required RunDriveGroup runGroupA = 1;
-    required RunDriveGroup runGroupB = 2;
+    required RunDriveGroup run_group_a = 1;
+    required RunDriveGroup run_group_b = 2;
 }
 
 message Nack
@@ -31,9 +36,22 @@ message Nack
     required string reason = 1;
 }
 
+message SendSensorsInfo
+{
+    required SwitchState send_state = 1;
+}
+
+message ShowVideoComposite
+{
+    required SwitchState show_state = 1;
+}
+
 message CommandMessage 
 {
-    enum Type { PING = 1; MOVE = 2; RUN_DRIVE = 3; }
+    enum Type { 
+        PING = 1; MOVE = 2; RUN_DRIVE = 3; SENSORS_INFO = 4; 
+        SHOW_VIDEO_COMPOSITE = 5;
+    }
 
     // Identifies which field is filled in.
     required Type type = 1;
@@ -42,8 +60,10 @@ message CommandMessage
 
     // One of the following will be filled in.
     optional Ping ping = 3;
-    optional MoveAction moveAction = 4;
-    optional RunDriveGroup runDrive = 5;
+    optional MoveAction move_action = 4;
+    optional RunDriveGroup run_drive = 5;
+    optional SendSensorsInfo sensors_send_state = 6;
+    optional ShowVideoComposite show_video_composite = 7;
 }
 
 message CommandReply {
@@ -56,7 +76,5 @@ message CommandReply {
 
     // One of the following will be filled in.
     optional Pong pong = 3;
-
     optional Nack nack = 4;
 }
-

@@ -30,6 +30,7 @@ private:
     Q_SLOT void onRotateRightReleased();
     Q_SLOT void onRotateLeftPressed();
     Q_SLOT void onRotateLeftReleased();
+    Q_SLOT void onShowVideoComposite();
     
 private:
     void doDisconnect();

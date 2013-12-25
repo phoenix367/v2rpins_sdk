@@ -17,6 +17,28 @@ bool SocketCommand::serializeMessage(const cc::CommandMessage& commandMessage,
     return true;
 }
 
+bool SocketCommand::handleReplyAck(zmq::socket_t& socket)
+{
+    zmq::message_t reply;
+    if (!socket.recv(&reply))
+    {
+        return false;
+    }
+    
+    cc::CommandReply cmdReply;
+    if (!cmdReply.ParseFromArray(reply.data(), reply.size()))
+    {
+        return false;
+    }
+    
+    if (cmdReply.type() != cc::CommandReply::ACK)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 PingCommand::PingCommand(QTimer& t, int64_t sn)
 : seqno(sn)
 , timer(t)
@@ -47,7 +69,7 @@ bool PingCommand::commandHandler(zmq::socket_t& socket)
     commandMessage.set_type(cc::CommandMessage::PING);
     commandMessage.set_cookie(0);
     cc::Ping* pingMsg = commandMessage.mutable_ping();
-    pingMsg->set_seqno(seqno);
+    pingMsg->set_seq_no(seqno);
 
     if (!serializeMessage(commandMessage, socket))
     {
@@ -72,7 +94,7 @@ bool PingCommand::commandHandler(zmq::socket_t& socket)
     }
     
     cc::Pong *pongMsg = cmdReply.mutable_pong();
-    if (pongMsg->seqno() != seqno)
+    if (pongMsg->seq_no() != seqno)
     {
         return false;
     }
@@ -100,8 +122,8 @@ bool MoveCommand::doCommand(zmq::socket_t& socket)
     commandMessage.set_type(cc::CommandMessage::MOVE);
     commandMessage.set_cookie(0);
     
-    cc::MoveAction *moveCmd = commandMessage.mutable_moveaction();
-    cc::RunDriveGroup *groupA = moveCmd->mutable_rungroupa();
+    cc::MoveAction *moveCmd = commandMessage.mutable_move_action();
+    cc::RunDriveGroup *groupA = moveCmd->mutable_run_group_a();
     
     switch (groupDirectionA)
     {
@@ -115,7 +137,7 @@ bool MoveCommand::doCommand(zmq::socket_t& socket)
     
     groupA->set_power(drivePower);
 
-    cc::RunDriveGroup *groupB = moveCmd->mutable_rungroupb();
+    cc::RunDriveGroup *groupB = moveCmd->mutable_run_group_b();
 
     switch (groupDirectionB)
     {
@@ -134,24 +156,9 @@ bool MoveCommand::doCommand(zmq::socket_t& socket)
         return false;
     }
 
-    zmq::message_t reply;
-    if (!socket.recv(&reply))
-    {
-        return false;
-    }
-    
-    cc::CommandReply cmdReply;
-    if (!cmdReply.ParseFromArray(reply.data(), reply.size()))
-    {
-        return false;
-    }
-    
-    if (cmdReply.type() != cc::CommandReply::ACK)
-    {
-        return false;
-    }
+    bool replyResult = handleReplyAck(socket);
 
-    return true;
+    return replyResult;
 }
 
 MoveForward::MoveForward(float power)
@@ -196,4 +203,34 @@ RotateCounterClockwise::RotateCounterClockwise(float power)
 RotateCounterClockwise::~RotateCounterClockwise()
 {
     
+}
+
+ShowVideoComposite::ShowVideoComposite(bool show)
+: showState(show)
+{
+    
+}
+
+ShowVideoComposite::~ShowVideoComposite()
+{
+    
+}
+
+bool ShowVideoComposite::doCommand(zmq::socket_t& socket)
+{
+    cc::CommandMessage commandMessage;
+    commandMessage.set_type(cc::CommandMessage::SHOW_VIDEO_COMPOSITE);
+    commandMessage.set_cookie(0);
+    cc::ShowVideoComposite* videoMsg = 
+            commandMessage.mutable_show_video_composite();
+    videoMsg->set_show_state((showState) ? cc::ON : cc::OFF);
+
+    if (!serializeMessage(commandMessage, socket))
+    {
+        return false;
+    }
+
+    bool replyResult = handleReplyAck(socket);
+
+    return replyResult;
 }

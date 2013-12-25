@@ -23,6 +23,7 @@ public:
 protected:
     bool serializeMessage(const cc::CommandMessage& commandMessage,
             zmq::socket_t& socket);
+    bool handleReplyAck(zmq::socket_t& socket);
 };
 
 class PingCommand : public SocketCommand
@@ -91,6 +92,18 @@ class RotateCounterClockwise : public MoveCommand
 public:
     RotateCounterClockwise(float power);
     virtual ~RotateCounterClockwise();
+};
+
+class ShowVideoComposite : public SocketCommand
+{
+public:
+    ShowVideoComposite(bool show);
+    virtual ~ShowVideoComposite();
+    
+    virtual bool doCommand(zmq::socket_t& socket);
+    
+private:
+    bool showState;
 };
 
 #endif	/* COMMANDS_HPP */

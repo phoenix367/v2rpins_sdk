@@ -33,12 +33,15 @@ MainForm::MainForm()
             SLOT(onRotateLeftPressed()));
     connect(widget.btnRotateLeft, SIGNAL(released()),
             SLOT(onRotateLeftReleased()));
+    connect(widget.btnShowComposite, SIGNAL(clicked()),
+            SLOT(onShowVideoComposite()));
     
     connectorPtr = new RemoteConnector(this);
     connect(connectorPtr, SIGNAL(ConversationTerminated(const QString&)),
             SLOT(onConnectionTerminated(const QString&)));
     
     widget.frmMove->setEnabled(false);
+    widget.btnShowComposite->setEnabled(false);
 }
 
 MainForm::~MainForm() 
@@ -57,6 +60,7 @@ void MainForm::onConnect()
         widget.btnConnect->setText("Disconnect...");
         
         widget.frmMove->setEnabled(true);
+        widget.btnShowComposite->setEnabled(true);
     }
     else
     {
@@ -81,6 +85,7 @@ void MainForm::doDisconnect()
     widget.btnConnect->setText("Connect...");
     
     widget.frmMove->setEnabled(false);
+    widget.btnShowComposite->setEnabled(false);
 }
 
 void MainForm::onMoveForwardPressed()
@@ -131,4 +136,13 @@ void MainForm::onRotateLeftReleased()
     QSharedPointer<SocketCommand> backwardCommand(
         new RotateCounterClockwise(0.0));
     connectorPtr->handleCommand(backwardCommand);
+}
+
+void MainForm::onShowVideoComposite()
+{
+    bool showVideo = widget.btnShowComposite->isChecked();
+    
+    QSharedPointer<SocketCommand> showCommand(
+        new ShowVideoComposite(showVideo));
+    connectorPtr->handleCommand(showCommand);
 }

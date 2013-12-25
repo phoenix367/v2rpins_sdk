@@ -8,6 +8,7 @@
 #include "ConnectionListener.hpp"
 #include "Exceptions.hpp"
 #include "DriveController.hpp"
+#include "VideoController.hpp"
 
 namespace cc = cherokey::common;
 
@@ -60,6 +61,9 @@ void ConnectionListener::run()
                 case cc::CommandMessage::MOVE:
                     processMove(socket, commandMsg);
                     break;
+                case cc::CommandMessage::SHOW_VIDEO_COMPOSITE:
+                    processVideoComposite(socket, commandMsg);
+                    break;
                 default:
                     std::cout << "Received unknown message with type " <<
                           commandMsg.type() << std::endl;  
@@ -73,7 +77,7 @@ void ConnectionListener::processPing(zmq::socket_t& socket,
 {
     auto cookie = msg.cookie();
     auto pingMsg = msg.ping();
-    auto seqno = pingMsg.seqno();
+    auto seqno = pingMsg.seq_no();
 
     std::cout << "Received ping message with seqno=" << seqno <<
             std::endl;
@@ -82,7 +86,7 @@ void ConnectionListener::processPing(zmq::socket_t& socket,
     replyMsg.set_cookie(cookie);
     
     auto pongMsg = replyMsg.mutable_pong();
-    pongMsg->set_seqno(seqno);
+    pongMsg->set_seq_no(seqno);
 
     int messageSize = replyMsg.ByteSize();
     std::vector<uint8_t> outArray(messageSize);
@@ -99,12 +103,12 @@ void ConnectionListener::processMove(zmq::socket_t& socket,
     
     try
     {
-        auto moveAction = msg.moveaction();
+        auto moveAction = msg.move_action();
         
-        auto groupA = moveAction.rungroupa();
+        auto groupA = moveAction.run_group_a();
         runDriveGroup(groupA, DriveController::DriveGroup::GROUP_A);
         
-        auto groupB = moveAction.rungroupb();
+        auto groupB = moveAction.run_group_b();
         runDriveGroup(groupB, DriveController::DriveGroup::GROUP_B);
 
         sendAck(cookie, socket);
@@ -170,4 +174,31 @@ void ConnectionListener::runDriveGroup(
     }
 
     driveInstance->runDriveGroup(groupType, direction, group.power());
+}
+
+void ConnectionListener::processVideoComposite(zmq::socket_t& socket, 
+        cherokey::common::CommandMessage& msg)
+{
+    auto cookie = msg.cookie();
+
+    try
+    {
+        auto showAction = msg.mutable_show_video_composite();
+        auto showState = showAction->show_state();
+        
+        auto videoInstance = VideoController::getInstance();
+        if (!videoInstance)
+        {
+            COMM_EXCEPTION(NullPointerException, "Video controller instance "
+                "is null.");
+        }
+        
+        videoInstance->compositeVideo(showState == cc::ON);
+        
+        sendAck(cookie, socket);
+    }
+    catch (std::exception& e)
+    {
+        sendNack(e.what(), cookie, socket);
+    }
 }

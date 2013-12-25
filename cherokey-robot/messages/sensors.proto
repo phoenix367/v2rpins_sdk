@@ -2,14 +2,24 @@ package cherokey.sensors;
 
 enum DataTypes 
 {
-    STRING = 1; INTEGER = 2; REAL = 3;
+    STRING = 1; INTEGER = 2; REAL = 3; STRUCTURE = 4;
 }
 
 message SensorValue
 {
-    required DataTypes dataType = 1;
+    required DataTypes data_type = 1;
+    optional string associated_name = 2;
 
-    optional string strValue = 2;
-    optional int64 intValue = 3;
-    optional double realValue = 4;
+    optional string str_value = 3;
+    optional int64 int_value = 4;
+    optional double real_value = 5;
+    optional SensorValue nested_value = 6;
+}
+
+message SensorData
+{
+    required int32 sensor_id = 1;
+    optional string sensor_desc = 2;
+
+    repeated SensorValue sensor_values = 3;
 }

@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'MainForm.ui'
 **
-** Created: Wed Dec 25 15:50:13 2013
-**      by: Qt User Interface Compiler version 4.8.1
+** Created: Thu Dec 26 00:05:46 2013
+**      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -40,12 +40,13 @@ public:
     QLabel *label_4;
     QLabel *label_5;
     QLabel *label_3;
+    QPushButton *btnShowComposite;
 
     void setupUi(QDialog *MainForm)
     {
         if (MainForm->objectName().isEmpty())
             MainForm->setObjectName(QString::fromUtf8("MainForm"));
-        MainForm->resize(566, 296);
+        MainForm->resize(462, 359);
         btnConnect = new QPushButton(MainForm);
         btnConnect->setObjectName(QString::fromUtf8("btnConnect"));
         btnConnect->setGeometry(QRect(240, 40, 93, 27));
@@ -93,6 +94,10 @@ public:
         label_3 = new QLabel(MainForm);
         label_3->setObjectName(QString::fromUtf8("label_3"));
         label_3->setGeometry(QRect(310, 80, 51, 17));
+        btnShowComposite = new QPushButton(MainForm);
+        btnShowComposite->setObjectName(QString::fromUtf8("btnShowComposite"));
+        btnShowComposite->setGeometry(QRect(30, 290, 131, 27));
+        btnShowComposite->setCheckable(true);
 
         retranslateUi(MainForm);
 
@@ -113,6 +118,7 @@ public:
         label_4->setText(QApplication::translate("MainForm", "Voltage:", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("MainForm", "Current:", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("MainForm", "Sensors", 0, QApplication::UnicodeUTF8));
+        btnShowComposite->setText(QApplication::translate("MainForm", "Composite video", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

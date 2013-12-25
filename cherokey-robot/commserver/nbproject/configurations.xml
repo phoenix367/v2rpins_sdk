@@ -11,6 +11,7 @@
       <itemPath>include/ConnectionListener.hpp</itemPath>
       <itemPath>include/DriveController.hpp</itemPath>
       <itemPath>include/Exceptions.hpp</itemPath>
+      <itemPath>include/VideoController.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="messages" displayName="messages" projectFiles="true">
       <itemPath>messages/common.pb.cc</itemPath>
@@ -26,6 +27,7 @@
       <itemPath>src/ConfigManager.cpp</itemPath>
       <itemPath>src/ConnectionListener.cpp</itemPath>
       <itemPath>src/DriveController.cpp</itemPath>
+      <itemPath>src/VideoController.cpp</itemPath>
       <itemPath>src/main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -99,6 +101,8 @@
       </item>
       <item path="include/Exceptions.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/VideoController.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="messages/common.pb.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="messages/common.pb.h" ex="false" tool="3" flavor2="0">
@@ -108,6 +112,8 @@
       <item path="src/ConnectionListener.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/DriveController.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/VideoController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -143,6 +149,8 @@
       </item>
       <item path="include/Exceptions.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/VideoController.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="messages/common.pb.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="messages/common.pb.h" ex="false" tool="3" flavor2="0">
@@ -152,6 +160,8 @@
       <item path="src/ConnectionListener.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/DriveController.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/VideoController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
