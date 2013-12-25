@@ -48,6 +48,7 @@ private:
     QQueue<QSharedPointer<SocketCommand> > commandQueue;
     QSharedPointer<QMutex> queueMutex;
     QTimer failTimer;
+    int64_t pingSeqno;
 };
 
 #endif	/* REMOTECONNECTOR_HPP */

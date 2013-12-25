@@ -102,6 +102,9 @@ void RemoteConnector::connectToServer(const QString& uri)
     socketPtr->setsockopt(ZMQ_LINGER, &lingerValue, sizeof(int));
     started = true;
     serverUri = uri;
+    pingSeqno = 0;
+    commandQueue.clear();
+    
     start();
 }
 
@@ -122,7 +125,7 @@ void RemoteConnector::disconnectFromServer()
 void RemoteConnector::onPingTimeout()
 {
     QSharedPointer<SocketCommand> pingCommand(new PingCommand(
-        failTimer));
+        failTimer, pingSeqno++));
     handleCommand(pingCommand);
 }
 

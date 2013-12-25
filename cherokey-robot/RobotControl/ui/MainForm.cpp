@@ -8,10 +8,6 @@
 #include "MainForm.hpp"
 #include "../Commands.hpp"
 
-#include <QIcon>
-#include <QStyle>
-#include <QRegExpValidator>
-#include <QRegExp>
 #include <QMessageBox>
 #include <QSharedPointer>
 
@@ -41,20 +37,6 @@ MainForm::MainForm()
     connectorPtr = new RemoteConnector(this);
     connect(connectorPtr, SIGNAL(ConversationTerminated(const QString&)),
             SLOT(onConnectionTerminated(const QString&)));
-    
-    QStyle *stylePtr = qApp->style();
-    
-    QIcon icon = stylePtr->standardIcon(QStyle::SP_ArrowUp);
-    widget.btnForward->setIcon(icon);
-    
-    icon = stylePtr->standardIcon(QStyle::SP_ArrowLeft);
-    widget.btnRotateLeft->setIcon(icon);
-    
-    icon = stylePtr->standardIcon(QStyle::SP_ArrowRight);
-    widget.btnRotateRight->setIcon(icon);
-    
-    icon = stylePtr->standardIcon(QStyle::SP_ArrowDown);
-    widget.btnBackward->setIcon(icon);
     
     widget.frmMove->setEnabled(false);
 }

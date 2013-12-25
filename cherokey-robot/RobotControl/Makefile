@@ -53,9 +53,12 @@ CCADMIN=CCadmin
 # build
 build: .build-post
 
-.build-pre:
+build-proto:
 	${MKDIR} -p ./messages
 	protoc --cpp_out=./messages --proto_path=${CND_BASEDIR}/../messages ${CND_BASEDIR}/../messages/common.proto
+	protoc --cpp_out=./messages --proto_path=${CND_BASEDIR}/../messages ${CND_BASEDIR}/../messages/sensors.proto
+
+.build-pre: build-proto
 
 .build-post: .build-impl
 # Add your post 'build' code here...

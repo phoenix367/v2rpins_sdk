@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>353</width>
-    <height>436</height>
+    <width>566</width>
+    <height>296</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -55,7 +55,7 @@
   <widget class="QFrame" name="frmMove">
    <property name="geometry">
     <rect>
-     <x>70</x>
+     <x>20</x>
      <y>100</y>
      <width>201</width>
      <height>161</height>
@@ -67,7 +67,7 @@
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
    </property>
-   <widget class="QPushButton" name="btnBackward">
+   <widget class="QToolButton" name="btnBackward">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -79,8 +79,11 @@
     <property name="text">
      <string/>
     </property>
+    <property name="arrowType">
+     <enum>Qt::DownArrow</enum>
+    </property>
    </widget>
-   <widget class="QPushButton" name="btnRotateLeft">
+   <widget class="QToolButton" name="btnRotateLeft">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -92,8 +95,11 @@
     <property name="text">
      <string/>
     </property>
+    <property name="arrowType">
+     <enum>Qt::LeftArrow</enum>
+    </property>
    </widget>
-   <widget class="QPushButton" name="btnForward">
+   <widget class="QToolButton" name="btnForward">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -105,8 +111,11 @@
     <property name="text">
      <string/>
     </property>
+    <property name="arrowType">
+     <enum>Qt::UpArrow</enum>
+    </property>
    </widget>
-   <widget class="QPushButton" name="btnRotateRight">
+   <widget class="QToolButton" name="btnRotateRight">
     <property name="geometry">
      <rect>
       <x>120</x>
@@ -118,12 +127,15 @@
     <property name="text">
      <string/>
     </property>
+    <property name="arrowType">
+     <enum>Qt::RightArrow</enum>
+    </property>
    </widget>
   </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>60</x>
      <y>80</y>
      <width>131</width>
      <height>20</height>
@@ -131,6 +143,61 @@
    </property>
    <property name="text">
     <string>Movement control</string>
+   </property>
+  </widget>
+  <widget class="QFrame" name="frmSensors">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>100</y>
+     <width>201</width>
+     <height>161</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>66</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Voltage:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>30</y>
+      <width>66</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Current:</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>80</y>
+     <width>51</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Sensors</string>
    </property>
   </widget>
  </widget>

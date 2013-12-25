@@ -6,10 +6,15 @@
                    projectFiles="true">
       <itemPath>Commands.hpp</itemPath>
       <itemPath>RemoteConnector.hpp</itemPath>
+      <itemPath>SensorsListener.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="messages" displayName="messages" projectFiles="true">
       <itemPath>messages/common.pb.cc</itemPath>
       <itemPath>messages/common.pb.h</itemPath>
+      <itemPath>../messages/common.proto</itemPath>
+      <itemPath>messages/sensors.pb.cc</itemPath>
+      <itemPath>messages/sensors.pb.h</itemPath>
+      <itemPath>../messages/sensors.proto</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -20,6 +25,7 @@
                    projectFiles="true">
       <itemPath>Commands.cpp</itemPath>
       <itemPath>RemoteConnector.cpp</itemPath>
+      <itemPath>SensorsListener.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="f1" displayName="UI" projectFiles="true">
@@ -71,6 +77,10 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="../messages/common.proto" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../messages/sensors.proto" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Commands.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Commands.hpp" ex="false" tool="3" flavor2="0">
@@ -79,11 +89,19 @@
       </item>
       <item path="RemoteConnector.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="SensorsListener.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SensorsListener.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="messages/common.pb.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="messages/common.pb.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="messages/sensors.pb.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="messages/sensors.pb.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ui/MainForm.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -117,6 +135,10 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="../messages/common.proto" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../messages/sensors.proto" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Commands.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Commands.hpp" ex="false" tool="3" flavor2="0">
@@ -125,11 +147,19 @@
       </item>
       <item path="RemoteConnector.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="SensorsListener.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SensorsListener.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="messages/common.pb.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="messages/common.pb.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="messages/sensors.pb.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="messages/sensors.pb.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ui/MainForm.cpp" ex="false" tool="1" flavor2="0">
       </item>
