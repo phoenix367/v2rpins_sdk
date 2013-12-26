@@ -9,14 +9,15 @@
 #include "Exceptions.hpp"
 
 #include <boost/system/error_code.hpp>
-
-namespace bp = ::boost::process;
+#include <signal.h>
+#include <sys/wait.h>
 
 std::unique_ptr<VideoController> VideoController::instance;
 
 VideoController::VideoController() 
 : videoTXPower(new pc::GPIOPin(pc::GPIO_PIN::gpio33, 
                 pc::GPIO_DIRECTION::output))
+, videoProcessPID(-1)
 {
 }
 
@@ -38,47 +39,47 @@ void VideoController::compositeVideo(bool showState)
 {
     if (showState)
     {
-        std::string exec = "/etc/cherokey-robot/run_video_composite";
+        pid_t pid = fork();
+        if (pid == -1)
+        {
+            COMM_EXCEPTION(LaunchException, "Failed to fork server process");
+        }
         
-        boost::system::error_code ec;
-        std::vector<std::string> args;
-        bp::context ctx;
-        
-    ctx.stdin_behavior = bp::inherit_stream(); 
-    ctx.stdout_behavior = bp::inherit_stream(); 
-    ctx.stderr_behavior = bp::inherit_stream(); 
-
-        videoChild = std::unique_ptr<bp::child>(
-                new bp::child(boost::process::launch_shell(exec, ctx)));
-        std::cout << "GStreamer PID = " << videoChild->get_id() << std::endl;
+        if (pid == 0)
+        {
+            int execResult = execlp(
+                "/etc/cherokey-robot/run_video_composite", NULL);
+            
+            exit(execResult);
+        }
+        else
+        {
+            videoProcessPID = pid;
+        }
         
         try
         {
             videoTXPower->setLogicalLevel(pc::GPIO_LOGIC_LEVEL::high);
         }
-        catch (std::exception& e)
+        catch (std::exception&)
         {
-            videoChild->terminate();
+            stopChild();
             throw;
         }
     }
     else
     {
-        if (videoChild)
-        {
-            std::cout << "Terminate gstreamer" << std::endl;
-            
-            try
-            {
-                videoChild->terminate(true);
-            }
-            catch (std::exception& e)
-            {
-                std::cout << e.what() << std::endl;
-                throw;
-            }
-        }
-        
+        stopChild();
         videoTXPower->setLogicalLevel(pc::GPIO_LOGIC_LEVEL::low);
+    }
+}
+
+void VideoController::stopChild()
+{
+    if (videoProcessPID != -1)
+    {
+        kill(videoProcessPID, SIGINT);
+        
+        videoProcessPID = -1;
     }
 }

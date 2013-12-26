@@ -10,8 +10,16 @@
 
 #include "ConfigManager.hpp"
 #include "DriveController.hpp"
-#include "common.pb.h"
 #include <zmq.hpp>
+
+namespace cherokey
+{
+    namespace common
+    {
+        class CommandMessage;
+        class RunDriveGroup;
+    }
+}
 
 class ConnectionListener 
 {

@@ -9,6 +9,7 @@
 #include "Exceptions.hpp"
 #include "DriveController.hpp"
 #include "VideoController.hpp"
+#include "common.pb.h"
 
 namespace cc = cherokey::common;
 
@@ -44,7 +45,22 @@ void ConnectionListener::run()
     while (true)
     {
         zmq::message_t message;
-        socket.recv(&message);
+        
+        try
+        {
+            socket.recv(&message);
+        }
+        catch (zmq::error_t& e)
+        {
+            if (e.num() == EINTR)
+            {
+                continue;
+            }
+            else
+            {
+                throw;
+            }
+        }
         
         cc::CommandMessage commandMsg;
         if (!commandMsg.ParseFromArray(message.data(), message.size()))

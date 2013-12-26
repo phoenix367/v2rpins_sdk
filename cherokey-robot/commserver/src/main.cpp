@@ -6,21 +6,44 @@
  */
 
 #include <cstdlib>
-
+#include <sys/types.h> 
+#include <sys/wait.h> 
 #include <string>
-#include "common.pb.h"
 
 #include "ConfigManager.hpp"
 #include "Exceptions.hpp"
 #include "ConnectionListener.hpp"
 
+#include "common.pb.h"
+
 const std::string DEFAULT_CONFIG_FILE = "commserver.cfg";
+
+sig_atomic_t child_exit_status; 
+
+void clean_up_child_process (int, siginfo_t *info, void *uap) 
+{
+    /* Clean up the child process.  */ 
+    int status; 
+    ::wait((void*) &status); 
+
+    /* Store its exit status in a global variable.  */ 
+    child_exit_status = status; 
+} 
 
 /*
  * 
  */
 int main(int argc, char** argv) 
 {
+    struct sigaction action;
+    action.sa_flags = SA_SIGINFO;
+    memset(&action.sa_mask, 0, sizeof(action.sa_mask));
+    sigemptyset(&action.sa_mask);
+    action.sa_sigaction = &clean_up_child_process;
+    
+    int rc = sigaction(SIGCHLD, &action, NULL);
+    assert(rc == 0);
+
     GOOGLE_PROTOBUF_VERIFY_VERSION;
 
     std::string configFile = DEFAULT_CONFIG_FILE;

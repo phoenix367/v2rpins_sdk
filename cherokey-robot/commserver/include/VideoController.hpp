@@ -9,7 +9,6 @@
 #define	VIDEOCONTROLLER_HPP
 
 #include <memory>
-#include <boost/process.hpp>
 
 #include "pincontroller/pincontroller.hpp"
 
@@ -24,10 +23,13 @@ public:
     void compositeVideo(bool showState);
     
 private:
+    void stopChild();
+    
+private:
     static std::unique_ptr<VideoController> instance;
 
     std::unique_ptr<pc::GPIOPin> videoTXPower;
-    std::unique_ptr<boost::process::child> videoChild;
+    pid_t videoProcessPID;
 };
 
 #endif	/* VIDEOCONTROLLER_HPP */

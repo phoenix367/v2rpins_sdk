@@ -1,0 +1,14 @@
+#!/bin/sh
+
+on_exit()
+{
+    kill -2 $gstreamer_pid
+}
+
+trap 'on_exit' INT
+
+eval "gst-launch v4l2src always-copy=false chain-ipipe=true ! video/x-raw-yuv,format='(fourcc)'NV12,width=640,height=480 ! dmaiaccel ! TIDmaiVideoSink videoStd=D1_PAL videoOutput=composite accelFrameCopy=FALSE sync=false &"
+gstreamer_pid=$!
+
+wait $gstreamer_pid
+
