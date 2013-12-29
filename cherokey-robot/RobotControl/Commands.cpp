@@ -1,4 +1,7 @@
 #include "Commands.hpp"
+#include "messages/common.pb.h"
+
+namespace cc = cherokey::common;
 
 bool SocketCommand::serializeMessage(const cc::CommandMessage& commandMessage,
         zmq::socket_t& socket)
@@ -20,18 +23,29 @@ bool SocketCommand::serializeMessage(const cc::CommandMessage& commandMessage,
 bool SocketCommand::handleReplyAck(zmq::socket_t& socket)
 {
     zmq::message_t reply;
-    if (!socket.recv(&reply))
-    {
-        return false;
-    }
     
-    cc::CommandReply cmdReply;
-    if (!cmdReply.ParseFromArray(reply.data(), reply.size()))
-    {
-        return false;
-    }
+    zmq::pollitem_t items [] = { { socket, 0, ZMQ_POLLIN, 0 } };
+    zmq::poll(items, 1, 1000);
     
-    if (cmdReply.type() != cc::CommandReply::ACK)
+    if (items [0].revents & ZMQ_POLLIN) 
+    {
+        if (!socket.recv(&reply))
+        {
+            return false;
+        }
+
+        cc::CommandReply cmdReply;
+        if (!cmdReply.ParseFromArray(reply.data(), reply.size()))
+        {
+            return false;
+        }
+
+        if (cmdReply.type() != cc::CommandReply::ACK)
+        {
+            return false;
+        }
+    }
+    else
     {
         return false;
     }
@@ -77,24 +91,34 @@ bool PingCommand::commandHandler(zmq::socket_t& socket)
     }
 
     zmq::message_t reply;
-    if (!socket.recv(&reply))
-    {
-        return false;
-    }
+    zmq::pollitem_t items [] = { { socket, 0, ZMQ_POLLIN, 0 } };
+    zmq::poll(items, 1, 1000);
     
-    cc::CommandReply cmdReply;
-    if (!cmdReply.ParseFromArray(reply.data(), reply.size()))
+    if (items [0].revents & ZMQ_POLLIN) 
     {
-        return false;
+        if (!socket.recv(&reply))
+        {
+            return false;
+        }
+
+        cc::CommandReply cmdReply;
+        if (!cmdReply.ParseFromArray(reply.data(), reply.size()))
+        {
+            return false;
+        }
+
+        if (cmdReply.type() != cc::CommandReply::PONG)
+        {
+            return false;
+        }
+
+        cc::Pong *pongMsg = cmdReply.mutable_pong();
+        if (pongMsg->seq_no() != seqno)
+        {
+            return false;
+        }
     }
-    
-    if (cmdReply.type() != cc::CommandReply::PONG)
-    {
-        return false;
-    }
-    
-    cc::Pong *pongMsg = cmdReply.mutable_pong();
-    if (pongMsg->seq_no() != seqno)
+    else
     {
         return false;
     }
@@ -224,6 +248,36 @@ bool ShowVideoComposite::doCommand(zmq::socket_t& socket)
     cc::ShowVideoComposite* videoMsg = 
             commandMessage.mutable_show_video_composite();
     videoMsg->set_show_state((showState) ? cc::ON : cc::OFF);
+
+    if (!serializeMessage(commandMessage, socket))
+    {
+        return false;
+    }
+
+    bool replyResult = handleReplyAck(socket);
+
+    return replyResult;
+}
+
+SendSensorsInfo::SendSensorsInfo(bool send)
+: sendState(send)
+{
+    
+}
+
+SendSensorsInfo::~SendSensorsInfo()
+{
+    
+}
+
+bool SendSensorsInfo::doCommand(zmq::socket_t& socket)
+{
+    cc::CommandMessage commandMessage;
+    commandMessage.set_type(cc::CommandMessage::SENSORS_INFO);
+    commandMessage.set_cookie(0);
+    cc::SendSensorsInfo* sensorsMsg = 
+            commandMessage.mutable_sensors_send_state();
+    sensorsMsg->set_send_state((sendState) ? cc::ON : cc::OFF);
 
     if (!serializeMessage(commandMessage, socket))
     {

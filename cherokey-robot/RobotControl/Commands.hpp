@@ -11,9 +11,13 @@
 #include <zmq.hpp>
 #include <QTimer>
 
-#include "messages/common.pb.h"
-
-namespace cc = cherokey::common;
+namespace cherokey
+{
+    namespace common
+    {
+        class CommandMessage;
+    }
+}
 
 class SocketCommand
 {
@@ -21,7 +25,8 @@ public:
     virtual bool doCommand(zmq::socket_t& socket) = 0;
     
 protected:
-    bool serializeMessage(const cc::CommandMessage& commandMessage,
+    bool serializeMessage(
+            const cherokey::common::CommandMessage& commandMessage,
             zmq::socket_t& socket);
     bool handleReplyAck(zmq::socket_t& socket);
 };
@@ -104,6 +109,18 @@ public:
     
 private:
     bool showState;
+};
+
+class SendSensorsInfo : public SocketCommand
+{
+public:
+    SendSensorsInfo(bool send);
+    virtual ~SendSensorsInfo();
+    
+    virtual bool doCommand(zmq::socket_t& socket);
+    
+private:
+    bool sendState;
 };
 
 #endif	/* COMMANDS_HPP */

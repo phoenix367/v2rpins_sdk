@@ -5,10 +5,13 @@
  * Created on December 7, 2013, 7:35 PM
  */
 
+#include <google/protobuf/service.h>
 #include <QtGui/QApplication>
 #include <QTextCodec>
+
 #include "MainForm.hpp"
-#include "common.pb.h"
+
+zmq::context_t gContext(1);
 
 int main(int argc, char *argv[]) 
 {

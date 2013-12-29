@@ -30,15 +30,19 @@ public:
     
     void loadConfiguration(const std::string& fileName);
     std::shared_ptr<ConnectionInfo> getConnectionInfo();
+    std::shared_ptr<ConnectionInfo> getSensorsConnectionInfo();
     
 private:
     static std::unique_ptr<ConfigManager> instance;
     
     static const std::string IP_ADDRESS_KEY;
     static const std::string PORT_KEY;
+    static const std::string SENSORS_ADDRESS_KEY;
+    static const std::string SENSORS_PORT_KEY;
     
     boost::program_options::options_description desc;
     std::shared_ptr<ConnectionInfo> connectionInfo;
+    std::shared_ptr<ConnectionInfo> sensorsConnection;
 };
 
 #endif	/* CONFIGMANAGER_HPP */

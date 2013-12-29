@@ -11,11 +11,16 @@
       <itemPath>include/ConnectionListener.hpp</itemPath>
       <itemPath>include/DriveController.hpp</itemPath>
       <itemPath>include/Exceptions.hpp</itemPath>
+      <itemPath>include/SensorsController.hpp</itemPath>
       <itemPath>include/VideoController.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="messages" displayName="messages" projectFiles="true">
       <itemPath>messages/common.pb.cc</itemPath>
       <itemPath>messages/common.pb.h</itemPath>
+      <itemPath>../messages/common.proto</itemPath>
+      <itemPath>messages/sensors.pb.cc</itemPath>
+      <itemPath>messages/sensors.pb.h</itemPath>
+      <itemPath>../messages/sensors.proto</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -27,6 +32,7 @@
       <itemPath>src/ConfigManager.cpp</itemPath>
       <itemPath>src/ConnectionListener.cpp</itemPath>
       <itemPath>src/DriveController.cpp</itemPath>
+      <itemPath>src/SensorsController.cpp</itemPath>
       <itemPath>src/VideoController.cpp</itemPath>
       <itemPath>src/main.cpp</itemPath>
     </logicalFolder>
@@ -88,9 +94,14 @@
                             OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libpincontroller.${CND_DLIB_EXT}">
               </makeArtifact>
             </linkerLibProjectItem>
+            <linkerLibLibItem>boost_thread</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="../messages/common.proto" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../messages/sensors.proto" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="configs/commserver.cfg" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/ConfigManager.hpp" ex="false" tool="3" flavor2="0">
@@ -101,17 +112,25 @@
       </item>
       <item path="include/Exceptions.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/SensorsController.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/VideoController.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="messages/common.pb.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="messages/common.pb.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="messages/sensors.pb.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="messages/sensors.pb.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/ConfigManager.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/ConnectionListener.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/DriveController.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/SensorsController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/VideoController.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -139,6 +158,10 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="../messages/common.proto" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../messages/sensors.proto" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="configs/commserver.cfg" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/ConfigManager.hpp" ex="false" tool="3" flavor2="0">
@@ -149,17 +172,25 @@
       </item>
       <item path="include/Exceptions.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/SensorsController.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/VideoController.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="messages/common.pb.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="messages/common.pb.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="messages/sensors.pb.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="messages/sensors.pb.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/ConfigManager.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/ConnectionListener.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/DriveController.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/SensorsController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/VideoController.cpp" ex="false" tool="1" flavor2="0">
       </item>

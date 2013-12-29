@@ -41,6 +41,8 @@ private:
             DriveController::DriveGroup groupType);
     void processVideoComposite(zmq::socket_t& socket, 
             cherokey::common::CommandMessage& msg);
+    void processSensrosInfo(zmq::socket_t& socket, 
+            cherokey::common::CommandMessage& msg);
     
 private:
     std::shared_ptr<ConnectionInfo> connectionParams;

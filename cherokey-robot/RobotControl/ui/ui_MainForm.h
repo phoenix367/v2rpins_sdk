@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'MainForm.ui'
 **
-** Created: Thu Dec 26 00:05:46 2013
+** Created: Mon Dec 30 01:24:59 2013
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -39,6 +39,8 @@ public:
     QFrame *frmSensors;
     QLabel *label_4;
     QLabel *label_5;
+    QLabel *lblVoltage;
+    QLabel *lblCurrent;
     QLabel *label_3;
     QPushButton *btnShowComposite;
 
@@ -91,6 +93,12 @@ public:
         label_5 = new QLabel(frmSensors);
         label_5->setObjectName(QString::fromUtf8("label_5"));
         label_5->setGeometry(QRect(20, 30, 66, 17));
+        lblVoltage = new QLabel(frmSensors);
+        lblVoltage->setObjectName(QString::fromUtf8("lblVoltage"));
+        lblVoltage->setGeometry(QRect(80, 10, 62, 17));
+        lblCurrent = new QLabel(frmSensors);
+        lblCurrent->setObjectName(QString::fromUtf8("lblCurrent"));
+        lblCurrent->setGeometry(QRect(80, 30, 62, 17));
         label_3 = new QLabel(MainForm);
         label_3->setObjectName(QString::fromUtf8("label_3"));
         label_3->setGeometry(QRect(310, 80, 51, 17));
@@ -117,6 +125,8 @@ public:
         label_2->setText(QApplication::translate("MainForm", "Movement control", 0, QApplication::UnicodeUTF8));
         label_4->setText(QApplication::translate("MainForm", "Voltage:", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("MainForm", "Current:", 0, QApplication::UnicodeUTF8));
+        lblVoltage->setText(QApplication::translate("MainForm", "-", 0, QApplication::UnicodeUTF8));
+        lblCurrent->setText(QApplication::translate("MainForm", "-", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("MainForm", "Sensors", 0, QApplication::UnicodeUTF8));
         btnShowComposite->setText(QApplication::translate("MainForm", "Composite video", 0, QApplication::UnicodeUTF8));
     } // retranslateUi

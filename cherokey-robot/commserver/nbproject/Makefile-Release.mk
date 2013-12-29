@@ -36,9 +36,11 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/messages/common.pb.o \
+	${OBJECTDIR}/messages/sensors.pb.o \
 	${OBJECTDIR}/src/ConfigManager.o \
 	${OBJECTDIR}/src/ConnectionListener.o \
 	${OBJECTDIR}/src/DriveController.o \
+	${OBJECTDIR}/src/SensorsController.o \
 	${OBJECTDIR}/src/VideoController.o \
 	${OBJECTDIR}/src/main.o
 
@@ -72,6 +74,11 @@ ${OBJECTDIR}/messages/common.pb.o: messages/common.pb.cc
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/messages/common.pb.o messages/common.pb.cc
 
+${OBJECTDIR}/messages/sensors.pb.o: messages/sensors.pb.cc 
+	${MKDIR} -p ${OBJECTDIR}/messages
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/messages/sensors.pb.o messages/sensors.pb.cc
+
 ${OBJECTDIR}/src/ConfigManager.o: src/ConfigManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
@@ -86,6 +93,11 @@ ${OBJECTDIR}/src/DriveController.o: src/DriveController.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/DriveController.o src/DriveController.cpp
+
+${OBJECTDIR}/src/SensorsController.o: src/SensorsController.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/SensorsController.o src/SensorsController.cpp
 
 ${OBJECTDIR}/src/VideoController.o: src/VideoController.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src

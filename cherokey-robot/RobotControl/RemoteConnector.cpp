@@ -7,11 +7,14 @@
 
 #include "RemoteConnector.hpp"
 #include "common.pb.h"
+#include "SensorsConnector.cpp"
 
 #include <iostream>
 #include <QMutexLocker>
 
 namespace cc = cherokey::common;
+
+extern zmq::context_t gContext;
 
 #define PING_INTERVAL           1000
 #define FAIL_CONN_TIMEOUT       3000
@@ -94,9 +97,13 @@ void RemoteConnector::connectToServer(const QString& uri)
         return;
     }
     
-    contextPtr = QSharedPointer<zmq::context_t>(new zmq::context_t(1));
     socketPtr = QSharedPointer<zmq::socket_t>(new zmq::socket_t(
-            *contextPtr, ZMQ_REQ));
+            gContext, ZMQ_REQ));
+    sensorsConnector = QSharedPointer<SensorsConnector>(new 
+            SensorsConnector());
+    
+    connect(sensorsConnector.data(), SIGNAL(VoltageData(float, float)),
+            parent(), SLOT(onVoltageData(float, float)));    
     
     int lingerValue = 0;
     socketPtr->setsockopt(ZMQ_LINGER, &lingerValue, sizeof(int));
@@ -106,6 +113,7 @@ void RemoteConnector::connectToServer(const QString& uri)
     commandQueue.clear();
     
     start();
+    sensorsConnector->startSubscriber("");
 }
 
 void RemoteConnector::disconnectFromServer()
@@ -117,7 +125,7 @@ void RemoteConnector::disconnectFromServer()
     
     started = false;
     socketPtr->close();
-    contextPtr.clear();
+    sensorsConnector->stopSubscriber();
     
     wait();
 }

@@ -61,6 +61,10 @@ void MainForm::onConnect()
         
         widget.frmMove->setEnabled(true);
         widget.btnShowComposite->setEnabled(true);
+
+        QSharedPointer<SocketCommand> showCommand(
+            new SendSensorsInfo(true));
+        connectorPtr->handleCommand(showCommand);
     }
     else
     {
@@ -145,4 +149,10 @@ void MainForm::onShowVideoComposite()
     QSharedPointer<SocketCommand> showCommand(
         new ShowVideoComposite(showVideo));
     connectorPtr->handleCommand(showCommand);
+}
+
+void MainForm::onVoltageData(float voltage, float current)
+{
+    widget.lblVoltage->setText(QString::number(voltage, 'g', 3));
+    widget.lblCurrent->setText(QString::number(current, 'g', 3));
 }

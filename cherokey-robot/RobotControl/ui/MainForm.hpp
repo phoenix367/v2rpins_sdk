@@ -21,6 +21,7 @@ public:
 private:
     Q_SLOT void onConnect();
     Q_SLOT void onConnectionTerminated(const QString& msg);
+    Q_SLOT void onVoltageData(float voltage, float current);
     
     Q_SLOT void onMoveForwardPressed();
     Q_SLOT void onMoveForwardReleased();

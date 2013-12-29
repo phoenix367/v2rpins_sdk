@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>Commands.hpp</itemPath>
       <itemPath>RemoteConnector.hpp</itemPath>
+      <itemPath>SensorsConnector.hpp</itemPath>
       <itemPath>SensorsListener.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="messages" displayName="messages" projectFiles="true">
@@ -25,6 +26,7 @@
                    projectFiles="true">
       <itemPath>Commands.cpp</itemPath>
       <itemPath>RemoteConnector.cpp</itemPath>
+      <itemPath>SensorsConnector.cpp</itemPath>
       <itemPath>SensorsListener.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
@@ -89,6 +91,10 @@
       </item>
       <item path="RemoteConnector.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="SensorsConnector.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SensorsConnector.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="SensorsListener.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SensorsListener.hpp" ex="false" tool="3" flavor2="0">
@@ -146,6 +152,10 @@
       <item path="RemoteConnector.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="RemoteConnector.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SensorsConnector.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SensorsConnector.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="SensorsListener.cpp" ex="false" tool="1" flavor2="0">
       </item>

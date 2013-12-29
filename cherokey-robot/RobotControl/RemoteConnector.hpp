@@ -16,6 +16,7 @@
 #include <zmq.hpp>
 
 #include "Commands.hpp"
+#include "SensorsConnector.hpp"
 
 class RemoteConnector : public QThread
 {
@@ -40,8 +41,7 @@ protected:
     virtual void run();
     
 private:
-    QSharedPointer<zmq::context_t> contextPtr;
-    bool started;
+    volatile bool started;
     QString serverUri;
     QSharedPointer<zmq::socket_t> socketPtr;
     QTimer pingTimer;
@@ -49,6 +49,7 @@ private:
     QSharedPointer<QMutex> queueMutex;
     QTimer failTimer;
     int64_t pingSeqno;
+    QSharedPointer<SensorsConnector> sensorsConnector;
 };
 
 #endif	/* REMOTECONNECTOR_HPP */

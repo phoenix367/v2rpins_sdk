@@ -10,8 +10,11 @@
 #include "DriveController.hpp"
 #include "VideoController.hpp"
 #include "common.pb.h"
+#include "SensorsController.hpp"
 
 namespace cc = cherokey::common;
+
+extern zmq::context_t gContext;
 
 ConnectionListener::ConnectionListener(
     std::shared_ptr<ConnectionInfo>& infoPtr) 
@@ -35,8 +38,7 @@ void ConnectionListener::run()
     stream << "tcp://" << connectionParams->ipAddress.to_string() << ":" <<
             connectionParams->port;
 
-    zmq::context_t context(1);
-    zmq::socket_t socket(context, ZMQ_REP);
+    zmq::socket_t socket(gContext, ZMQ_REP);
     
     std::cout << stream.str() << std::endl;
     
@@ -79,6 +81,9 @@ void ConnectionListener::run()
                     break;
                 case cc::CommandMessage::SHOW_VIDEO_COMPOSITE:
                     processVideoComposite(socket, commandMsg);
+                    break;
+                case cc::CommandMessage::SENSORS_INFO:
+                    processSensrosInfo(socket, commandMsg);
                     break;
                 default:
                     std::cout << "Received unknown message with type " <<
@@ -210,6 +215,55 @@ void ConnectionListener::processVideoComposite(zmq::socket_t& socket,
         }
         
         videoInstance->compositeVideo(showState == cc::ON);
+        
+        sendAck(cookie, socket);
+    }
+    catch (std::exception& e)
+    {
+        sendNack(e.what(), cookie, socket);
+    }
+}
+
+void ConnectionListener::processSensrosInfo(zmq::socket_t& socket, 
+            cherokey::common::CommandMessage& msg)
+{
+    auto cookie = msg.cookie();
+
+    try
+    {
+        auto sendAction = msg.mutable_sensors_send_state();
+        auto sendState = sendAction->send_state();
+        
+        auto sensorsInstance = SensorsController::getInstance();
+        if (!sensorsInstance)
+        {
+            COMM_EXCEPTION(NullPointerException, "Sensors controller instance "
+                "is null.");
+        }
+        
+        auto configInstance = ConfigManager::getInstance();
+        if (!configInstance)
+        {
+            COMM_EXCEPTION(NullPointerException, "Configuration manager instance "
+                "is null.");
+        }
+        
+        auto connectionInfo = configInstance->getSensorsConnectionInfo();
+        if (!connectionInfo)
+        {
+            COMM_EXCEPTION(NullPointerException, "Connection information for "
+                "sensors publisher is null.");
+        }
+        
+        switch (sendState)
+        {
+            case cc::ON:
+                sensorsInstance->startPublisher(*connectionInfo);
+                break;
+            case cc::OFF:
+                sensorsInstance->stopPublisher();
+                break;
+        }
         
         sendAck(cookie, socket);
     }

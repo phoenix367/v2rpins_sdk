@@ -9,16 +9,17 @@
 #include <sys/types.h> 
 #include <sys/wait.h> 
 #include <string>
+#include <google/protobuf/service.h>
+#include <zmq.hpp>
 
 #include "ConfigManager.hpp"
 #include "Exceptions.hpp"
 #include "ConnectionListener.hpp"
 
-#include "common.pb.h"
-
 const std::string DEFAULT_CONFIG_FILE = "commserver.cfg";
 
 sig_atomic_t child_exit_status; 
+zmq::context_t gContext(1);
 
 void clean_up_child_process (int, siginfo_t *info, void *uap) 
 {
