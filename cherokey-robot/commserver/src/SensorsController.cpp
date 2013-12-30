@@ -58,7 +58,19 @@ void SensorsController::run()
     publisher.bind(stream.str().c_str());
     
     float prevVoltageData = 0, prevCurrentData = 0;
+    cs::SensorData sensorMessage;
+
+    sensorMessage.set_sensor_id(0);
+    sensorMessage.set_sensor_desc("voltage_current");
+    auto values = sensorMessage.mutable_sensor_values();
+    auto voltageData = values->Add();
+    auto currentData = values->Add();
     
+    voltageData->set_associated_name("voltage");
+    voltageData->set_data_type(cs::REAL);
+    currentData->set_associated_name("current");
+    currentData->set_data_type(cs::REAL);
+
     while (!stopVariable)
     {
         pc::ADCReader::ADCValue adcValue;
@@ -71,21 +83,8 @@ void SensorsController::run()
         float current = -(adcValue.adcVoltages[1] - 2) / (2 * 0.185);
         current = (current + prevCurrentData) / 2;
         prevCurrentData = current;
-        
-        cs::SensorData sensorMessage;
-        
-        sensorMessage.set_sensor_id(0);
-        sensorMessage.set_sensor_desc("voltage_current");
-        
-        auto values = sensorMessage.mutable_sensor_values();
-        auto voltageData = values->Add();
-        voltageData->set_associated_name("voltage");
-        voltageData->set_data_type(cs::REAL);
-        voltageData->set_real_value(voltage);
-        
-        auto currentData = values->Add();
-        currentData->set_associated_name("current");
-        currentData->set_data_type(cs::REAL);
+                
+        voltageData->set_real_value(voltage);        
         currentData->set_real_value(current);
         
         int messageSize = sensorMessage.ByteSize();
