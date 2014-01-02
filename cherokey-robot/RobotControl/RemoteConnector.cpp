@@ -7,9 +7,9 @@
 
 #include "RemoteConnector.hpp"
 #include "common.pb.h"
-#include "SensorsConnector.cpp"
 
 #include <iostream>
+#include <sstream>
 #include <QMutexLocker>
 
 namespace cc = cherokey::common;
@@ -44,7 +44,11 @@ void RemoteConnector::run()
 {
     try
     {
-        socketPtr->connect(serverUri.toStdString().c_str());
+        std::ostringstream stream;
+        
+        stream << "tcp://" << connectionInfo.ipAddress.toStdString() << ":" <<
+                connectionInfo.commandPort;
+        socketPtr->connect(stream.str().c_str());
 
         pingTimer.start();
         failTimer.start(failTimer.interval());
@@ -90,7 +94,7 @@ void RemoteConnector::run()
     failTimer.stop();
 }
 
-void RemoteConnector::connectToServer(const QString& uri)
+void RemoteConnector::connectToServer(const ConnectionInfo& info)
 {
     if (started)
     {
@@ -108,12 +112,12 @@ void RemoteConnector::connectToServer(const QString& uri)
     int lingerValue = 0;
     socketPtr->setsockopt(ZMQ_LINGER, &lingerValue, sizeof(int));
     started = true;
-    serverUri = uri;
+    connectionInfo = info;
     pingSeqno = 0;
     commandQueue.clear();
     
     start();
-    sensorsConnector->startSubscriber("");
+    sensorsConnector->startSubscriber(connectionInfo);
 }
 
 void RemoteConnector::disconnectFromServer()

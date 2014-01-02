@@ -26,7 +26,7 @@ public:
     RemoteConnector(QObject *parent = NULL);
     virtual ~RemoteConnector();
     
-    void connectToServer(const QString& uri);
+    void connectToServer(const ConnectionInfo& info);
     void disconnectFromServer();
     void handleCommand(QSharedPointer<SocketCommand>& commandPtr);
     
@@ -42,7 +42,7 @@ protected:
     
 private:
     volatile bool started;
-    QString serverUri;
+    ConnectionInfo connectionInfo;
     QSharedPointer<zmq::socket_t> socketPtr;
     QTimer pingTimer;
     QQueue<QSharedPointer<SocketCommand> > commandQueue;

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>462</width>
-    <height>359</height>
+    <height>442</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,12 +31,12 @@
     <rect>
      <x>20</x>
      <y>20</y>
-     <width>131</width>
+     <width>151</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Connection string:</string>
+    <string>Connection IP-address:</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="txtConnectionString">
@@ -48,15 +48,12 @@
      <height>27</height>
     </rect>
    </property>
-   <property name="inputMask">
-    <string>000.000.000.000:0000; </string>
-   </property>
   </widget>
   <widget class="QFrame" name="frmMove">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>100</y>
+     <y>220</y>
      <width>201</width>
      <height>161</height>
     </rect>
@@ -136,7 +133,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>80</y>
+     <y>200</y>
      <width>131</width>
      <height>20</height>
     </rect>
@@ -149,7 +146,7 @@
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>100</y>
+     <y>220</y>
      <width>201</width>
      <height>161</height>
     </rect>
@@ -217,7 +214,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>80</y>
+     <y>200</y>
      <width>51</width>
      <height>17</height>
     </rect>
@@ -229,8 +226,8 @@
   <widget class="QPushButton" name="btnShowComposite">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>290</y>
+     <x>20</x>
+     <y>390</y>
      <width>131</width>
      <height>27</height>
     </rect>
@@ -240,6 +237,52 @@
    </property>
    <property name="checkable">
     <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>70</y>
+     <width>151</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Command server port:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="txtCommandPort">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>90</y>
+     <width>81</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>130</y>
+     <width>151</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Sensors publisher port:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="txtSensorsPort">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>150</y>
+     <width>81</width>
+     <height>27</height>
+    </rect>
    </property>
   </widget>
  </widget>

@@ -5,6 +5,9 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>Commands.hpp</itemPath>
+      <itemPath>Globals.hpp</itemPath>
+      <itemPath>IP4Validator.hpp</itemPath>
+      <itemPath>PortValidator.hpp</itemPath>
       <itemPath>RemoteConnector.hpp</itemPath>
       <itemPath>SensorsConnector.hpp</itemPath>
       <itemPath>SensorsListener.hpp</itemPath>
@@ -25,6 +28,8 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>Commands.cpp</itemPath>
+      <itemPath>IP4Validator.cpp</itemPath>
+      <itemPath>PortValidator.cpp</itemPath>
       <itemPath>RemoteConnector.cpp</itemPath>
       <itemPath>SensorsConnector.cpp</itemPath>
       <itemPath>SensorsListener.cpp</itemPath>
@@ -87,6 +92,16 @@
       </item>
       <item path="Commands.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Globals.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IP4Validator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="IP4Validator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PortValidator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="PortValidator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="RemoteConnector.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="RemoteConnector.hpp" ex="false" tool="3" flavor2="0">
@@ -148,6 +163,16 @@
       <item path="Commands.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Commands.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Globals.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IP4Validator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="IP4Validator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PortValidator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="PortValidator.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="RemoteConnector.cpp" ex="false" tool="1" flavor2="0">
       </item>

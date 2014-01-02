@@ -7,8 +7,10 @@
 
 #include "SensorsConnector.hpp"
 #include "messages/sensors.pb.h"
+#include "RemoteConnector.hpp"
 
 #include <iostream>
+#include <sstream>
 
 namespace cs = cherokey::sensors;
 
@@ -28,7 +30,11 @@ void SensorsConnector::run()
 {
     try
     {
-        socketPtr->connect("tcp://192.168.1.128:1231");
+        std::ostringstream stream;
+        
+        stream << "tcp://" << connectionInfo.ipAddress.toStdString() << ":" <<
+                connectionInfo.sensorsPort;
+        socketPtr->connect(stream.str().c_str());
         
         while (true)
         {
@@ -74,7 +80,7 @@ void SensorsConnector::run()
     }
 }
 
-void SensorsConnector::startSubscriber(const QString& url)
+void SensorsConnector::startSubscriber(const ConnectionInfo& info)
 {
     socketPtr = QSharedPointer<zmq::socket_t>(
             new zmq::socket_t(gContext, ZMQ_SUB));
@@ -82,6 +88,7 @@ void SensorsConnector::startSubscriber(const QString& url)
 
     int lingerValue = 0;
     socketPtr->setsockopt(ZMQ_LINGER, &lingerValue, sizeof(int));
+    connectionInfo = info;
     
     start();
 }

@@ -12,6 +12,8 @@
 #include <zmq.hpp>
 #include <QSharedPointer>
 
+#include "Globals.hpp"
+
 class SensorsConnector : public QThread
 {
     Q_OBJECT
@@ -20,7 +22,7 @@ public:
     SensorsConnector(QObject *parent = NULL);
     virtual ~SensorsConnector();
     
-    void startSubscriber(const QString& url);
+    void startSubscriber(const ConnectionInfo& info);
     void stopSubscriber();
     
 public:
@@ -32,6 +34,7 @@ protected:
 private:
     volatile bool started;
     QSharedPointer<zmq::socket_t> socketPtr;
+    ConnectionInfo connectionInfo;
 };
 
 #endif	/* SENSORSCONNECTOR_HPP */

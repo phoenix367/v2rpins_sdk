@@ -7,6 +7,8 @@
 
 #include "MainForm.hpp"
 #include "../Commands.hpp"
+#include "../IP4Validator.hpp"
+#include "../PortValidator.hpp"
 
 #include <QMessageBox>
 #include <QSharedPointer>
@@ -42,6 +44,13 @@ MainForm::MainForm()
     
     widget.frmMove->setEnabled(false);
     widget.btnShowComposite->setEnabled(false);
+    
+    static IP4Validator ipValidator;
+    static PortValidator portValidator;
+    
+    widget.txtConnectionString->setValidator(&ipValidator);
+    widget.txtCommandPort->setValidator(&portValidator);
+    widget.txtSensorsPort->setValidator(&portValidator);
 }
 
 MainForm::~MainForm() 
@@ -55,7 +64,12 @@ void MainForm::onConnect()
     {
         QString ipAddress = widget.txtConnectionString->text();
         
-        connectorPtr->connectToServer("tcp://" + ipAddress);
+        ConnectionInfo info;
+        info.ipAddress = ipAddress;
+        info.commandPort = widget.txtCommandPort->text().toInt();
+        info.sensorsPort = widget.txtSensorsPort->text().toInt();
+        
+        connectorPtr->connectToServer(info);
         connected = true;
         widget.btnConnect->setText("Disconnect...");
         
