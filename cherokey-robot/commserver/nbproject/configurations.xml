@@ -11,8 +11,10 @@
       <itemPath>include/ConnectionListener.hpp</itemPath>
       <itemPath>include/DriveController.hpp</itemPath>
       <itemPath>include/Exceptions.hpp</itemPath>
+      <itemPath>include/GPSReader.hpp</itemPath>
       <itemPath>include/SensorsController.hpp</itemPath>
       <itemPath>include/VideoController.hpp</itemPath>
+      <itemPath>include/serialstream.h</itemPath>
     </logicalFolder>
     <logicalFolder name="messages" displayName="messages" projectFiles="true">
       <itemPath>messages/common.pb.cc</itemPath>
@@ -32,9 +34,11 @@
       <itemPath>src/ConfigManager.cpp</itemPath>
       <itemPath>src/ConnectionListener.cpp</itemPath>
       <itemPath>src/DriveController.cpp</itemPath>
+      <itemPath>src/GPSReader.cpp</itemPath>
       <itemPath>src/SensorsController.cpp</itemPath>
       <itemPath>src/VideoController.cpp</itemPath>
       <itemPath>src/main.cpp</itemPath>
+      <itemPath>src/serialstream.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -112,9 +116,13 @@
       </item>
       <item path="include/Exceptions.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/GPSReader.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/SensorsController.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/VideoController.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/serialstream.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="messages/common.pb.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -130,11 +138,15 @@
       </item>
       <item path="src/DriveController.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="src/GPSReader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="src/SensorsController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/VideoController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/serialstream.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -172,9 +184,13 @@
       </item>
       <item path="include/Exceptions.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/GPSReader.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/SensorsController.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/VideoController.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/serialstream.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="messages/common.pb.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -190,11 +206,15 @@
       </item>
       <item path="src/DriveController.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="src/GPSReader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="src/SensorsController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/VideoController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/serialstream.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

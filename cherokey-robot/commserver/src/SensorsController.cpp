@@ -8,6 +8,7 @@
 #include "SensorsController.hpp"
 #include "Exceptions.hpp"
 #include "sensors.pb.h"
+#include "GPSReader.hpp"
 
 #include <boost/thread/thread.hpp>
 #include <boost/asio.hpp>
@@ -70,6 +71,8 @@ void SensorsController::run()
     voltageData->set_data_type(cs::REAL);
     currentData->set_associated_name("current");
     currentData->set_data_type(cs::REAL);
+    
+    GPSReader gpsReader;
 
     while (!stopVariable)
     {
