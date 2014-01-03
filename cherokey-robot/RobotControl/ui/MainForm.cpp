@@ -12,6 +12,7 @@
 
 #include <QMessageBox>
 #include <QSharedPointer>
+#include <QKeyEvent>
 
 MainForm::MainForm()
 : connected(false)
@@ -51,6 +52,8 @@ MainForm::MainForm()
     widget.txtConnectionString->setValidator(&ipValidator);
     widget.txtCommandPort->setValidator(&portValidator);
     widget.txtSensorsPort->setValidator(&portValidator);
+    
+    qApp->installEventFilter(this);
 }
 
 MainForm::~MainForm() 
@@ -169,4 +172,56 @@ void MainForm::onVoltageData(float voltage, float current)
 {
     widget.lblVoltage->setText(QString::number(voltage, 'g', 3));
     widget.lblCurrent->setText(QString::number(current, 'g', 3));
+}
+
+bool MainForm::eventFilter(QObject *object, QEvent *event)
+{
+    Q_UNUSED(object);
+
+    if (event->type() == QEvent::KeyPress)
+    {
+        QKeyEvent *ke = static_cast<QKeyEvent *>(event);
+        if (!ke->isAutoRepeat())
+        {
+            switch (ke->key())
+            {
+                case Qt::Key_Up:
+                    onMoveForwardPressed();
+                    return true;
+                case Qt::Key_Down:
+                    onMoveBackwardPressed();
+                    return true;
+                case Qt::Key_Left:
+                    onRotateLeftPressed();
+                    return true;
+                case Qt::Key_Right:
+                    onRotateRightPressed();
+                    return true;
+            }
+        }
+    }
+    else if (event->type() == QEvent::KeyRelease)
+    {
+        QKeyEvent *ke = static_cast<QKeyEvent *>(event);
+        if (!ke->isAutoRepeat())
+        {
+            switch (ke->key())
+            {
+                case Qt::Key_Up:
+                    onMoveForwardReleased();
+                    return true;
+                case Qt::Key_Down:
+                    onMoveBackwardReleased();
+                    return true;
+                case Qt::Key_Left:
+                    onRotateLeftReleased();
+                    return true;
+                case Qt::Key_Right:
+                    onRotateRightReleased();
+                    return true;
+            }
+        }
+    }
+    
+    return false;
 }

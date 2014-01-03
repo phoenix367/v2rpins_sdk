@@ -33,6 +33,9 @@ private:
     Q_SLOT void onRotateLeftReleased();
     Q_SLOT void onShowVideoComposite();
     
+protected:
+    virtual bool eventFilter(QObject *object, QEvent *event);
+    
 private:
     void doDisconnect();
     
