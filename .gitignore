@@ -19,3 +19,5 @@ pincontroller/build/
 /cherokey-robot/commserver/messages/
 /cherokey-robot/RobotControl/moc/
 /cherokey-robot/RobotControl/messages/
+/cherokey-robot/nmea/build/
+/cherokey-robot/nmea/dist/
