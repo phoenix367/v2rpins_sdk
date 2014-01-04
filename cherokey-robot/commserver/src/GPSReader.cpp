@@ -6,15 +6,25 @@
  */
 
 #include "GPSReader.hpp"
+#include "ConfigManager.hpp"
 
 #include <iostream>
+#include <iomanip>
 
 GPSReader::GPSReader()
 : stopVariable(false)
 {
+    auto instance = ConfigManager::getInstance();
+    
+    if (!instance)
+    {
+        COMM_EXCEPTION(NullPointerException, "Pointer to instance of "
+                "configuration manager is null.");
+    }
+    
     SerialOptions options;
-    options.setDevice("/dev/ttyS1");
-    options.setBaudrate(115200);
+    options.setDevice(instance->getGPSDevice());
+    options.setBaudrate(instance->getGPSDeviceBaudrate());
     options.setTimeout(boost::posix_time::seconds(3));
     
     serialStreamPtr = std::shared_ptr<SerialStream>(
@@ -34,12 +44,35 @@ GPSReader::~GPSReader()
 
 void GPSReader::run()
 {
+    ParserHolder parser;
+    nmeaINFO info;
+    
+    nmea_zero_INFO(&info);
+    nmea_parser_init(parser);
+    
+    double degLatPrev = INFINITY, degLonPrev = INFINITY;
+    
     while (!stopVariable)
     {
         std::string s;
         
         *serialStreamPtr >> s;
-        std::cout << "Read " << s.size() << " bytes from GPS receiver" << 
-                std::endl;
+        
+        s += "\r\n";
+        nmea_parse(parser, s.c_str(), s.size(), &info);
+        
+        double degLat = nmea_ndeg2degree(info.lat);
+        double degLon = nmea_ndeg2degree(info.lon);
+        
+        if ((degLat != degLatPrev || degLon != degLonPrev) &&
+                info.sig != 0)
+        {
+            degLatPrev = degLat;
+            degLonPrev = degLon;
+            
+            std::cout << info.smask << " " << 
+                    std::setprecision(10) << degLat << " " << degLon << " " <<
+                    info.sig << std::endl;
+        }
     }
 }

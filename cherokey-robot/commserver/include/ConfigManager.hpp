@@ -32,6 +32,9 @@ public:
     std::shared_ptr<ConnectionInfo> getConnectionInfo();
     std::shared_ptr<ConnectionInfo> getSensorsConnectionInfo();
     
+    std::string getGPSDevice();
+    uint32_t getGPSDeviceBaudrate();
+    
 private:
     static std::unique_ptr<ConfigManager> instance;
     
@@ -39,10 +42,14 @@ private:
     static const std::string PORT_KEY;
     static const std::string SENSORS_ADDRESS_KEY;
     static const std::string SENSORS_PORT_KEY;
+    static const std::string GPS_SERIAL_DEVICE;
+    static const std::string GPS_SERIAL_BAUDRATE;
     
     boost::program_options::options_description desc;
     std::shared_ptr<ConnectionInfo> connectionInfo;
     std::shared_ptr<ConnectionInfo> sensorsConnection;
+    std::string gpsSerial;
+    uint32_t gpsSerialBaudrate;
 };
 
 #endif	/* CONFIGMANAGER_HPP */

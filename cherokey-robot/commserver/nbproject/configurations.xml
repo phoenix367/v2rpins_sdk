@@ -73,6 +73,7 @@
             <pElem>include</pElem>
             <pElem>messages</pElem>
             <pElem>../../pincontroller/include</pElem>
+            <pElem>../nmea/include</pElem>
           </incDir>
         </ccTool>
         <linkerTool>
@@ -99,6 +100,18 @@
               </makeArtifact>
             </linkerLibProjectItem>
             <linkerLibLibItem>boost_thread</linkerLibLibItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../nmea"
+                            CT="2"
+                            CN="Debug"
+                            AC="true"
+                            BL="true"
+                            WD="../nmea"
+                            BC="${MAKE}  -f Makefile CONF=Debug"
+                            CC="${MAKE}  -f Makefile CONF=Debug clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libnmea.${CND_DLIB_EXT}">
+              </makeArtifact>
+            </linkerLibProjectItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>

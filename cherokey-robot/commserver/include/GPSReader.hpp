@@ -12,9 +12,38 @@
 #include <boost/atomic.hpp>
 
 #include "serialstream.h"
+#include "nmea/nmea.h"
+#include "Exceptions.hpp"
 
 class GPSReader 
 {
+private:
+    class ParserHolder
+    {
+    public:
+        ParserHolder()
+        {
+            if (!nmea_parser_init(&parser))
+            {
+                COMM_EXCEPTION(InternalError, "Failed to create NMEA parser "
+                    "instance");
+            }
+        }
+        
+        ~ParserHolder()
+        {
+            nmea_parser_destroy(&parser);
+        }
+        
+        operator nmeaPARSER*()
+        {
+            return &parser;
+        }
+
+    private:
+        nmeaPARSER parser;
+    };
+    
 public:
     GPSReader();
     virtual ~GPSReader();

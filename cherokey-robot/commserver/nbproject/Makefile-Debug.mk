@@ -61,13 +61,15 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L../../3pty/lib -lprotobuf -lpthread -lz -lzmq -lboost_program_options -lboost_system -Wl,-rpath,../../pincontroller/dist/Debug/V2R-Linux-x86 -L../../pincontroller/dist/Debug/V2R-Linux-x86 -lpincontroller -lboost_thread
+LDLIBSOPTIONS=-L../../3pty/lib -lprotobuf -lpthread -lz -lzmq -lboost_program_options -lboost_system -Wl,-rpath,../../pincontroller/dist/Debug/V2R-Linux-x86 -L../../pincontroller/dist/Debug/V2R-Linux-x86 -lpincontroller -lboost_thread -Wl,-rpath,../nmea/dist/Debug/V2R-Linux-x86 -L../nmea/dist/Debug/V2R-Linux-x86 -lnmea
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/commserver
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/commserver: ../../pincontroller/dist/Debug/V2R-Linux-x86/libpincontroller.so
+
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/commserver: ../nmea/dist/Debug/V2R-Linux-x86/libnmea.so
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/commserver: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
@@ -76,56 +78,57 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/commserver: ${OBJECTFILES}
 ${OBJECTDIR}/messages/common.pb.o: messages/common.pb.cc 
 	${MKDIR} -p ${OBJECTDIR}/messages
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/messages/common.pb.o messages/common.pb.cc
+	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/messages/common.pb.o messages/common.pb.cc
 
 ${OBJECTDIR}/messages/sensors.pb.o: messages/sensors.pb.cc 
 	${MKDIR} -p ${OBJECTDIR}/messages
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/messages/sensors.pb.o messages/sensors.pb.cc
+	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/messages/sensors.pb.o messages/sensors.pb.cc
 
 ${OBJECTDIR}/src/ConfigManager.o: src/ConfigManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/ConfigManager.o src/ConfigManager.cpp
+	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/ConfigManager.o src/ConfigManager.cpp
 
 ${OBJECTDIR}/src/ConnectionListener.o: src/ConnectionListener.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/ConnectionListener.o src/ConnectionListener.cpp
+	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/ConnectionListener.o src/ConnectionListener.cpp
 
 ${OBJECTDIR}/src/DriveController.o: src/DriveController.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/DriveController.o src/DriveController.cpp
+	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/DriveController.o src/DriveController.cpp
 
 ${OBJECTDIR}/src/GPSReader.o: src/GPSReader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/GPSReader.o src/GPSReader.cpp
+	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/GPSReader.o src/GPSReader.cpp
 
 ${OBJECTDIR}/src/SensorsController.o: src/SensorsController.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/SensorsController.o src/SensorsController.cpp
+	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/SensorsController.o src/SensorsController.cpp
 
 ${OBJECTDIR}/src/VideoController.o: src/VideoController.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/VideoController.o src/VideoController.cpp
+	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/VideoController.o src/VideoController.cpp
 
 ${OBJECTDIR}/src/main.o: src/main.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/main.o src/main.cpp
+	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/main.o src/main.cpp
 
 ${OBJECTDIR}/src/serialstream.o: src/serialstream.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/serialstream.o src/serialstream.cpp
+	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/serialstream.o src/serialstream.cpp
 
 # Subprojects
 .build-subprojects:
 	cd ../../pincontroller && ${MAKE}  -f Makefile CONF=Debug
+	cd ../nmea && ${MAKE}  -f Makefile CONF=Debug
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
@@ -135,6 +138,7 @@ ${OBJECTDIR}/src/serialstream.o: src/serialstream.cpp
 # Subprojects
 .clean-subprojects:
 	cd ../../pincontroller && ${MAKE}  -f Makefile CONF=Debug clean
+	cd ../nmea && ${MAKE}  -f Makefile CONF=Debug clean
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl

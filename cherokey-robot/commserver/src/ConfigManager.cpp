@@ -19,9 +19,12 @@ const std::string ConfigManager::IP_ADDRESS_KEY = "Connection.IPAddress";
 const std::string ConfigManager::PORT_KEY = "Connection.Port";
 const std::string ConfigManager::SENSORS_ADDRESS_KEY = "Sensors.IPAddress";
 const std::string ConfigManager::SENSORS_PORT_KEY = "Sensors.Port";
+const std::string ConfigManager::GPS_SERIAL_DEVICE = "GPS.SerialDevice";
+const std::string ConfigManager::GPS_SERIAL_BAUDRATE = "GPS.Baudrate";
 
 ConfigManager::ConfigManager() 
 : desc("Options")
+, gpsSerialBaudrate(0)
 {
     desc.add_options()
         (IP_ADDRESS_KEY.c_str(), boost::program_options::value<std::string>()->required(), 
@@ -30,8 +33,12 @@ ConfigManager::ConfigManager()
             "Port")
         (SENSORS_ADDRESS_KEY.c_str(), boost::program_options::value<std::string>(),
             "Sensors publisher IP Address")
-        (SENSORS_PORT_KEY.c_str(), boost::program_options::value<std::string>(),
-            "Sensors publisher Port");
+        (SENSORS_PORT_KEY.c_str(), boost::program_options::value<uint16_t>(),
+            "Sensors publisher Port")
+        (GPS_SERIAL_DEVICE.c_str(), boost::program_options::value<std::string>(),
+            "Serial device to connect with GPS receiver")
+        (GPS_SERIAL_BAUDRATE.c_str(), boost::program_options::value<uint32_t>(),
+            "Desired buadrate of serial device");
 }
 
 ConfigManager::~ConfigManager() 
@@ -105,10 +112,34 @@ void ConfigManager::loadConfiguration(const std::string& fileName)
         {
             sensorsConnection->port = connectionInfo->port + 1;
         }
+        
+        if (vm.count(GPS_SERIAL_DEVICE))
+        {
+            gpsSerial = vm[GPS_SERIAL_DEVICE].as<std::string>();
+        }
+        else
+        {
+            COMM_EXCEPTION(ConfigurationException, 
+                    "GPS serial device is not specified.");
+        }
+        
+        if (vm.count(GPS_SERIAL_BAUDRATE))
+        {
+            gpsSerialBaudrate = vm[GPS_SERIAL_BAUDRATE].as<uint32_t>();
+        }
+        else
+        {
+            COMM_EXCEPTION(ConfigurationException, 
+                    "GPS serial device baudrate is not specified.");
+        }
+    }
+    catch (Exception&)
+    {
+        throw;
     }
     catch (std::exception& e)
     {
-        COMM_EXCEPTION(ConfigurationException, e.what());
+        COMM_EXCEPTION(InternalError, e.what());
     }
 }
 
@@ -120,4 +151,14 @@ std::shared_ptr<ConnectionInfo> ConfigManager::getConnectionInfo()
 std::shared_ptr<ConnectionInfo> ConfigManager::getSensorsConnectionInfo()
 {
     return sensorsConnection;
+}
+
+std::string ConfigManager::getGPSDevice()
+{
+    return gpsSerial;
+}
+
+uint32_t ConfigManager::getGPSDeviceBaudrate()
+{
+    return gpsSerialBaudrate;
 }
