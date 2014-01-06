@@ -50,25 +50,50 @@ void SensorsConnector::run()
                     cs::SensorData dataMsg;
                     dataMsg.ParseFromArray(msg.data(), msg.size());
                     
-                    float voltage = 0, current = 0;
-                    
-                    for (int i = 0; i < dataMsg.sensor_values_size(); i++)
-                    {
-                        cs::SensorValue value = dataMsg.sensor_values(i);
-                        
-                        if (value.associated_name() == "voltage" &&
-                            value.has_real_value())
+                    if (dataMsg.sensor_id() == 0)
+                    {                   
+                        float voltage = 0, current = 0;
+
+                        for (int i = 0; i < dataMsg.sensor_values_size(); i++)
                         {
-                            voltage = value.real_value();
+                            cs::SensorValue value = dataMsg.sensor_values(i);
+
+                            if (value.associated_name() == "voltage" &&
+                                value.has_real_value())
+                            {
+                                voltage = value.real_value();
+                            }
+                            else if (value.associated_name() == "current" &&
+                                value.has_real_value())
+                            {
+                                current = value.real_value();
+                            }
                         }
-                        else if (value.associated_name() == "current" &&
-                            value.has_real_value())
-                        {
-                            current = value.real_value();
-                        }
+
+                        emit VoltageData(voltage, current);
                     }
-                    
-                    VoltageData(voltage, current);
+                    else if (dataMsg.sensor_id() == 1)
+                    {
+                        GPSInfo info;
+                        
+                        for (int i = 0; i < dataMsg.sensor_values_size(); i++)
+                        {
+                            cs::SensorValue value = dataMsg.sensor_values(i);
+
+                            if (value.associated_name() == "latitude" &&
+                                value.has_real_value())
+                            {
+                                info.latitude = value.real_value();
+                            }
+                            else if (value.associated_name() == "longitude" &&
+                                value.has_real_value())
+                            {
+                                info.longitude = value.real_value();
+                            }
+                        }
+                        
+                        emit GPSData(info);
+                    }
                 }
             }
         }

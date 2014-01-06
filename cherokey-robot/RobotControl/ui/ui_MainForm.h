@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'MainForm.ui'
 **
-** Created: Fri Jan 3 20:06:28 2014
+** Created: Mon Jan 6 22:01:53 2014
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -20,6 +20,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
 #include <QtGui/QPushButton>
+#include <QtGui/QSlider>
 #include <QtGui/QToolButton>
 
 QT_BEGIN_NAMESPACE
@@ -35,12 +36,18 @@ public:
     QToolButton *btnRotateLeft;
     QToolButton *btnForward;
     QToolButton *btnRotateRight;
+    QSlider *sldDrivePower;
     QLabel *label_2;
     QFrame *frmSensors;
     QLabel *label_4;
     QLabel *label_5;
     QLabel *lblVoltage;
     QLabel *lblCurrent;
+    QLabel *label_8;
+    QLabel *label_9;
+    QLabel *label_10;
+    QLabel *lblLatitude;
+    QLabel *lblLongitude;
     QLabel *label_3;
     QPushButton *btnShowComposite;
     QLabel *label_6;
@@ -69,20 +76,26 @@ public:
         frmMove->setFrameShadow(QFrame::Raised);
         btnBackward = new QToolButton(frmMove);
         btnBackward->setObjectName(QString::fromUtf8("btnBackward"));
-        btnBackward->setGeometry(QRect(80, 90, 31, 27));
+        btnBackward->setGeometry(QRect(50, 90, 31, 27));
         btnBackward->setArrowType(Qt::DownArrow);
         btnRotateLeft = new QToolButton(frmMove);
         btnRotateLeft->setObjectName(QString::fromUtf8("btnRotateLeft"));
-        btnRotateLeft->setGeometry(QRect(40, 60, 31, 27));
+        btnRotateLeft->setGeometry(QRect(10, 60, 31, 27));
         btnRotateLeft->setArrowType(Qt::LeftArrow);
         btnForward = new QToolButton(frmMove);
         btnForward->setObjectName(QString::fromUtf8("btnForward"));
-        btnForward->setGeometry(QRect(80, 30, 31, 27));
+        btnForward->setGeometry(QRect(50, 30, 31, 27));
         btnForward->setArrowType(Qt::UpArrow);
         btnRotateRight = new QToolButton(frmMove);
         btnRotateRight->setObjectName(QString::fromUtf8("btnRotateRight"));
-        btnRotateRight->setGeometry(QRect(120, 60, 31, 27));
+        btnRotateRight->setGeometry(QRect(90, 60, 31, 27));
         btnRotateRight->setArrowType(Qt::RightArrow);
+        sldDrivePower = new QSlider(frmMove);
+        sldDrivePower->setObjectName(QString::fromUtf8("sldDrivePower"));
+        sldDrivePower->setGeometry(QRect(160, 10, 20, 131));
+        sldDrivePower->setMaximum(100);
+        sldDrivePower->setValue(100);
+        sldDrivePower->setOrientation(Qt::Vertical);
         label_2 = new QLabel(MainForm);
         label_2->setObjectName(QString::fromUtf8("label_2"));
         label_2->setGeometry(QRect(60, 200, 131, 20));
@@ -99,10 +112,25 @@ public:
         label_5->setGeometry(QRect(20, 30, 66, 17));
         lblVoltage = new QLabel(frmSensors);
         lblVoltage->setObjectName(QString::fromUtf8("lblVoltage"));
-        lblVoltage->setGeometry(QRect(80, 10, 62, 17));
+        lblVoltage->setGeometry(QRect(100, 10, 62, 17));
         lblCurrent = new QLabel(frmSensors);
         lblCurrent->setObjectName(QString::fromUtf8("lblCurrent"));
-        lblCurrent->setGeometry(QRect(80, 30, 62, 17));
+        lblCurrent->setGeometry(QRect(100, 30, 62, 17));
+        label_8 = new QLabel(frmSensors);
+        label_8->setObjectName(QString::fromUtf8("label_8"));
+        label_8->setGeometry(QRect(20, 60, 31, 17));
+        label_9 = new QLabel(frmSensors);
+        label_9->setObjectName(QString::fromUtf8("label_9"));
+        label_9->setGeometry(QRect(20, 80, 62, 17));
+        label_10 = new QLabel(frmSensors);
+        label_10->setObjectName(QString::fromUtf8("label_10"));
+        label_10->setGeometry(QRect(20, 100, 71, 17));
+        lblLatitude = new QLabel(frmSensors);
+        lblLatitude->setObjectName(QString::fromUtf8("lblLatitude"));
+        lblLatitude->setGeometry(QRect(100, 80, 91, 17));
+        lblLongitude = new QLabel(frmSensors);
+        lblLongitude->setObjectName(QString::fromUtf8("lblLongitude"));
+        lblLongitude->setGeometry(QRect(100, 100, 91, 17));
         label_3 = new QLabel(MainForm);
         label_3->setObjectName(QString::fromUtf8("label_3"));
         label_3->setGeometry(QRect(310, 200, 51, 17));
@@ -142,6 +170,11 @@ public:
         label_5->setText(QApplication::translate("MainForm", "Current:", 0, QApplication::UnicodeUTF8));
         lblVoltage->setText(QApplication::translate("MainForm", "-", 0, QApplication::UnicodeUTF8));
         lblCurrent->setText(QApplication::translate("MainForm", "-", 0, QApplication::UnicodeUTF8));
+        label_8->setText(QApplication::translate("MainForm", "GPS", 0, QApplication::UnicodeUTF8));
+        label_9->setText(QApplication::translate("MainForm", "Latitude:", 0, QApplication::UnicodeUTF8));
+        label_10->setText(QApplication::translate("MainForm", "Longitude:", 0, QApplication::UnicodeUTF8));
+        lblLatitude->setText(QApplication::translate("MainForm", "-", 0, QApplication::UnicodeUTF8));
+        lblLongitude->setText(QApplication::translate("MainForm", "-", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("MainForm", "Sensors", 0, QApplication::UnicodeUTF8));
         btnShowComposite->setText(QApplication::translate("MainForm", "Composite video", 0, QApplication::UnicodeUTF8));
         label_6->setText(QApplication::translate("MainForm", "Command server port:", 0, QApplication::UnicodeUTF8));

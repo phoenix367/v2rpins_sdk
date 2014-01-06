@@ -14,7 +14,6 @@
 #include <boost/asio.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/exception/diagnostic_information.hpp>
-#include <zmq.hpp>
 
 namespace cs = cherokey::sensors;
 
@@ -72,10 +71,15 @@ void SensorsController::run()
     currentData->set_associated_name("current");
     currentData->set_data_type(cs::REAL);
     
+    zmq::socket_t socket(gContext, ZMQ_PULL);
+    socket.bind("inproc://sensors");
+    
     GPSReader gpsReader;
 
     while (!stopVariable)
     {
+        processSensorMessages(publisher, socket);
+        
         pc::ADCReader::ADCValue adcValue;
         adcReader.read(adcValue);
         
@@ -101,6 +105,7 @@ void SensorsController::run()
     }
     
     publisher.close();
+    socket.close();
 }
 
 void SensorsController::startPublisher(const ConnectionInfo& info)
@@ -137,4 +142,27 @@ void SensorsController::stopPublisher()
     stopVariable = true;
     producerThread->join();
     started = false;
+}
+
+void SensorsController::processSensorMessages(zmq::socket_t& pubSocket,
+        zmq::socket_t& sensorSocket)
+{
+    while (true)
+    {
+        zmq::pollitem_t items [] = { { sensorSocket, 0, ZMQ_POLLIN, 0 } };
+        zmq::poll(items, 1, 0);
+
+        if (items [0].revents & ZMQ_POLLIN) 
+        {
+            zmq::message_t msg;
+            if (sensorSocket.recv(&msg))
+            {
+                pubSocket.send(msg);
+            }
+        }
+        else
+        {
+            break;
+        }
+    }
 }

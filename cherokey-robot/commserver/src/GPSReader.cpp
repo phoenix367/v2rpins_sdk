@@ -7,9 +7,15 @@
 
 #include "GPSReader.hpp"
 #include "ConfigManager.hpp"
+#include "sensors.pb.h"
 
 #include <iostream>
 #include <iomanip>
+#include <zmq.hpp>
+
+extern zmq::context_t gContext;
+
+namespace cs = cherokey::sensors;
 
 GPSReader::GPSReader()
 : stopVariable(false)
@@ -50,8 +56,24 @@ void GPSReader::run()
     nmea_zero_INFO(&info);
     nmea_parser_init(parser);
     
+    zmq::socket_t socket(gContext, ZMQ_PUSH);
+    socket.connect("inproc://sensors");
+    
     double degLatPrev = INFINITY, degLonPrev = INFINITY;
     
+    cs::SensorData sensorMessage;
+
+    sensorMessage.set_sensor_id(1);
+    sensorMessage.set_sensor_desc("GPS");
+    auto values = sensorMessage.mutable_sensor_values();
+    auto latData = values->Add();
+    auto lonData = values->Add();
+    
+    latData->set_associated_name("latitude");
+    latData->set_data_type(cs::REAL);
+    lonData->set_associated_name("longitude");
+    lonData->set_data_type(cs::REAL);
+
     while (!stopVariable)
     {
         std::string s;
@@ -70,9 +92,16 @@ void GPSReader::run()
             degLatPrev = degLat;
             degLonPrev = degLon;
             
-            std::cout << info.smask << " " << 
-                    std::setprecision(10) << degLat << " " << degLon << " " <<
-                    info.sig << std::endl;
+            latData->set_real_value(degLat);
+            lonData->set_real_value(degLon);
+
+            int messageSize = sensorMessage.ByteSize();
+            std::vector<int8_t> outArray(messageSize);
+            sensorMessage.SerializeToArray(&outArray[0], messageSize);
+
+            socket.send(&outArray[0], messageSize);
         }
     }
+    
+    socket.close();
 }

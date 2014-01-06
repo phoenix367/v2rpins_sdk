@@ -11,6 +11,8 @@
 #include <memory>
 #include <boost/thread/thread.hpp>
 #include <boost/atomic.hpp>
+#include <zmq.hpp>
+
 #include "ConfigManager.hpp"
 #include "pincontroller/pincontroller.hpp"
 
@@ -27,6 +29,8 @@ public:
     
 private:
     void run();
+    void processSensorMessages(zmq::socket_t& pubSocket,
+            zmq::socket_t& sensorSocket);
 
 private:
     static std::unique_ptr<SensorsController> instance;

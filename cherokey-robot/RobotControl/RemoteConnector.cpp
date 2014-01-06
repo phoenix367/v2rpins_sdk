@@ -108,6 +108,8 @@ void RemoteConnector::connectToServer(const ConnectionInfo& info)
     
     connect(sensorsConnector.data(), SIGNAL(VoltageData(float, float)),
             parent(), SLOT(onVoltageData(float, float)));    
+    connect(sensorsConnector.data(), SIGNAL(GPSData(GPSInfo)),
+            parent(), SLOT(onGPSData(GPSInfo)));    
     
     int lingerValue = 0;
     socketPtr->setsockopt(ZMQ_LINGER, &lingerValue, sizeof(int));

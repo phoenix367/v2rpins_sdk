@@ -14,6 +14,12 @@
 
 #include "Globals.hpp"
 
+struct GPSInfo
+{
+    double latitude;
+    double longitude;
+};
+
 class SensorsConnector : public QThread
 {
     Q_OBJECT
@@ -27,6 +33,7 @@ public:
     
 public:
     Q_SIGNAL void VoltageData(float voltage, float current);
+    Q_SIGNAL void GPSData(GPSInfo gpsInfo);
     
 protected:
     virtual void run();

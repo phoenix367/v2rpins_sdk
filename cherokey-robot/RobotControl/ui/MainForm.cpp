@@ -111,7 +111,9 @@ void MainForm::doDisconnect()
 
 void MainForm::onMoveForwardPressed()
 {
-    QSharedPointer<SocketCommand> forwardCommand(new MoveForward(1.0));
+    int value = widget.sldDrivePower->value();
+    double power = value / 100.0;
+    QSharedPointer<SocketCommand> forwardCommand(new MoveForward(power));
     connectorPtr->handleCommand(forwardCommand);
 }
 
@@ -123,7 +125,9 @@ void MainForm::onMoveForwardReleased()
 
 void MainForm::onMoveBackwardPressed()
 {
-    QSharedPointer<SocketCommand> backwardCommand(new MoveBackward(1.0));
+    int value = widget.sldDrivePower->value();
+    double power = value / 100.0;
+    QSharedPointer<SocketCommand> backwardCommand(new MoveBackward(power));
     connectorPtr->handleCommand(backwardCommand);
 }
 
@@ -135,7 +139,9 @@ void MainForm::onMoveBackwardReleased()
 
 void MainForm::onRotateRightPressed()
 {
-    QSharedPointer<SocketCommand> backwardCommand(new RotateClockwise(1.0));
+    int value = widget.sldDrivePower->value();
+    double power = value / 100.0;
+    QSharedPointer<SocketCommand> backwardCommand(new RotateClockwise(power));
     connectorPtr->handleCommand(backwardCommand);
 }
 
@@ -147,8 +153,10 @@ void MainForm::onRotateRightReleased()
 
 void MainForm::onRotateLeftPressed()
 {
+    int value = widget.sldDrivePower->value();
+    double power = value / 100.0;
     QSharedPointer<SocketCommand> backwardCommand(
-        new RotateCounterClockwise(1.0));
+        new RotateCounterClockwise(power));
     connectorPtr->handleCommand(backwardCommand);
 }
 
@@ -185,17 +193,21 @@ bool MainForm::eventFilter(QObject *object, QEvent *event)
         {
             switch (ke->key())
             {
-                case Qt::Key_Up:
+                case Qt::Key_W:
+                    widget.btnForward->setFocus();
                     onMoveForwardPressed();
                     return true;
-                case Qt::Key_Down:
+                case Qt::Key_S:
+                    widget.btnBackward->setFocus();
                     onMoveBackwardPressed();
                     return true;
-                case Qt::Key_Left:
-                    onRotateLeftPressed();
-                    return true;
-                case Qt::Key_Right:
+                case Qt::Key_D:
+                    widget.btnRotateRight->setFocus();
                     onRotateRightPressed();
+                    return true;
+                case Qt::Key_A:
+                    widget.btnRotateLeft->setFocus();
+                    onRotateLeftPressed();
                     return true;
             }
         }
@@ -207,21 +219,31 @@ bool MainForm::eventFilter(QObject *object, QEvent *event)
         {
             switch (ke->key())
             {
-                case Qt::Key_Up:
+                case Qt::Key_W:
+                    widget.btnForward->clearFocus();
                     onMoveForwardReleased();
                     return true;
-                case Qt::Key_Down:
+                case Qt::Key_S:
+                    widget.btnBackward->clearFocus();
                     onMoveBackwardReleased();
                     return true;
-                case Qt::Key_Left:
-                    onRotateLeftReleased();
-                    return true;
-                case Qt::Key_Right:
+                case Qt::Key_D:
+                    widget.btnRotateRight->clearFocus();
                     onRotateRightReleased();
+                    return true;
+                case Qt::Key_A:
+                    widget.btnRotateLeft->clearFocus();
+                    onRotateLeftReleased();
                     return true;
             }
         }
     }
     
     return false;
+}
+
+void MainForm::onGPSData(GPSInfo info)
+{
+    widget.lblLatitude->setText(QString::number(info.latitude, 'g', 10));
+    widget.lblLongitude->setText(QString::number(info.longitude, 'g', 10));
 }
