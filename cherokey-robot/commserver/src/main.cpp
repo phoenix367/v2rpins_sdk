@@ -31,6 +31,13 @@ void clean_up_child_process (int, siginfo_t *info, void *uap)
     child_exit_status = status; 
 } 
 
+std::function<void(int)> alrmFunc;
+
+void sigAlrmHandler(int sig)
+{
+    alrmFunc(sig);
+}
+
 /*
  * 
  */
@@ -68,6 +75,11 @@ int main(int argc, char** argv)
         auto ci = instance->getConnectionInfo();
         
         ConnectionListener listener(ci);
+        
+        alrmFunc = std::bind1st(
+            std::mem_fun(&ConnectionListener::onTimer), &listener);
+        signal(SIGALRM, sigAlrmHandler);
+        
         listener.run();
     }
     catch (Exception& e)

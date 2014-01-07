@@ -8,10 +8,12 @@
 #include "GPSReader.hpp"
 #include "ConfigManager.hpp"
 #include "sensors.pb.h"
+#include "SensorsController.hpp"
 
 #include <iostream>
 #include <iomanip>
 #include <zmq.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 extern zmq::context_t gContext;
 
@@ -57,7 +59,7 @@ void GPSReader::run()
     nmea_parser_init(parser);
     
     zmq::socket_t socket(gContext, ZMQ_PUSH);
-    socket.connect("inproc://sensors");
+    socket.connect(SensorsController::SENSORS_CONN_POINT);
     
     double degLatPrev = INFINITY, degLonPrev = INFINITY;
     
@@ -101,6 +103,8 @@ void GPSReader::run()
 
             socket.send(&outArray[0], messageSize);
         }
+        
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
     }
     
     socket.close();

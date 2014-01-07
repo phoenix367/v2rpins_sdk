@@ -25,10 +25,12 @@ ConnectionListener::ConnectionListener(
     }
     
     connectionParams = infoPtr;
+    timer_create(CLOCK_REALTIME, NULL, &watchDogTimer);
 }
 
 ConnectionListener::~ConnectionListener() 
 {
+    timer_delete(watchDogTimer);
 }
 
 void ConnectionListener::run()
@@ -50,7 +52,11 @@ void ConnectionListener::run()
         
         try
         {
-            socket.recv(&message);
+            if (socket.recv(&message))
+            {
+                stopWatchdogTimer();
+                startWatchDogTimer();
+            }
         }
         catch (zmq::error_t& e)
         {
@@ -270,5 +276,55 @@ void ConnectionListener::processSensrosInfo(zmq::socket_t& socket,
     catch (std::exception& e)
     {
         sendNack(e.what(), cookie, socket);
+    }
+}
+
+void ConnectionListener::startWatchDogTimer()
+{
+    struct itimerspec value;
+
+    value.it_value.tv_sec = 3;
+    value.it_value.tv_nsec = 0;
+    value.it_interval.tv_sec = 0;
+    value.it_interval.tv_nsec = 0;
+
+    timer_settime (watchDogTimer, 0, &value, NULL);
+}
+
+void ConnectionListener::stopWatchdogTimer()
+{
+    struct itimerspec value;
+
+    value.it_value.tv_sec = 0;
+    value.it_value.tv_nsec = 0;
+    value.it_interval.tv_sec = 0;
+    value.it_interval.tv_nsec = 0;
+
+    timer_settime (watchDogTimer, 0, &value, NULL);
+}
+
+void ConnectionListener::onTimer(int sig)
+{
+    if (sig == SIGALRM)
+    {
+        auto sensorsInstance = SensorsController::getInstance();
+        if (!sensorsInstance)
+        {
+            COMM_EXCEPTION(NullPointerException, "Sensors controller instance "
+                "is null.");
+        }
+        
+        /*
+        sensorsInstance->stopPublisher();
+
+        auto videoInstance = VideoController::getInstance();
+        if (!videoInstance)
+        {
+            COMM_EXCEPTION(NullPointerException, "Video controller instance "
+                "is null.");
+        }
+        
+        videoInstance->compositeVideo(false);
+        */
     }
 }

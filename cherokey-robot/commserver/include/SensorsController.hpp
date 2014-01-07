@@ -19,6 +19,9 @@
 class SensorsController 
 {
 public:
+    static const char* SENSORS_CONN_POINT;
+    
+public:
     SensorsController();
     virtual ~SensorsController();
     

@@ -43,6 +43,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/GPSReader.o \
 	${OBJECTDIR}/src/SensorsController.o \
 	${OBJECTDIR}/src/VideoController.o \
+	${OBJECTDIR}/src/VoltageReader.o \
 	${OBJECTDIR}/src/main.o \
 	${OBJECTDIR}/src/serialstream.o
 
@@ -61,7 +62,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L../../3pty/lib -lprotobuf -lpthread -lz -lzmq -lboost_program_options -lboost_system -Wl,-rpath,../../pincontroller/dist/Debug/V2R-Linux-x86 -L../../pincontroller/dist/Debug/V2R-Linux-x86 -lpincontroller -lboost_thread -Wl,-rpath,../nmea/dist/Debug/V2R-Linux-x86 -L../nmea/dist/Debug/V2R-Linux-x86 -lnmea
+LDLIBSOPTIONS=-L../../3pty/lib -lprotobuf -lpthread -lz -lzmq -lboost_program_options -lboost_system -Wl,-rpath,../../pincontroller/dist/Debug/V2R-Linux-x86 -L../../pincontroller/dist/Debug/V2R-Linux-x86 -lpincontroller -lboost_thread -Wl,-rpath,../nmea/dist/Debug/V2R-Linux-x86 -L../nmea/dist/Debug/V2R-Linux-x86 -lnmea -lrt
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -114,6 +115,11 @@ ${OBJECTDIR}/src/VideoController.o: src/VideoController.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/VideoController.o src/VideoController.cpp
+
+${OBJECTDIR}/src/VoltageReader.o: src/VoltageReader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/VoltageReader.o src/VoltageReader.cpp
 
 ${OBJECTDIR}/src/main.o: src/main.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src

@@ -7,19 +7,16 @@
 
 #include "SensorsController.hpp"
 #include "Exceptions.hpp"
-#include "sensors.pb.h"
 #include "GPSReader.hpp"
+#include "VoltageReader.hpp"
 
 #include <boost/thread/thread.hpp>
-#include <boost/asio.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/exception/diagnostic_information.hpp>
-
-namespace cs = cherokey::sensors;
 
 extern zmq::context_t gContext;
 
 std::unique_ptr<SensorsController> SensorsController::instance;
+const char* SensorsController::SENSORS_CONN_POINT = "inproc://sensors";
 
 SensorsController::SensorsController()
 : started(false)
@@ -45,9 +42,6 @@ SensorsController* SensorsController::getInstance()
 
 void SensorsController::run()
 {
-    boost::asio::io_service io;
-    boost::asio::deadline_timer t(io, boost::posix_time::milliseconds(250));
-    
     zmq::socket_t publisher (gContext, ZMQ_PUB);
     
     std::ostringstream stream;
@@ -56,52 +50,16 @@ void SensorsController::run()
             connectionInfo.port;
     
     publisher.bind(stream.str().c_str());
-    
-    float prevVoltageData = 0, prevCurrentData = 0;
-    cs::SensorData sensorMessage;
-
-    sensorMessage.set_sensor_id(0);
-    sensorMessage.set_sensor_desc("voltage_current");
-    auto values = sensorMessage.mutable_sensor_values();
-    auto voltageData = values->Add();
-    auto currentData = values->Add();
-    
-    voltageData->set_associated_name("voltage");
-    voltageData->set_data_type(cs::REAL);
-    currentData->set_associated_name("current");
-    currentData->set_data_type(cs::REAL);
-    
+        
     zmq::socket_t socket(gContext, ZMQ_PULL);
-    socket.bind("inproc://sensors");
+    socket.bind(SENSORS_CONN_POINT);
     
     GPSReader gpsReader;
+    VoltageReader voltageReader;
 
     while (!stopVariable)
     {
         processSensorMessages(publisher, socket);
-        
-        pc::ADCReader::ADCValue adcValue;
-        adcReader.read(adcValue);
-        
-        float voltage = adcValue.adcVoltages[0] * 3.593;
-        voltage = (voltage + prevVoltageData) / 2;
-        prevVoltageData = voltage;
-        
-        float current = -(adcValue.adcVoltages[1] - 2) / (2 * 0.185);
-        current = (current + prevCurrentData) / 2;
-        prevCurrentData = current;
-                
-        voltageData->set_real_value(voltage);        
-        currentData->set_real_value(current);
-        
-        int messageSize = sensorMessage.ByteSize();
-        std::vector<int8_t> outArray(messageSize);
-        sensorMessage.SerializeToArray(&outArray[0], messageSize);
-        
-        publisher.send(&outArray[0], messageSize);
-        
-        t.wait();
-        t.expires_at(t.expires_at() + boost::posix_time::milliseconds(250));
     }
     
     publisher.close();
@@ -150,7 +108,7 @@ void SensorsController::processSensorMessages(zmq::socket_t& pubSocket,
     while (true)
     {
         zmq::pollitem_t items [] = { { sensorSocket, 0, ZMQ_POLLIN, 0 } };
-        zmq::poll(items, 1, 0);
+        zmq::poll(items, 1, 100);
 
         if (items [0].revents & ZMQ_POLLIN) 
         {

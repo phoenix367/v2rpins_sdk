@@ -14,6 +14,7 @@
       <itemPath>include/GPSReader.hpp</itemPath>
       <itemPath>include/SensorsController.hpp</itemPath>
       <itemPath>include/VideoController.hpp</itemPath>
+      <itemPath>include/VoltageReader.hpp</itemPath>
       <itemPath>include/serialstream.h</itemPath>
     </logicalFolder>
     <logicalFolder name="messages" displayName="messages" projectFiles="true">
@@ -37,6 +38,7 @@
       <itemPath>src/GPSReader.cpp</itemPath>
       <itemPath>src/SensorsController.cpp</itemPath>
       <itemPath>src/VideoController.cpp</itemPath>
+      <itemPath>src/VoltageReader.cpp</itemPath>
       <itemPath>src/main.cpp</itemPath>
       <itemPath>src/serialstream.cpp</itemPath>
     </logicalFolder>
@@ -112,6 +114,7 @@
                             OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libnmea.${CND_DLIB_EXT}">
               </makeArtifact>
             </linkerLibProjectItem>
+            <linkerLibLibItem>rt</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
@@ -135,6 +138,8 @@
       </item>
       <item path="include/VideoController.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/VoltageReader.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/serialstream.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="messages/common.pb.cc" ex="false" tool="1" flavor2="0">
@@ -156,6 +161,8 @@
       <item path="src/SensorsController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/VideoController.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/VoltageReader.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -203,6 +210,8 @@
       </item>
       <item path="include/VideoController.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/VoltageReader.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/serialstream.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="messages/common.pb.cc" ex="false" tool="1" flavor2="0">
@@ -224,6 +233,8 @@
       <item path="src/SensorsController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/VideoController.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/VoltageReader.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>

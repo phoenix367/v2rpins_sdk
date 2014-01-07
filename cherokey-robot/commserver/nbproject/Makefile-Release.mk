@@ -43,6 +43,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/GPSReader.o \
 	${OBJECTDIR}/src/SensorsController.o \
 	${OBJECTDIR}/src/VideoController.o \
+	${OBJECTDIR}/src/VoltageReader.o \
 	${OBJECTDIR}/src/main.o \
 	${OBJECTDIR}/src/serialstream.o
 
@@ -110,6 +111,11 @@ ${OBJECTDIR}/src/VideoController.o: src/VideoController.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/VideoController.o src/VideoController.cpp
+
+${OBJECTDIR}/src/VoltageReader.o: src/VoltageReader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/VoltageReader.o src/VoltageReader.cpp
 
 ${OBJECTDIR}/src/main.o: src/main.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src

@@ -44,8 +44,15 @@ private:
     void processSensrosInfo(zmq::socket_t& socket, 
             cherokey::common::CommandMessage& msg);
     
+    void startWatchDogTimer();
+    void stopWatchdogTimer();
+    
+public:
+    void onTimer(int sig);
+    
 private:
     std::shared_ptr<ConnectionInfo> connectionParams;
+    timer_t watchDogTimer;
 };
 
 #endif	/* CONNECTIONLISTENER_HPP */
