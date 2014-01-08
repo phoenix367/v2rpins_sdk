@@ -314,7 +314,6 @@ void ConnectionListener::onTimer(int sig)
                 "is null.");
         }
         
-        /*
         sensorsInstance->stopPublisher();
 
         auto videoInstance = VideoController::getInstance();
@@ -325,6 +324,5 @@ void ConnectionListener::onTimer(int sig)
         }
         
         videoInstance->compositeVideo(false);
-        */
     }
 }

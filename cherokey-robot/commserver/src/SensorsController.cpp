@@ -54,13 +54,16 @@ void SensorsController::run()
     zmq::socket_t socket(gContext, ZMQ_PULL);
     socket.bind(SENSORS_CONN_POINT);
     
-    GPSReader gpsReader;
-    VoltageReader voltageReader;
+    std::unique_ptr<GPSReader> gpsReader(new GPSReader());
+    std::unique_ptr<VoltageReader> voltageReader(new VoltageReader());
 
     while (!stopVariable)
     {
         processSensorMessages(publisher, socket);
     }
+    
+    gpsReader.reset();
+    voltageReader.reset();
     
     publisher.close();
     socket.close();
