@@ -89,3 +89,11 @@ void DriveController::setGroupDirection(DriveGroup group, bool isForward)
             break;
     }
 }
+
+void DriveController::stopDrives()
+{
+    pwmA->setPulseParams(0, PWM_PERIOD);
+    pwmA->init();
+    pwmB->setPulseParams(0, PWM_PERIOD);
+    pwmB->init();
+}

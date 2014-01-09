@@ -324,5 +324,15 @@ void ConnectionListener::onTimer(int sig)
         }
         
         videoInstance->compositeVideo(false);
+
+        auto driveInstance = DriveController::getInstance();
+
+        if (!driveInstance)
+        {
+            COMM_EXCEPTION(NullPointerException, "Drive controller instance "
+                    "is null.");
+        }
+        
+        driveInstance->stopDrives();
     }
 }

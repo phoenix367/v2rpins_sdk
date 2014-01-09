@@ -37,6 +37,7 @@ public:
     
     void runDriveGroup(DriveGroup group, MoveDirection direction,
         float drivePower);
+    void stopDrives();
     
 private:
     void setGroupDirection(DriveGroup group, bool isForward);
