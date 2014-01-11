@@ -54,16 +54,7 @@ void SensorsController::run()
     zmq::socket_t socket(gContext, ZMQ_PULL);
     socket.bind(SENSORS_CONN_POINT);
     
-    std::unique_ptr<GPSReader> gpsReader(new GPSReader());
-    std::unique_ptr<VoltageReader> voltageReader(new VoltageReader());
-
-    while (!stopVariable)
-    {
-        processSensorMessages(publisher, socket);
-    }
-    
-    gpsReader.reset();
-    voltageReader.reset();
+    processSensorMessages(publisher, socket);
     
     publisher.close();
     socket.close();
@@ -108,7 +99,10 @@ void SensorsController::stopPublisher()
 void SensorsController::processSensorMessages(zmq::socket_t& pubSocket,
         zmq::socket_t& sensorSocket)
 {
-    while (true)
+    GPSReader gpsReader;
+    VoltageReader voltageReader;
+
+    while (!stopVariable)
     {
         zmq::pollitem_t items [] = { { sensorSocket, 0, ZMQ_POLLIN, 0 } };
         zmq::poll(items, 1, 100);
@@ -120,10 +114,6 @@ void SensorsController::processSensorMessages(zmq::socket_t& pubSocket,
             {
                 pubSocket.send(msg);
             }
-        }
-        else
-        {
-            break;
         }
     }
 }

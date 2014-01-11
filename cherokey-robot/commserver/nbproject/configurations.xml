@@ -12,6 +12,7 @@
       <itemPath>include/DriveController.hpp</itemPath>
       <itemPath>include/Exceptions.hpp</itemPath>
       <itemPath>include/GPSReader.hpp</itemPath>
+      <itemPath>include/IMUReader.hpp</itemPath>
       <itemPath>include/SensorsController.hpp</itemPath>
       <itemPath>include/VideoController.hpp</itemPath>
       <itemPath>include/VoltageReader.hpp</itemPath>
@@ -36,6 +37,7 @@
       <itemPath>src/ConnectionListener.cpp</itemPath>
       <itemPath>src/DriveController.cpp</itemPath>
       <itemPath>src/GPSReader.cpp</itemPath>
+      <itemPath>src/IMUReader.cpp</itemPath>
       <itemPath>src/SensorsController.cpp</itemPath>
       <itemPath>src/VideoController.cpp</itemPath>
       <itemPath>src/VoltageReader.cpp</itemPath>
@@ -134,6 +136,8 @@
       </item>
       <item path="include/GPSReader.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/IMUReader.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/SensorsController.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/VideoController.hpp" ex="false" tool="3" flavor2="0">
@@ -157,6 +161,8 @@
       <item path="src/DriveController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/GPSReader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/IMUReader.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/SensorsController.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -206,6 +212,8 @@
       </item>
       <item path="include/GPSReader.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/IMUReader.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/SensorsController.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/VideoController.hpp" ex="false" tool="3" flavor2="0">
@@ -229,6 +237,8 @@
       <item path="src/DriveController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/GPSReader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/IMUReader.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/SensorsController.cpp" ex="false" tool="1" flavor2="0">
       </item>
