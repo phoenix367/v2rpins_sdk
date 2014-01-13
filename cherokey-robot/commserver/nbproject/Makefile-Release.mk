@@ -42,6 +42,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/DriveController.o \
 	${OBJECTDIR}/src/GPSReader.o \
 	${OBJECTDIR}/src/IMUReader.o \
+	${OBJECTDIR}/src/SensorReader.o \
 	${OBJECTDIR}/src/SensorsController.o \
 	${OBJECTDIR}/src/VideoController.o \
 	${OBJECTDIR}/src/VoltageReader.o \
@@ -107,6 +108,11 @@ ${OBJECTDIR}/src/IMUReader.o: src/IMUReader.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/IMUReader.o src/IMUReader.cpp
+
+${OBJECTDIR}/src/SensorReader.o: src/SensorReader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/SensorReader.o src/SensorReader.cpp
 
 ${OBJECTDIR}/src/SensorsController.o: src/SensorsController.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src

@@ -9,6 +9,7 @@
 #include "Exceptions.hpp"
 #include "GPSReader.hpp"
 #include "VoltageReader.hpp"
+#include "IMUReader.hpp"
 
 #include <boost/thread/thread.hpp>
 #include <boost/exception/diagnostic_information.hpp>
@@ -101,6 +102,7 @@ void SensorsController::processSensorMessages(zmq::socket_t& pubSocket,
 {
     GPSReader gpsReader;
     VoltageReader voltageReader;
+    IMUReader imuReader;
 
     while (!stopVariable)
     {

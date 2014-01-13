@@ -12,15 +12,11 @@
 
 #include <iostream>
 #include <iomanip>
-#include <zmq.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-
-extern zmq::context_t gContext;
 
 namespace cs = cherokey::sensors;
 
 GPSReader::GPSReader()
-: stopVariable(false)
 {
     auto instance = ConfigManager::getInstance();
     
@@ -39,15 +35,12 @@ GPSReader::GPSReader()
             new SerialStream(options));
     serialStreamPtr->exceptions(std::ios::badbit | std::ios::failbit);
     
-    readerThread = std::unique_ptr<boost::thread>(
-                    new boost::thread(
-                    boost::bind(&GPSReader::run, this)));
+    initThread();
 }
 
 GPSReader::~GPSReader() 
 {
-    stopVariable = true;
-    readerThread->join();
+    stopThread();
 }
 
 void GPSReader::run()
@@ -57,9 +50,6 @@ void GPSReader::run()
     
     nmea_zero_INFO(&info);
     nmea_parser_init(parser);
-    
-    zmq::socket_t socket(gContext, ZMQ_PUSH);
-    socket.connect(SensorsController::SENSORS_CONN_POINT);
     
     double degLatPrev = INFINITY, degLonPrev = INFINITY;
     
@@ -101,11 +91,9 @@ void GPSReader::run()
             std::vector<int8_t> outArray(messageSize);
             sensorMessage.SerializeToArray(&outArray[0], messageSize);
 
-            socket.send(&outArray[0], messageSize);
+            sendData(outArray);
         }
         
         boost::this_thread::sleep(boost::posix_time::milliseconds(10));
     }
-    
-    socket.close();
 }

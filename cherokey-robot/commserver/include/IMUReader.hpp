@@ -8,14 +8,26 @@
 #ifndef IMUREADER_HPP
 #define	IMUREADER_HPP
 
-class IMUReader 
+#include "SensorReader.hpp"
+
+class IMUReader : public SensorReader
 {
 public:
     IMUReader();
     virtual ~IMUReader();
     
+protected:
+    virtual void run();
+    
 private:
-
+    static void writeToDevice(int file, const char * buf, int len);
+    static void selectDevice(int file, int addr, const char * name);
+    
+    void initSensors();
+    void readSensors();
+    
+private:
+    int file;
 };
 
 #endif	/* IMUREADER_HPP */

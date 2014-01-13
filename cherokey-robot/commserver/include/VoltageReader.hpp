@@ -13,20 +13,19 @@
 #include <zmq.hpp>
 
 #include "pincontroller/adc_reader.hpp"
+#include "SensorReader.hpp"
 
-class VoltageReader 
+class VoltageReader : public SensorReader
 {
 public:
     VoltageReader();
     virtual ~VoltageReader();
     
 private:
-    void run();
+    virtual void run();
     
 private:
-    boost::atomic<bool> stopVariable;
     pc::ADCReader adcReader;
-    std::unique_ptr<boost::thread> sensorsThread;
 };
 
 #endif	/* VOLTAGEREADER_HPP */

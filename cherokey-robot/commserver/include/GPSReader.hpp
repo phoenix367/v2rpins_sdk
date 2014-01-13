@@ -14,8 +14,9 @@
 #include "serialstream.h"
 #include "nmea/nmea.h"
 #include "Exceptions.hpp"
+#include "SensorReader.hpp"
 
-class GPSReader 
+class GPSReader : public SensorReader
 {
 private:
     class ParserHolder
@@ -48,13 +49,11 @@ public:
     GPSReader();
     virtual ~GPSReader();
     
-private:
-    void run();
+protected:
+    virtual void run();
 
 private:
     std::shared_ptr<SerialStream> serialStreamPtr;
-    std::unique_ptr<boost::thread> readerThread;
-    boost::atomic<bool> stopVariable;
 };
 
 #endif	/* GPSREADER_HPP */

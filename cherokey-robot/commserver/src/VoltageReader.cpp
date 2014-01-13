@@ -17,20 +17,13 @@
 
 namespace cs = cherokey::sensors;
 
-extern zmq::context_t gContext;
-
 VoltageReader::VoltageReader()
-: stopVariable(false)
 {
-    sensorsThread = std::unique_ptr<boost::thread>(
-                    new boost::thread(
-                    boost::bind(&VoltageReader::run, this)));
+    initThread();
 }
 
 VoltageReader::~VoltageReader() 
 {
-    stopVariable = true;
-    sensorsThread->join();
 }
 
 void VoltageReader::run()
@@ -51,9 +44,6 @@ void VoltageReader::run()
     voltageData->set_data_type(cs::REAL);
     currentData->set_associated_name("current");
     currentData->set_data_type(cs::REAL);
-
-    zmq::socket_t socket(gContext, ZMQ_PUSH);
-    socket.connect(SensorsController::SENSORS_CONN_POINT);
 
     float prevVoltageData = 0, prevCurrentData = 0;
 
@@ -77,11 +67,9 @@ void VoltageReader::run()
         std::vector<int8_t> outArray(messageSize);
         sensorMessage.SerializeToArray(&outArray[0], messageSize);
 
-        socket.send(&outArray[0], messageSize);
+        sendData(outArray);
 
         t.wait();
         t.expires_at(t.expires_at() + delayTime);
     }
-    
-    socket.close();
 }
