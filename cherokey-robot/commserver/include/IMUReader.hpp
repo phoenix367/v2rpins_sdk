@@ -10,6 +10,14 @@
 
 #include "SensorReader.hpp"
 
+namespace cherokey
+{
+    namespace sensors
+    {
+        class SensorData;
+    }
+}
+
 class IMUReader : public SensorReader
 {
 public:
@@ -24,7 +32,7 @@ private:
     static void selectDevice(int file, int addr, const char * name);
     
     void initSensors();
-    void readSensors();
+    void readSensors(cherokey::sensors::SensorData& msg);
     
 private:
     int file;

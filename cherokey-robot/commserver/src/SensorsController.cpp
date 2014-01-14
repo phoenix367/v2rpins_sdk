@@ -102,7 +102,7 @@ void SensorsController::processSensorMessages(zmq::socket_t& pubSocket,
 {
     GPSReader gpsReader;
     VoltageReader voltageReader;
-    IMUReader imuReader;
+    //IMUReader imuReader;
 
     while (!stopVariable)
     {
