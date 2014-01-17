@@ -74,52 +74,52 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libnmea.${CND_DLIB_EXT}: ${OBJECTFILE
 ${OBJECTDIR}/src/context.o: src/context.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/context.o src/context.c
+	$(COMPILE.c) -O2 -Iinclude -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/context.o src/context.c
 
 ${OBJECTDIR}/src/generate.o: src/generate.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/generate.o src/generate.c
+	$(COMPILE.c) -O2 -Iinclude -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/generate.o src/generate.c
 
 ${OBJECTDIR}/src/generator.o: src/generator.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/generator.o src/generator.c
+	$(COMPILE.c) -O2 -Iinclude -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/generator.o src/generator.c
 
 ${OBJECTDIR}/src/gmath.o: src/gmath.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/gmath.o src/gmath.c
+	$(COMPILE.c) -O2 -Iinclude -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/gmath.o src/gmath.c
 
 ${OBJECTDIR}/src/info.o: src/info.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/info.o src/info.c
+	$(COMPILE.c) -O2 -Iinclude -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/info.o src/info.c
 
 ${OBJECTDIR}/src/parse.o: src/parse.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/parse.o src/parse.c
+	$(COMPILE.c) -O2 -Iinclude -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/parse.o src/parse.c
 
 ${OBJECTDIR}/src/parser.o: src/parser.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/parser.o src/parser.c
+	$(COMPILE.c) -O2 -Iinclude -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/parser.o src/parser.c
 
 ${OBJECTDIR}/src/sentence.o: src/sentence.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/sentence.o src/sentence.c
+	$(COMPILE.c) -O2 -Iinclude -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/sentence.o src/sentence.c
 
 ${OBJECTDIR}/src/time.o: src/time.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/time.o src/time.c
+	$(COMPILE.c) -O2 -Iinclude -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/time.o src/time.c
 
 ${OBJECTDIR}/src/tok.o: src/tok.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/tok.o src/tok.c
+	$(COMPILE.c) -O2 -Iinclude -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/tok.o src/tok.c
 
 # Subprojects
 .build-subprojects:

@@ -20,6 +20,22 @@ namespace cherokey
 
 class IMUReader : public SensorReader
 {
+private:
+    struct IMUSensorsData
+    {
+        float compassX;
+        float compassY;
+        float compassZ;
+        
+        float accelX;
+        float accelY;
+        float accelZ;
+        
+        float gyroX;
+        float gyroY;
+        float gyroZ;
+    };
+    
 public:
     IMUReader();
     virtual ~IMUReader();
@@ -32,7 +48,7 @@ private:
     static void selectDevice(int file, int addr, const char * name);
     
     void initSensors();
-    void readSensors(cherokey::sensors::SensorData& msg);
+    void readSensors(IMUSensorsData& data);
     
 private:
     int file;

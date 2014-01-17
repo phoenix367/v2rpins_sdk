@@ -94,6 +94,22 @@ void SensorsConnector::run()
                         
                         emit GPSData(info);
                     }
+                    else if (dataMsg.sensor_id() == 2)
+                    {
+                        for (int i = 0; i < dataMsg.sensor_values_size(); i++)
+                        {
+                            cs::SensorValue value = dataMsg.sensor_values(i);
+                            if (value.associated_name() == "compass_data" &&
+                                value.has_coord_value())
+                            {
+                                cs::Coord3D coord3D = value.coord_value();
+                                
+                                std::cout << coord3D.x() << " " <<
+                                        coord3D.y() << " " << coord3D.z() << 
+                                        std::endl;
+                            }
+                        }
+                    }
                 }
             }
         }

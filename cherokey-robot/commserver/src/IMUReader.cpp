@@ -55,13 +55,29 @@ void IMUReader::run()
     sensorMessage.set_sensor_id(2);
     sensorMessage.set_sensor_desc("IMU");
     auto values = sensorMessage.mutable_sensor_values();
+    auto compassData = values->Add();
+    
+    compassData->set_associated_name("compass_data");
+    compassData->set_data_type(cs::COORD_3D);
+    auto compassCoords = compassData->mutable_coord_value();
 
     while (!stopVariable)
     {
-        readSensors(sensorMessage);
+        IMUSensorsData sensorsData = { 0 };
+        readSensors(sensorsData);
         
         t.wait();
         t.expires_at(t.expires_at() + delayTime);
+        
+        compassCoords->set_x(sensorsData.compassX);
+        compassCoords->set_y(sensorsData.compassY);
+        compassCoords->set_z(sensorsData.compassZ);
+        
+        int messageSize = sensorMessage.ByteSize();
+        std::vector<int8_t> outArray(messageSize);
+        sensorMessage.SerializeToArray(&outArray[0], messageSize);
+
+        sendData(outArray);
     }
 }
 
@@ -104,13 +120,10 @@ void IMUReader::initSensors()
     writeToDevice(file, "\x17\x00", 2);
 }
 
-void IMUReader::readSensors(cs::SensorData& msg)
+void IMUReader::readSensors(IMUSensorsData& data)
 {
-    int data;
     short x, y, z;
-    float xa, ya, za;
     unsigned char buf[16];
-    int count, b;
 
     selectDevice(file, HMC5883L_I2C_ADDR, "HMC5883L");
     writeToDevice(file, "\x03", 1);
@@ -124,12 +137,9 @@ void IMUReader::readSensors(cs::SensorData& msg)
         x = buf[1]<<8| buf[0];
         y = buf[3]<<8| buf[2];
         z = buf[5]<<8| buf[4];
-        xa = (90.0 / 256.0) * (float) x;
-        ya = (90.0 / 256.0) * (float) y;
-        za = (90.0 / 256.0) * (float) z;
-       //printf("HMC: x=%d, y=%d, z=%d xa=%4.0f ya=%4.0f za=%4.0f\n", x, y, z, xa, ya, za);
-       //if (n % 100 == 0)
-           //printf("HMC: x=%d, y=%d, z=%d\n", x, y, z);
+        data.compassX = (90.0 / 256.0) * (float) x;
+        data.compassY = (90.0 / 256.0) * (float) y;
+        data.compassZ = (90.0 / 256.0) * (float) z;
     }
 
 
@@ -161,12 +171,9 @@ void IMUReader::readSensors(cs::SensorData& msg)
         x = buf[1]<<8| buf[0];
         y = buf[3]<<8| buf[2];
         z = buf[5]<<8| buf[4];
-        xa = (90.0 / 256.0) * (float) x;
-        ya = (90.0 / 256.0) * (float) y;
-        za = (90.0 / 256.0) * (float) z;
-    //printf("ADXL %d %d %d, %4.0f %4.0f %4.0f\n", x, y, z, xa, ya, za);
-    //if (n % 100 == 0)
-             //printf("ADXL %d %d %d\n", x, y, z);
+        data.accelX = (90.0 / 256.0) * (float) x;
+        data.accelY = (90.0 / 256.0) * (float) y;
+        data.accelZ = (90.0 / 256.0) * (float) z;
     }
 
     selectDevice(file, ITG3200_I2C_ADDR, "ITG3200");
@@ -181,13 +188,8 @@ void IMUReader::readSensors(cs::SensorData& msg)
         x = buf[0]<<8| buf[1];
         y = buf[2]<<8| buf[3];
         z = buf[4]<<8| buf[5];
-        xa = (90.0 / 256.0) * (float) x;
-        ya = (90.0 / 256.0) * (float) y;
-        za = (90.0 / 256.0) * (float) z;
-       //printf("ITG: x=%d, y=%d, z=%d xa=%4.0f ya=%4.0f za=%4.0f\n", x, y, z, xa, ya, za);
-       //if (n % 100 == 0)
-           //printf("ITG: x=%d, y=%d, z=%d\n", x, y, z);
+        data.gyroX = (90.0 / 256.0) * (float) x;
+        data.gyroY = (90.0 / 256.0) * (float) y;
+        data.gyroZ = (90.0 / 256.0) * (float) z;
     }
-
-    //n++;
 }

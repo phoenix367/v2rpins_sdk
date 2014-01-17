@@ -10,7 +10,6 @@
       <itemPath>PortValidator.hpp</itemPath>
       <itemPath>RemoteConnector.hpp</itemPath>
       <itemPath>SensorsConnector.hpp</itemPath>
-      <itemPath>SensorsListener.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="messages" displayName="messages" projectFiles="true">
       <itemPath>messages/common.pb.cc</itemPath>
@@ -32,7 +31,6 @@
       <itemPath>PortValidator.cpp</itemPath>
       <itemPath>RemoteConnector.cpp</itemPath>
       <itemPath>SensorsConnector.cpp</itemPath>
-      <itemPath>SensorsListener.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="f1" displayName="UI" projectFiles="true">
@@ -110,10 +108,6 @@
       </item>
       <item path="SensorsConnector.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="SensorsListener.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="SensorsListener.hpp" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="messages/common.pb.cc" ex="false" tool="1" flavor2="0">
@@ -181,10 +175,6 @@
       <item path="SensorsConnector.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SensorsConnector.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="SensorsListener.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="SensorsListener.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
