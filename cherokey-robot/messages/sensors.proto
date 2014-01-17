@@ -2,7 +2,14 @@ package cherokey.sensors;
 
 enum DataTypes 
 {
-    STRING = 1; INTEGER = 2; REAL = 3; STRUCTURE = 4;
+    STRING = 1; INTEGER = 2; REAL = 3; COORD_3D = 4;
+}
+
+message Coord3D
+{
+    required double x = 1;
+    required double y = 2;
+    required double z = 3;
 }
 
 message SensorValue
@@ -13,7 +20,7 @@ message SensorValue
     optional string str_value = 3;
     optional int64 int_value = 4;
     optional double real_value = 5;
-    optional SensorValue nested_value = 6;
+    optional Coord3D coord_value = 6;
 }
 
 message SensorData
