@@ -89,7 +89,10 @@ void IMUReader::run()
         std::vector<int8_t> outArray(messageSize);
         sensorMessage.SerializeToArray(&outArray[0], messageSize);
 
-        sendData(outArray);
+        if (!calibration && loopCount % 10 == 0)
+        {
+            sendData(outArray);
+        }
         
         loopCount++;
         

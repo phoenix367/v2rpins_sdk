@@ -36,8 +36,6 @@ void SensorsConnector::run()
                 connectionInfo.sensorsPort;
         socketPtr->connect(stream.str().c_str());
         
-        int64_t sensorMsg = 0;
-        
         while (true)
         {
             zmq::message_t msg;
@@ -105,14 +103,8 @@ void SensorsConnector::run()
                                 value.has_coord_value())
                             {
                                 cs::Coord3D coord3D = value.coord_value();
-                                
-                                if (sensorMsg % 10 == 0)
-                                {
                                 emit ModelRotation(coord3D.x(), coord3D.y(),
                                         coord3D.z());
-                                }
-                                
-                                sensorMsg++;
                             }
                         }
                     }
