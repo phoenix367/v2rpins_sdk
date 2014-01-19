@@ -34,6 +34,7 @@ public:
 public:
     Q_SIGNAL void VoltageData(float voltage, float current);
     Q_SIGNAL void GPSData(GPSInfo gpsInfo);
+    Q_SIGNAL void ModelRotation(float angleX, float angleY, float angleZ);
     
 protected:
     virtual void run();

@@ -10,6 +10,7 @@
 
 #include "ui_MainForm.h"
 #include "RemoteConnector.hpp"
+#include "../PlatformModel.hpp"
 
 class MainForm : public QDialog 
 {
@@ -33,6 +34,7 @@ private:
     Q_SLOT void onRotateLeftPressed();
     Q_SLOT void onRotateLeftReleased();
     Q_SLOT void onShowVideoComposite();
+    Q_SLOT void onModelRotation(float angleX, float angleY, float angleZ);
     
 protected:
     virtual bool eventFilter(QObject *object, QEvent *event);
@@ -44,6 +46,7 @@ private:
     Ui::MainForm widget;
     RemoteConnector *connectorPtr;
     bool connected;
+    PlatformModel *platformWidget;
 };
 
 #endif	/* _MAINFORM_HPP */

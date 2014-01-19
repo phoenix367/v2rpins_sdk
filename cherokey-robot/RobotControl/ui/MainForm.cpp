@@ -9,10 +9,12 @@
 #include "../Commands.hpp"
 #include "../IP4Validator.hpp"
 #include "../PortValidator.hpp"
+#include "../PlatformModel.hpp"
 
 #include <QMessageBox>
 #include <QSharedPointer>
 #include <QKeyEvent>
+#include <QHBoxLayout>
 
 MainForm::MainForm()
 : connected(false)
@@ -54,6 +56,12 @@ MainForm::MainForm()
     widget.txtSensorsPort->setValidator(&portValidator);
     
     qApp->installEventFilter(this);
+    
+    widget.graphicsView->setLayout(new QHBoxLayout());
+    platformWidget = new PlatformModel(widget.graphicsView);
+    
+    QSize widgetSize = widget.graphicsView->size();
+    platformWidget->resize(widgetSize.width(), widgetSize.height());
 }
 
 MainForm::~MainForm() 
@@ -246,4 +254,9 @@ void MainForm::onGPSData(GPSInfo info)
 {
     widget.lblLatitude->setText(QString::number(info.latitude, 'g', 10));
     widget.lblLongitude->setText(QString::number(info.longitude, 'g', 10));
+}
+
+void MainForm::onModelRotation(float angleX, float angleY, float angleZ)
+{
+    platformWidget->rotateModel(angleX, angleY, angleZ);
 }

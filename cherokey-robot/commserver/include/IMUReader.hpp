@@ -23,9 +23,7 @@ class IMUReader : public SensorReader
 private:
     struct IMUSensorsData
     {
-        float compassX;
-        float compassY;
-        float compassZ;
+        float compassAngle;
         
         float accelX;
         float accelY;
@@ -34,6 +32,17 @@ private:
         float gyroX;
         float gyroY;
         float gyroZ;
+    };
+    
+    struct GyroState
+    {
+        float angleX;
+        float angleY;
+        float angleZ;
+        
+        float offsetX;
+        float offsetY;
+        float offsetZ;
     };
     
 public:
@@ -48,7 +57,9 @@ private:
     static void selectDevice(int file, int addr, const char * name);
     
     void initSensors();
-    void readSensors(IMUSensorsData& data);
+    void readSensors(IMUSensorsData& data, GyroState& gyroState,
+            bool calibration);
+    float getCompassAngle(short x, short y, short z);
     
 private:
     int file;

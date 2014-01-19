@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'MainForm.ui'
 **
-** Created: Mon Jan 6 22:01:53 2014
+** Created: Sun Jan 19 17:18:25 2014
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -16,6 +16,7 @@
 #include <QtGui/QButtonGroup>
 #include <QtGui/QDialog>
 #include <QtGui/QFrame>
+#include <QtGui/QGraphicsView>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
@@ -54,12 +55,14 @@ public:
     QLineEdit *txtCommandPort;
     QLabel *label_7;
     QLineEdit *txtSensorsPort;
+    QGraphicsView *graphicsView;
+    QLabel *label_11;
 
     void setupUi(QDialog *MainForm)
     {
         if (MainForm->objectName().isEmpty())
             MainForm->setObjectName(QString::fromUtf8("MainForm"));
-        MainForm->resize(462, 442);
+        MainForm->resize(870, 442);
         btnConnect = new QPushButton(MainForm);
         btnConnect->setObjectName(QString::fromUtf8("btnConnect"));
         btnConnect->setGeometry(QRect(240, 40, 93, 27));
@@ -150,6 +153,12 @@ public:
         txtSensorsPort = new QLineEdit(MainForm);
         txtSensorsPort->setObjectName(QString::fromUtf8("txtSensorsPort"));
         txtSensorsPort->setGeometry(QRect(20, 150, 81, 27));
+        graphicsView = new QGraphicsView(MainForm);
+        graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
+        graphicsView->setGeometry(QRect(450, 40, 401, 341));
+        label_11 = new QLabel(MainForm);
+        label_11->setObjectName(QString::fromUtf8("label_11"));
+        label_11->setGeometry(QRect(450, 20, 121, 17));
 
         retranslateUi(MainForm);
 
@@ -179,6 +188,7 @@ public:
         btnShowComposite->setText(QApplication::translate("MainForm", "Composite video", 0, QApplication::UnicodeUTF8));
         label_6->setText(QApplication::translate("MainForm", "Command server port:", 0, QApplication::UnicodeUTF8));
         label_7->setText(QApplication::translate("MainForm", "Sensors publisher port:", 0, QApplication::UnicodeUTF8));
+        label_11->setText(QApplication::translate("MainForm", "Platform position", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

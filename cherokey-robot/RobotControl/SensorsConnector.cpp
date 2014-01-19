@@ -36,6 +36,8 @@ void SensorsConnector::run()
                 connectionInfo.sensorsPort;
         socketPtr->connect(stream.str().c_str());
         
+        int64_t sensorMsg = 0;
+        
         while (true)
         {
             zmq::message_t msg;
@@ -99,14 +101,18 @@ void SensorsConnector::run()
                         for (int i = 0; i < dataMsg.sensor_values_size(); i++)
                         {
                             cs::SensorValue value = dataMsg.sensor_values(i);
-                            if (value.associated_name() == "compass_data" &&
+                            if (value.associated_name() == "gyro_data" &&
                                 value.has_coord_value())
                             {
                                 cs::Coord3D coord3D = value.coord_value();
                                 
-                                std::cout << coord3D.x() << " " <<
-                                        coord3D.y() << " " << coord3D.z() << 
-                                        std::endl;
+                                if (sensorMsg % 10 == 0)
+                                {
+                                emit ModelRotation(coord3D.x(), coord3D.y(),
+                                        coord3D.z());
+                                }
+                                
+                                sensorMsg++;
                             }
                         }
                     }

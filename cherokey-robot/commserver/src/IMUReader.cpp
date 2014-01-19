@@ -12,6 +12,7 @@
 #include <boost/asio.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <linux/i2c-dev.h>
+#include <linux/swab.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -56,28 +57,49 @@ void IMUReader::run()
     sensorMessage.set_sensor_desc("IMU");
     auto values = sensorMessage.mutable_sensor_values();
     auto compassData = values->Add();
+    auto gyroData = values->Add();
     
     compassData->set_associated_name("compass_data");
-    compassData->set_data_type(cs::COORD_3D);
-    auto compassCoords = compassData->mutable_coord_value();
+    compassData->set_data_type(cs::REAL);
+    
+    gyroData->set_associated_name("gyro_data");
+    gyroData->set_data_type(cs::COORD_3D);
+    auto gyroCoords = gyroData->mutable_coord_value();
+    
+    int64_t loopCount = 0;
+    GyroState gyroState = { 0 };
+    bool calibration = true;
+    
+    int64_t calibrationDelay = 500;
 
     while (!stopVariable)
     {
         IMUSensorsData sensorsData = { 0 };
-        readSensors(sensorsData);
+        readSensors(sensorsData, gyroState, calibration);
         
         t.wait();
         t.expires_at(t.expires_at() + delayTime);
         
-        compassCoords->set_x(sensorsData.compassX);
-        compassCoords->set_y(sensorsData.compassY);
-        compassCoords->set_z(sensorsData.compassZ);
+        compassData->set_real_value(sensorsData.compassAngle);
+        gyroCoords->set_x(sensorsData.gyroX);
+        gyroCoords->set_y(sensorsData.gyroY);
+        gyroCoords->set_z(sensorsData.gyroZ);
         
         int messageSize = sensorMessage.ByteSize();
         std::vector<int8_t> outArray(messageSize);
         sensorMessage.SerializeToArray(&outArray[0], messageSize);
 
         sendData(outArray);
+        
+        loopCount++;
+        
+        if (loopCount == calibrationDelay)
+        {
+            calibration = false;
+            gyroState.offsetX /= calibrationDelay;
+            gyroState.offsetY /= calibrationDelay;
+            gyroState.offsetZ /= calibrationDelay;
+        }
     }
 }
 
@@ -120,7 +142,8 @@ void IMUReader::initSensors()
     writeToDevice(file, "\x17\x00", 2);
 }
 
-void IMUReader::readSensors(IMUSensorsData& data)
+void IMUReader::readSensors(IMUSensorsData& data, GyroState& gyroState,
+            bool calibration)
 {
     short x, y, z;
     unsigned char buf[16];
@@ -134,12 +157,11 @@ void IMUReader::readSensors(IMUSensorsData& data)
     }
     else 
     {
-        x = buf[1]<<8| buf[0];
-        y = buf[3]<<8| buf[2];
-        z = buf[5]<<8| buf[4];
-        data.compassX = (90.0 / 256.0) * (float) x;
-        data.compassY = (90.0 / 256.0) * (float) y;
-        data.compassZ = (90.0 / 256.0) * (float) z;
+        x = __swab16(*(short*) &buf[0]);
+        z = __swab16(*(short*) &buf[2]);
+        y = __swab16(*(short*) &buf[4]);
+        
+        data.compassAngle = getCompassAngle(x, y, z);
     }
 
 
@@ -185,11 +207,35 @@ void IMUReader::readSensors(IMUSensorsData& data)
     }
     else 
     {
-        x = buf[0]<<8| buf[1];
-        y = buf[2]<<8| buf[3];
-        z = buf[4]<<8| buf[5];
-        data.gyroX = (90.0 / 256.0) * (float) x;
-        data.gyroY = (90.0 / 256.0) * (float) y;
-        data.gyroZ = (90.0 / 256.0) * (float) z;
+        x = __swab16(*(short*) &buf[0]);
+        y = __swab16(*(short*) &buf[2]);
+        z = __swab16(*(short*) &buf[4]);
+        
+        if (calibration)
+        {
+            gyroState.offsetX += x;
+            gyroState.offsetY += y;
+            gyroState.offsetZ += z;
+        }
+        else
+        {
+            float gyroRate = (x - gyroState.offsetX) / 14.375;
+            gyroState.angleX += gyroRate / 100;
+            
+            data.gyroX = gyroState.angleX;
+            
+            gyroRate = (y - gyroState.offsetY) / 14.375;
+            gyroState.angleY += gyroRate / 100;
+            data.gyroY = gyroState.angleY;
+            
+            gyroRate = (z - gyroState.offsetZ) / 14.375;
+            gyroState.angleZ += gyroRate / 100;
+            data.gyroZ = gyroState.angleZ;
+        }
     }
+}
+
+float IMUReader::getCompassAngle(short x, short y, short z)
+{
+    return 0.0;
 }
