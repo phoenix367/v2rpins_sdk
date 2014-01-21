@@ -202,6 +202,7 @@
             <pElem>messages</pElem>
             <pElem>../../pincontroller/include</pElem>
             <pElem>../nmea/include</pElem>
+            <pElem>../madgwik_ahrs/include</pElem>
           </incDir>
         </ccTool>
         <fortranCompilerTool>
@@ -249,6 +250,18 @@
             </linkerLibProjectItem>
             <linkerLibLibItem>rt</linkerLibLibItem>
             <linkerLibStdlibItem>DataCompression</linkerLibStdlibItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../madgwik_ahrs"
+                            CT="3"
+                            CN="Debug"
+                            AC="true"
+                            BL="true"
+                            WD="../madgwik_ahrs"
+                            BC="${MAKE}  -f Makefile CONF=Debug"
+                            CC="${MAKE}  -f Makefile CONF=Debug clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libmadgwik_ahrs.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>

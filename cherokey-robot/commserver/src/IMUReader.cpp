@@ -8,6 +8,7 @@
 #include "IMUReader.hpp"
 #include "Exceptions.hpp"
 #include "sensors.pb.h"
+#include "madgwik_ahrs.h"
 
 #include <boost/asio.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -26,6 +27,8 @@
 #define BMA180_I2C_ADDR             0x40
 
 namespace cs = cherokey::sensors;
+
+const float QuatToEulerAccuracy = 0.001;
 
 IMUReader::IMUReader() 
 {
@@ -71,14 +74,31 @@ void IMUReader::run()
     bool calibration = true;
     
     int64_t calibrationDelay = 500;
+    AHRS_INFO ahrsInfo;
+    InitAHRS(100, &ahrsInfo);
 
     while (!stopVariable)
     {
         IMUSensorsData sensorsData = { 0 };
         readSensors(sensorsData, gyroState, calibration);
         
+        
         t.wait();
         t.expires_at(t.expires_at() + delayTime);
+        
+        if (!calibration)
+        {
+            /*
+            MadgwickAHRSupdateIMU(
+                    sensorsData.rawGyroX - gyroState.offsetX, 
+                    sensorsData.rawGyroY - gyroState.offsetY, 
+                    sensorsData.rawGyroZ - gyroState.offsetZ, 
+                    0, 0, 0,
+                    &ahrsInfo);
+            quat2Euler(ahrsInfo.q0, ahrsInfo.q1, ahrsInfo.q2, ahrsInfo.q3,
+                    sensorsData.gyroX, sensorsData.gyroY, sensorsData.gyroZ);
+            */
+        }
         
         compassData->set_real_value(sensorsData.compassAngle);
         gyroCoords->set_x(sensorsData.gyroX);
@@ -91,6 +111,8 @@ void IMUReader::run()
 
         if (!calibration && loopCount % 10 == 0)
         {
+            std::cout << sensorsData.rawAccelX << " " << sensorsData.rawAccelY << " " <<
+                    sensorsData.rawAccelZ << std::endl;
             sendData(outArray);
         }
         
@@ -164,6 +186,10 @@ void IMUReader::readSensors(IMUSensorsData& data, GyroState& gyroState,
         z = __swab16(*(short*) &buf[2]);
         y = __swab16(*(short*) &buf[4]);
         
+        data.rawCompassX = x;
+        data.rawComapssY = y;
+        data.rawCompassZ = z;
+        
         data.compassAngle = getCompassAngle(x, y, z);
     }
 
@@ -193,12 +219,17 @@ void IMUReader::readSensors(IMUSensorsData& data, GyroState& gyroState,
     }
     else 
     {
-        x = buf[1]<<8| buf[0];
-        y = buf[3]<<8| buf[2];
-        z = buf[5]<<8| buf[4];
+        x = buf[1] << 8 | buf[0];
+        y = buf[3] << 8 | buf[2];
+        z = buf[5] << 8 | buf[4];
+        
         data.accelX = (90.0 / 256.0) * (float) x;
         data.accelY = (90.0 / 256.0) * (float) y;
         data.accelZ = (90.0 / 256.0) * (float) z;
+        
+        data.rawAccelX = x;
+        data.rawAccelY = y;
+        data.rawAccelZ = z;
     }
 
     selectDevice(file, ITG3200_I2C_ADDR, "ITG3200");
@@ -213,6 +244,10 @@ void IMUReader::readSensors(IMUSensorsData& data, GyroState& gyroState,
         x = __swab16(*(short*) &buf[0]);
         y = __swab16(*(short*) &buf[2]);
         z = __swab16(*(short*) &buf[4]);
+        
+        data.rawGyroX = x;
+        data.rawGyroY = y;
+        data.rawGyroZ = z;
         
         if (calibration)
         {
@@ -241,4 +276,20 @@ void IMUReader::readSensors(IMUSensorsData& data, GyroState& gyroState,
 float IMUReader::getCompassAngle(short x, short y, short z)
 {
     return 0.0;
+}
+
+void IMUReader::quat2Euler(float w, float x, float y, float z, float& roll, 
+        float& pitch, float& yaw)
+{
+    float sqw = w * w;
+    float sqx = x * x;
+    float sqy = y * y;
+    float sqz = z * z;
+    roll = atan2(2.f * (x * y + z * w), sqx - sqy - sqz + sqw);
+    pitch = asin(-2.f * (x * z - y * w));
+    yaw = atan2(2.f * (y * z + x * w), -sqx - sqy + sqz + sqw);
+    
+    roll *= 180 / M_PI;
+    pitch *= 180 / M_PI;
+    yaw *= 180 / M_PI;
 }

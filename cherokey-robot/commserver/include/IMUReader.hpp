@@ -32,6 +32,18 @@ private:
         float gyroX;
         float gyroY;
         float gyroZ;
+        
+        float rawCompassX;
+        float rawComapssY;
+        float rawCompassZ;
+        
+        float rawAccelX;
+        float rawAccelY;
+        float rawAccelZ;
+        
+        float rawGyroX;
+        float rawGyroY;
+        float rawGyroZ;
     };
     
     struct GyroState
@@ -60,6 +72,8 @@ private:
     void readSensors(IMUSensorsData& data, GyroState& gyroState,
             bool calibration);
     float getCompassAngle(short x, short y, short z);
+    void quat2Euler(float w, float x, float y, float z,
+        float& roll, float& pitch, float& yaw);
     
 private:
     int file;
