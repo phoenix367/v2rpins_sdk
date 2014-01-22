@@ -21,3 +21,5 @@ pincontroller/build/
 /cherokey-robot/RobotControl/messages/
 /cherokey-robot/nmea/build/
 /cherokey-robot/nmea/dist/
+/cherokey-robot/madgwik_ahrs/build/
+/cherokey-robot/madgwik_ahrs/dist/
