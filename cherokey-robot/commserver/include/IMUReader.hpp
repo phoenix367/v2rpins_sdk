@@ -57,6 +57,13 @@ private:
         float offsetZ;
     };
     
+    struct AccelState
+    {
+        float offsetX;
+        float offsetY;
+        float offsetZ;
+    };
+
 public:
     IMUReader();
     virtual ~IMUReader();
@@ -70,7 +77,7 @@ private:
     
     void initSensors();
     void readSensors(IMUSensorsData& data, GyroState& gyroState,
-            bool calibration);
+            AccelState& accelState, bool calibration);
     float getCompassAngle(short x, short y, short z);
     void quat2Euler(float w, float x, float y, float z,
         float& roll, float& pitch, float& yaw);

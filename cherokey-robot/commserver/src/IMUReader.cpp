@@ -61,6 +61,7 @@ void IMUReader::run()
     auto values = sensorMessage.mutable_sensor_values();
     auto compassData = values->Add();
     auto gyroData = values->Add();
+    auto accelData = values->Add();
     
     compassData->set_associated_name("compass_data");
     compassData->set_data_type(cs::REAL);
@@ -69,8 +70,13 @@ void IMUReader::run()
     gyroData->set_data_type(cs::COORD_3D);
     auto gyroCoords = gyroData->mutable_coord_value();
     
+    accelData->set_associated_name("accel_data");
+    accelData->set_data_type(cs::COORD_3D);
+    auto accelCoords = accelData->mutable_coord_value();
+
     int64_t loopCount = 0;
     GyroState gyroState = { 0 };
+    AccelState accelState = { 0 };
     bool calibration = true;
     
     int64_t calibrationDelay = 500;
@@ -80,7 +86,7 @@ void IMUReader::run()
     while (!stopVariable)
     {
         IMUSensorsData sensorsData = { 0 };
-        readSensors(sensorsData, gyroState, calibration);
+        readSensors(sensorsData, gyroState, accelState, calibration);
         
         
         t.wait();
@@ -105,14 +111,19 @@ void IMUReader::run()
         gyroCoords->set_y(sensorsData.gyroY);
         gyroCoords->set_z(sensorsData.gyroZ);
         
+        accelCoords->set_x(sensorsData.accelX);
+        accelCoords->set_y(sensorsData.accelY);
+        accelCoords->set_z(sensorsData.accelZ);
+
         int messageSize = sensorMessage.ByteSize();
         std::vector<int8_t> outArray(messageSize);
         sensorMessage.SerializeToArray(&outArray[0], messageSize);
 
         if (!calibration && loopCount % 10 == 0)
         {
-            std::cout << sensorsData.rawAccelX << " " << sensorsData.rawAccelY << " " <<
-                    sensorsData.rawAccelZ << std::endl;
+            std::cout << sensorsData.accelX << " " << sensorsData.accelY << " " <<
+                    sensorsData.accelZ << " " << sensorsData.gyroX << " " <<
+                    sensorsData.gyroY << " " << sensorsData.gyroZ << std::endl;
             sendData(outArray);
         }
         
@@ -121,9 +132,14 @@ void IMUReader::run()
         if (loopCount == calibrationDelay)
         {
             calibration = false;
+            
             gyroState.offsetX /= calibrationDelay;
             gyroState.offsetY /= calibrationDelay;
             gyroState.offsetZ /= calibrationDelay;
+            
+            accelState.offsetX /= calibrationDelay;
+            accelState.offsetY /= calibrationDelay;
+            accelState.offsetZ /= calibrationDelay;
         }
     }
 }
@@ -168,7 +184,7 @@ void IMUReader::initSensors()
 }
 
 void IMUReader::readSensors(IMUSensorsData& data, GyroState& gyroState,
-            bool calibration)
+            AccelState& accelState, bool calibration)
 {
     short x, y, z;
     unsigned char buf[16];
@@ -223,9 +239,29 @@ void IMUReader::readSensors(IMUSensorsData& data, GyroState& gyroState,
         y = buf[3] << 8 | buf[2];
         z = buf[5] << 8 | buf[4];
         
-        data.accelX = (90.0 / 256.0) * (float) x;
-        data.accelY = (90.0 / 256.0) * (float) y;
-        data.accelZ = (90.0 / 256.0) * (float) z;
+        if (calibration)
+        {
+            accelState.offsetX += x;
+            accelState.offsetY += y;
+            accelState.offsetZ += z;
+        }
+        else
+        {
+            float xCentered = x;
+            float yCentered = y;
+            float zCentered = z;
+            
+            float x_2 = xCentered * xCentered, y_2 = yCentered * yCentered,
+                    z_2 = zCentered * zCentered;
+            
+            data.accelX = atan(xCentered / sqrt(y_2 + z_2));
+            data.accelY = atan(yCentered / sqrt(x_2 + z_2));
+            data.accelZ = atan(sqrt(x_2 + y_2) / zCentered);
+
+            data.accelX *= 180 / M_PI;
+            data.accelY *= 180 / M_PI;
+            data.accelZ *= 180 / M_PI;
+        }
         
         data.rawAccelX = x;
         data.rawAccelY = y;
