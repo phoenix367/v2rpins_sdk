@@ -9,6 +9,7 @@
 #include "Exceptions.hpp"
 #include "sensors.pb.h"
 #include "madgwik_ahrs.h"
+#include "ComplementaryFilter.hpp"
 
 #include <boost/asio.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -18,6 +19,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <boost/timer.hpp>
 
 #define I2CDEV                      "/dev/i2c-1"
 
@@ -59,6 +61,7 @@ void IMUReader::run()
     sensorMessage.set_sensor_id(2);
     sensorMessage.set_sensor_desc("IMU");
     auto values = sensorMessage.mutable_sensor_values();
+
     auto compassData = values->Add();
     auto gyroData = values->Add();
     auto accelData = values->Add();
@@ -82,14 +85,16 @@ void IMUReader::run()
     int64_t calibrationDelay = 500;
     AHRS_INFO ahrsInfo;
     InitAHRS(100, &ahrsInfo);
-
+    
+    ComplementaryFilter filter;
+    float pitch = 0.0f, roll = 0.0f;
+    
     while (!stopVariable)
     {
         IMUSensorsData sensorsData = { 0 };
         readSensors(sensorsData, gyroState, accelState, calibration);
         
-        
-        t.wait();
+        t.wait();                
         t.expires_at(t.expires_at() + delayTime);
         
         if (!calibration)
@@ -106,24 +111,29 @@ void IMUReader::run()
             */
         }
         
-        compassData->set_real_value(sensorsData.compassAngle);
-        gyroCoords->set_x(sensorsData.gyroX);
-        gyroCoords->set_y(sensorsData.gyroY);
-        gyroCoords->set_z(sensorsData.gyroZ);
+        filter.getAngles(sensorsData.rawAccelX, sensorsData.rawAccelY,
+                sensorsData.rawAccelZ, sensorsData.rawGyroX,
+                sensorsData.rawGyroY, sensorsData.rawGyroZ, 
+                0.01f, pitch, roll);
         
-        accelCoords->set_x(sensorsData.accelX);
-        accelCoords->set_y(sensorsData.accelY);
-        accelCoords->set_z(sensorsData.accelZ);
-
+        compassData->set_real_value(0);
+        gyroCoords->set_x(pitch);
+        gyroCoords->set_y(roll);
+        gyroCoords->set_z(0);
+        
+        accelCoords->set_x(0);
+        accelCoords->set_y(0);
+        accelCoords->set_z(0);
+        
         int messageSize = sensorMessage.ByteSize();
         std::vector<int8_t> outArray(messageSize);
         sensorMessage.SerializeToArray(&outArray[0], messageSize);
 
         if (!calibration && loopCount % 10 == 0)
         {
-            std::cout << sensorsData.accelX << " " << sensorsData.accelY << " " <<
-                    sensorsData.accelZ << " " << sensorsData.gyroX << " " <<
-                    sensorsData.gyroY << " " << sensorsData.gyroZ << std::endl;
+            //std::cout << sensorsData.rawAccelX << " " << sensorsData.rawAccelY << " " <<
+            //        sensorsData.rawAccelZ << " " << sensorsData.rawGyroX << " " <<
+            //        sensorsData.rawGyroY << " " << sensorsData.rawGyroZ << std::endl;
             sendData(outArray);
         }
         
@@ -205,8 +215,6 @@ void IMUReader::readSensors(IMUSensorsData& data, GyroState& gyroState,
         data.rawCompassX = x;
         data.rawComapssY = y;
         data.rawCompassZ = z;
-        
-        data.compassAngle = getCompassAngle(x, y, z);
     }
 
 
@@ -245,23 +253,6 @@ void IMUReader::readSensors(IMUSensorsData& data, GyroState& gyroState,
             accelState.offsetY += y;
             accelState.offsetZ += z;
         }
-        else
-        {
-            float xCentered = x;
-            float yCentered = y;
-            float zCentered = z;
-            
-            float x_2 = xCentered * xCentered, y_2 = yCentered * yCentered,
-                    z_2 = zCentered * zCentered;
-            
-            data.accelX = atan(xCentered / sqrt(y_2 + z_2));
-            data.accelY = atan(yCentered / sqrt(x_2 + z_2));
-            data.accelZ = atan(sqrt(x_2 + y_2) / zCentered);
-
-            data.accelX *= 180 / M_PI;
-            data.accelY *= 180 / M_PI;
-            data.accelZ *= 180 / M_PI;
-        }
         
         data.rawAccelX = x;
         data.rawAccelY = y;
@@ -290,21 +281,6 @@ void IMUReader::readSensors(IMUSensorsData& data, GyroState& gyroState,
             gyroState.offsetX += x;
             gyroState.offsetY += y;
             gyroState.offsetZ += z;
-        }
-        else
-        {
-            float gyroRate = (x - gyroState.offsetX) / 14.375;
-            gyroState.angleX += gyroRate / 100;
-            
-            data.gyroX = gyroState.angleX;
-            
-            gyroRate = (y - gyroState.offsetY) / 14.375;
-            gyroState.angleY += gyroRate / 100;
-            data.gyroY = gyroState.angleY;
-            
-            gyroRate = (z - gyroState.offsetZ) / 14.375;
-            gyroState.angleZ += gyroRate / 100;
-            data.gyroZ = gyroState.angleZ;
         }
     }
 }

@@ -23,16 +23,6 @@ class IMUReader : public SensorReader
 private:
     struct IMUSensorsData
     {
-        float compassAngle;
-        
-        float accelX;
-        float accelY;
-        float accelZ;
-        
-        float gyroX;
-        float gyroY;
-        float gyroZ;
-        
         float rawCompassX;
         float rawComapssY;
         float rawCompassZ;
@@ -48,10 +38,6 @@ private:
     
     struct GyroState
     {
-        float angleX;
-        float angleY;
-        float angleZ;
-        
         float offsetX;
         float offsetY;
         float offsetZ;

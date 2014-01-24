@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/messages/common.pb.o \
 	${OBJECTDIR}/messages/sensors.pb.o \
+	${OBJECTDIR}/src/ComplementaryFilter.o \
 	${OBJECTDIR}/src/ConfigManager.o \
 	${OBJECTDIR}/src/ConnectionListener.o \
 	${OBJECTDIR}/src/DriveController.o \
@@ -89,6 +90,11 @@ ${OBJECTDIR}/messages/sensors.pb.o: messages/sensors.pb.cc
 	${MKDIR} -p ${OBJECTDIR}/messages
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -I../madgwik_ahrs/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/messages/sensors.pb.o messages/sensors.pb.cc
+
+${OBJECTDIR}/src/ComplementaryFilter.o: src/ComplementaryFilter.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -I../madgwik_ahrs/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/ComplementaryFilter.o src/ComplementaryFilter.cpp
 
 ${OBJECTDIR}/src/ConfigManager.o: src/ConfigManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
