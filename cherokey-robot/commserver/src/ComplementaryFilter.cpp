@@ -5,20 +5,29 @@
  * Created on January 25, 2014, 12:50 AM
  */
 
+#include <iosfwd>
+
+
 #include <cmath>
 #include <iostream>
+#include <fstream>
 #include "ComplementaryFilter.hpp"
 
 const float ComplementaryFilter::GYROSCOPE_SENSITIVITY = 14.375;
+
+std::ofstream fileStream;
 
 ComplementaryFilter::ComplementaryFilter(float factor) 
 : alphaFactor(factor)
 {
     init();
+    
+    fileStream.open("compass_data.txt");
 }
 
 ComplementaryFilter::~ComplementaryFilter() 
 {
+    fileStream.close();
 }
 
 void ComplementaryFilter::init()
@@ -58,23 +67,15 @@ void ComplementaryFilter::getAngles(
     float Yh = compassZ * sin(phi) - compassY * cos(phi);
     
     
-    float yawCompass = atan(compassY / compassX);
-    /*
-    if (yawCompass < 0.0f)
-    {
-        yawCompass += 2 * M_PI;
-    }
-    else if (yawCompass > 2 * M_PI)
-    {
-        yawCompass -= 2 * M_PI;
-    }
-    */
+    Xh = compassX + 111.4397;
+    Yh = compassY + 162.1687;
     
-    //yawCompass *= M_PI / 180;
+    float yawCompass = atan2(Yh, Xh) * 180 / M_PI;
     
-    std::cout << "Raw: " << compassX << " " << compassY << " " <<
-            compassZ << " Heading: " << yawCompass << 
-            " Radians " << yawCompass * 180 / M_PI << std::endl;
+    
+    //fileStream << compassX << " " << compassY << " " <<
+    //        compassZ << std::endl;
+    std::cout << Xh << " " << Yh << " " << yawCompass << std::endl;
     yaw = yaw * alphaFactor + (1.0f - alphaFactor) * yawCompass;
     
     rollOut = roll;
