@@ -18,6 +18,13 @@ struct ConnectionInfo
     uint16_t port;
 };
 
+struct CompassOffsets
+{
+    float V_x;
+    float V_y;
+    float V_z;
+};
+
 class ConfigManager 
 {
 private:
@@ -34,6 +41,7 @@ public:
     
     std::string getGPSDevice();
     uint32_t getGPSDeviceBaudrate();
+    CompassOffsets getCompassOffsets();
     
 private:
     static std::unique_ptr<ConfigManager> instance;
@@ -44,12 +52,16 @@ private:
     static const std::string SENSORS_PORT_KEY;
     static const std::string GPS_SERIAL_DEVICE;
     static const std::string GPS_SERIAL_BAUDRATE;
+    static const std::string IMU_COMPASS_X_OFFSET;
+    static const std::string IMU_COMPASS_Y_OFFSET;
+    static const std::string IMU_COMPASS_Z_OFFSET;
     
     boost::program_options::options_description desc;
     std::shared_ptr<ConnectionInfo> connectionInfo;
     std::shared_ptr<ConnectionInfo> sensorsConnection;
     std::string gpsSerial;
     uint32_t gpsSerialBaudrate;
+    CompassOffsets compassOffsets;
 };
 
 #endif	/* CONFIGMANAGER_HPP */

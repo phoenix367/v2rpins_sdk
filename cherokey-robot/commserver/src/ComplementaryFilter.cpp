@@ -10,24 +10,28 @@
 
 #include <cmath>
 #include <iostream>
-#include <fstream>
 #include "ComplementaryFilter.hpp"
+#include "Exceptions.hpp"
 
 const float ComplementaryFilter::GYROSCOPE_SENSITIVITY = 14.375;
-
-std::ofstream fileStream;
 
 ComplementaryFilter::ComplementaryFilter(float factor) 
 : alphaFactor(factor)
 {
     init();
     
-    fileStream.open("compass_data.txt");
+    auto instance = ConfigManager::getInstance();
+    if (!instance)
+    {
+        COMM_EXCEPTION(NullPointerException, "Can't get instance of "
+            "configuration manager");
+    }
+    
+    offsets = instance->getCompassOffsets();
 }
 
 ComplementaryFilter::~ComplementaryFilter() 
 {
-    fileStream.close();
 }
 
 void ComplementaryFilter::init()
@@ -58,25 +62,28 @@ void ComplementaryFilter::getAngles(
     rollAcc = atan2(accelX, sqrt(a_y2 + a_z2)) * 180 / M_PI;
     roll = roll * alphaFactor + rollAcc * (1.0f - alphaFactor);
     
-    float theta = pitch * M_PI / 180;
-    float phi = roll * M_PI / 180;
+    float pitchRad = pitch * M_PI / 180;
+    float rollRad = roll * M_PI / 180;
     
-    float Xh = compassX * cos(theta) + 
-        compassY * sin(theta) * sin(phi) +
-        compassZ * sin(theta) * cos(phi);
-    float Yh = compassZ * sin(phi) - compassY * cos(phi);
+    float Xcal = compassX - offsets.V_x;
+    float Ycal = compassY - offsets.V_y;
+    float Zcal = compassZ - offsets.V_z;
     
+    float Xh = Xcal * cos(pitchRad) + Ycal * sin(rollRad) * sin(pitchRad) + 
+        Zcal * cos(rollRad) * sin(pitchRad);
+    float Yh = Ycal * cos(rollRad) - Zcal * sin(rollRad);
+
+    float yawCompass = atan2(-Yh, Xh) * 180 / M_PI;
     
-    Xh = compassX + 111.4397;
-    Yh = compassY + 162.1687;
-    
-    float yawCompass = atan2(Yh, Xh) * 180 / M_PI;
-    
+    if (yawCompass < 0)
+    {
+        yawCompass = 360 + yawCompass;
+    }
     
     //fileStream << compassX << " " << compassY << " " <<
     //        compassZ << std::endl;
-    std::cout << Xh << " " << Yh << " " << yawCompass << std::endl;
-    yaw = yaw * alphaFactor + (1.0f - alphaFactor) * yawCompass;
+    //std::cout << Xh << " " << Yh << " " << yawCompass << std::endl;
+    yaw = yawCompass;
     
     rollOut = roll;
     pitchOut = pitch;

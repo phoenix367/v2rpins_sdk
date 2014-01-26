@@ -121,7 +121,7 @@ void IMUReader::run()
         compassData->set_real_value(0);
         gyroCoords->set_x(pitch);
         gyroCoords->set_y(-roll);
-        gyroCoords->set_z(-yaw);
+        gyroCoords->set_z(yaw);
         
         accelCoords->set_x(0);
         accelCoords->set_y(0);

@@ -8,6 +8,8 @@
 #ifndef COMPLEMENTARYFILTER_HPP
 #define	COMPLEMENTARYFILTER_HPP
 
+#include "ConfigManager.hpp"
+
 class ComplementaryFilter 
 {
 public:
@@ -26,6 +28,8 @@ private:
     float roll;
     float pitch;
     float yaw;
+    
+    CompassOffsets offsets;
 };
 
 #endif	/* COMPLEMENTARYFILTER_HPP */

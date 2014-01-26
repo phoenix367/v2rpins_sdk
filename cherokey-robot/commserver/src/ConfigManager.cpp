@@ -21,6 +21,9 @@ const std::string ConfigManager::SENSORS_ADDRESS_KEY = "Sensors.IPAddress";
 const std::string ConfigManager::SENSORS_PORT_KEY = "Sensors.Port";
 const std::string ConfigManager::GPS_SERIAL_DEVICE = "GPS.SerialDevice";
 const std::string ConfigManager::GPS_SERIAL_BAUDRATE = "GPS.Baudrate";
+const std::string ConfigManager::IMU_COMPASS_X_OFFSET = "IMU.V_x";
+const std::string ConfigManager::IMU_COMPASS_Y_OFFSET = "IMU.V_y";
+const std::string ConfigManager::IMU_COMPASS_Z_OFFSET = "IMU.V_z";
 
 ConfigManager::ConfigManager() 
 : desc("Options")
@@ -38,7 +41,13 @@ ConfigManager::ConfigManager()
         (GPS_SERIAL_DEVICE.c_str(), boost::program_options::value<std::string>(),
             "Serial device to connect with GPS receiver")
         (GPS_SERIAL_BAUDRATE.c_str(), boost::program_options::value<uint32_t>(),
-            "Desired buadrate of serial device");
+            "Desired buadrate of serial device")
+        (IMU_COMPASS_X_OFFSET.c_str(), boost::program_options::value<float>(),
+            "Offset of compass X axis")
+        (IMU_COMPASS_Y_OFFSET.c_str(), boost::program_options::value<float>(),
+            "Offset of compass Y axis")
+        (IMU_COMPASS_Z_OFFSET.c_str(), boost::program_options::value<float>(),
+            "Offset of compass Z axis");
 }
 
 ConfigManager::~ConfigManager() 
@@ -132,6 +141,33 @@ void ConfigManager::loadConfiguration(const std::string& fileName)
             COMM_EXCEPTION(ConfigurationException, 
                     "GPS serial device baudrate is not specified.");
         }
+        
+        if (vm.count(IMU_COMPASS_X_OFFSET))
+        {
+            compassOffsets.V_x = vm[IMU_COMPASS_X_OFFSET].as<float>();
+        }
+        else
+        {
+            compassOffsets.V_x = 0.0f;
+        }
+
+        if (vm.count(IMU_COMPASS_Y_OFFSET))
+        {
+            compassOffsets.V_y = vm[IMU_COMPASS_Y_OFFSET].as<float>();
+        }
+        else
+        {
+            compassOffsets.V_y = 0.0f;
+        }
+
+        if (vm.count(IMU_COMPASS_Z_OFFSET))
+        {
+            compassOffsets.V_z = vm[IMU_COMPASS_Z_OFFSET].as<float>();
+        }
+        else
+        {
+            compassOffsets.V_z = 0.0f;
+        }
     }
     catch (Exception&)
     {
@@ -161,4 +197,9 @@ std::string ConfigManager::getGPSDevice()
 uint32_t ConfigManager::getGPSDeviceBaudrate()
 {
     return gpsSerialBaudrate;
+}
+
+CompassOffsets ConfigManager::getCompassOffsets()
+{
+    return compassOffsets;
 }
