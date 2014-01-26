@@ -87,7 +87,7 @@ void IMUReader::run()
     InitAHRS(100, &ahrsInfo);
     
     ComplementaryFilter filter;
-    float pitch = 0.0f, roll = 0.0f;
+    float pitch, roll, yaw;
     
     while (!stopVariable)
     {
@@ -114,12 +114,14 @@ void IMUReader::run()
         filter.getAngles(sensorsData.rawAccelX, sensorsData.rawAccelY,
                 sensorsData.rawAccelZ, sensorsData.rawGyroX,
                 sensorsData.rawGyroY, sensorsData.rawGyroZ, 
-                0.01f, pitch, roll);
+                sensorsData.rawCompassX, sensorsData.rawCompassY,
+                sensorsData.rawCompassZ,
+                0.01f, pitch, roll, yaw);
         
         compassData->set_real_value(0);
         gyroCoords->set_x(pitch);
-        gyroCoords->set_y(roll);
-        gyroCoords->set_z(0);
+        gyroCoords->set_y(-roll);
+        gyroCoords->set_z(-yaw);
         
         accelCoords->set_x(0);
         accelCoords->set_y(0);
@@ -131,9 +133,8 @@ void IMUReader::run()
 
         if (!calibration && loopCount % 10 == 0)
         {
-            //std::cout << sensorsData.rawAccelX << " " << sensorsData.rawAccelY << " " <<
-            //        sensorsData.rawAccelZ << " " << sensorsData.rawGyroX << " " <<
-            //        sensorsData.rawGyroY << " " << sensorsData.rawGyroZ << std::endl;
+            //std::cout << sensorsData.rawCompassX << " " << sensorsData.rawCompassY << " " <<
+            //        sensorsData.rawCompassZ << std::endl;
             sendData(outArray);
         }
         
@@ -213,7 +214,7 @@ void IMUReader::readSensors(IMUSensorsData& data, GyroState& gyroState,
         y = __swab16(*(short*) &buf[4]);
         
         data.rawCompassX = x;
-        data.rawComapssY = y;
+        data.rawCompassY = y;
         data.rawCompassZ = z;
     }
 

@@ -24,7 +24,7 @@ private:
     struct IMUSensorsData
     {
         float rawCompassX;
-        float rawComapssY;
+        float rawCompassY;
         float rawCompassZ;
         
         float rawAccelX;
