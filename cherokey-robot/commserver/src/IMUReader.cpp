@@ -62,30 +62,30 @@ void IMUReader::run()
     sensorMessage.set_sensor_desc("IMU");
     auto values = sensorMessage.mutable_sensor_values();
 
-    auto compassData = values->Add();
     auto gyroData = values->Add();
-    auto accelData = values->Add();
-    
-    compassData->set_associated_name("compass_data");
-    compassData->set_data_type(cs::REAL);
-    
+        
     gyroData->set_associated_name("gyro_data");
     gyroData->set_data_type(cs::COORD_3D);
     auto gyroCoords = gyroData->mutable_coord_value();
-    
-    accelData->set_associated_name("accel_data");
-    accelData->set_data_type(cs::COORD_3D);
-    auto accelCoords = accelData->mutable_coord_value();
 
     int64_t loopCount = 0;
     GyroState gyroState = { 0 };
     AccelState accelState = { 0 };
     bool calibration = true;
     
-    int64_t calibrationDelay = 500;
+    int64_t calibrationDelay = 100;
     AHRS_INFO ahrsInfo;
     InitAHRS(100, &ahrsInfo);
     
+    auto instance = ConfigManager::getInstance();
+    if (!instance)
+    {
+        COMM_EXCEPTION(NullPointerException, "Can't get instance of "
+            "configuration manager");
+    }
+    
+    auto offsets = instance->getCompassOffsets();
+
     ComplementaryFilter filter;
     float pitch, roll, yaw;
     
@@ -99,16 +99,19 @@ void IMUReader::run()
         
         if (!calibration)
         {
-            /*
-            MadgwickAHRSupdateIMU(
-                    sensorsData.rawGyroX - gyroState.offsetX, 
-                    sensorsData.rawGyroY - gyroState.offsetY, 
-                    sensorsData.rawGyroZ - gyroState.offsetZ, 
-                    0, 0, 0,
-                    &ahrsInfo);
-            quat2Euler(ahrsInfo.q0, ahrsInfo.q1, ahrsInfo.q2, ahrsInfo.q3,
-                    sensorsData.gyroX, sensorsData.gyroY, sensorsData.gyroZ);
-            */
+//            MadgwickAHRSupdate(
+//                    sensorsData.rawGyroX * M_PI / 180, 
+//                    sensorsData.rawGyroY * M_PI / 180, 
+//                    sensorsData.rawGyroZ * M_PI / 180, 
+//                    sensorsData.rawAccelX, 
+//                    sensorsData.rawAccelY, 
+//                    sensorsData.rawAccelZ,
+//                    sensorsData.rawCompassX - offsets.V_x,
+//                    sensorsData.rawCompassY - offsets.V_y,
+//                    sensorsData.rawCompassZ - offsets.V_z,
+//                    &ahrsInfo);
+//            quat2Euler(ahrsInfo.q0, ahrsInfo.q1, ahrsInfo.q2, ahrsInfo.q3,
+//                    roll, pitch, yaw);
         }
         
         filter.getAngles(sensorsData.rawAccelX, sensorsData.rawAccelY,
@@ -118,14 +121,9 @@ void IMUReader::run()
                 sensorsData.rawCompassZ,
                 0.01f, pitch, roll, yaw);
         
-        compassData->set_real_value(0);
-        gyroCoords->set_x(pitch);
-        gyroCoords->set_y(-roll);
+        gyroCoords->set_x(roll);
+        gyroCoords->set_y(pitch);
         gyroCoords->set_z(yaw);
-        
-        accelCoords->set_x(0);
-        accelCoords->set_y(0);
-        accelCoords->set_z(0);
         
         int messageSize = sensorMessage.ByteSize();
         std::vector<int8_t> outArray(messageSize);

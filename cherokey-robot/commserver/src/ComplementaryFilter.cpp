@@ -15,6 +15,11 @@
 
 const float ComplementaryFilter::GYROSCOPE_SENSITIVITY = 14.375;
 
+template <typename T> int sgn(T val) 
+{
+    return (T(0) < val) - (val < T(0));
+}
+
 ComplementaryFilter::ComplementaryFilter(float factor) 
 : alphaFactor(factor)
 {
@@ -52,28 +57,29 @@ void ComplementaryFilter::getAngles(
 
     // Integrate the gyroscope data -> int(angularSpeed) = angle
     pitch += gyroX / GYROSCOPE_SENSITIVITY * dt; // Angle around the X-axis
-    roll -= gyroY / GYROSCOPE_SENSITIVITY * dt;    // Angle around the Y-axis
+    roll += gyroY / GYROSCOPE_SENSITIVITY * dt;    // Angle around the Y-axis
+    yaw += gyroZ / GYROSCOPE_SENSITIVITY * dt;    // Angle around the Y-axis
  
 	// Turning around the X axis results in a vector on the Y-axis
-    pitchAcc = atan2(accelY, sqrt(a_x2 + a_z2)) * 180 / M_PI;
+    pitchAcc = atan2(-accelX, sqrt(a_y2 + a_z2)) * 180 / M_PI;
     pitch = pitch * alphaFactor + pitchAcc * (1.0f - alphaFactor);
  
 	// Turning around the Y axis results in a vector on the X-axis
-    rollAcc = atan2(accelX, sqrt(a_y2 + a_z2)) * 180 / M_PI;
+    rollAcc = atan2(accelY, sgn(accelZ) * sqrt(a_x2 + a_z2)) * 180 / M_PI;
     roll = roll * alphaFactor + rollAcc * (1.0f - alphaFactor);
     
-    float pitchRad = pitch * M_PI / 180;
-    float rollRad = roll * M_PI / 180;
+    float pitchRad = pitchAcc * M_PI / 180;
+    float rollRad = rollAcc * M_PI / 180;
     
     float Xcal = compassX - offsets.V_x;
     float Ycal = compassY - offsets.V_y;
     float Zcal = compassZ - offsets.V_z;
     
-    float Xh = Xcal * cos(pitchRad) + Ycal * sin(rollRad) * sin(pitchRad) + 
-        Zcal * cos(rollRad) * sin(pitchRad);
-    float Yh = Ycal * cos(rollRad) - Zcal * sin(rollRad);
+    float Xh = Xcal * cos(pitchRad) + Ycal * sin(pitchRad) * sin(rollRad) + 
+        Zcal * sin(pitchRad) * cos(rollRad);
+    float Yh = Zcal * sin(rollRad) - Ycal * cos(rollRad);
 
-    float yawCompass = atan2(-Yh, Xh) * 180 / M_PI;
+    float yawCompass = atan2(Yh, Xh) * 180 / M_PI;
     
     if (yawCompass < 0)
     {
@@ -83,7 +89,7 @@ void ComplementaryFilter::getAngles(
     //fileStream << compassX << " " << compassY << " " <<
     //        compassZ << std::endl;
     //std::cout << Xh << " " << Yh << " " << yawCompass << std::endl;
-    yaw = yawCompass;
+    yaw = yaw * alphaFactor + yawCompass * (1.0f - alphaFactor);
     
     rollOut = roll;
     pitchOut = pitch;
