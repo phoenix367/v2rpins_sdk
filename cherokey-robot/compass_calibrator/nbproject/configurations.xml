@@ -37,14 +37,22 @@
       </toolsSet>
       <compileType>
         <ccTool>
+          <standard>8</standard>
           <incDir>
             <pElem>../../3pty/include</pElem>
           </incDir>
         </ccTool>
         <linkerTool>
+          <linkerAddLib>
+            <pElem>../../3pty/lib</pElem>
+          </linkerAddLib>
+          <commandlineTool>arm-none-linux-gnueabi-g++</commandlineTool>
           <linkerLibItems>
             <linkerLibLibItem>rt</linkerLibLibItem>
             <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+            <linkerLibLibItem>lapack</linkerLibLibItem>
+            <linkerLibLibItem>blas</linkerLibLibItem>
+            <linkerLibLibItem>f2c</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>

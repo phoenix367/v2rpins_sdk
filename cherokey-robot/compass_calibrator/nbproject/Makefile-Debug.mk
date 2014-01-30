@@ -52,7 +52,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-lrt -lpthread
+LDLIBSOPTIONS=-L../../3pty/lib -lrt -lpthread -llapack -lblas -lf2c
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -60,12 +60,12 @@ LDLIBSOPTIONS=-lrt -lpthread
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/compass_calibrator: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/compass_calibrator ${OBJECTFILES} ${LDLIBSOPTIONS}
+	arm-none-linux-gnueabi-g++ -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/compass_calibrator ${OBJECTFILES} ${LDLIBSOPTIONS}
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../../3pty/include -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -I../../3pty/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:

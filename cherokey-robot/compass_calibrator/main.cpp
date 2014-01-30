@@ -25,6 +25,8 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 #include <boost/numeric/ublas/io.hpp>
+#include <boost/numeric/bindings/lapack/geev.hpp>
+#include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/program_options.hpp>
 
 #define HMC5883L_I2C_ADDR   0x1E
@@ -45,6 +47,7 @@ uint gAdapterIndex = 1;
 std::ofstream stream;
 
 using namespace boost::numeric::ublas;
+using namespace boost::numeric::bindings::lapack;
 
 void writeToDevice(int file, const char * buf, int len) 
 {
@@ -288,7 +291,7 @@ void calibration()
     if (s)
     {
         std::cerr << "Singular matrix found. " << 
-                "Terminate clasibration process." << std::endl;
+                "Terminate calibration process." << std::endl;
         exit(1);
     }
     
@@ -305,18 +308,26 @@ void calibration()
     if (s)
     {
         std::cerr << "Singular matrix found. " << 
-                "Terminate clasibration process." << std::endl;
+                "Terminate calibration process." << std::endl;
         exit(1);
     }
 
     matrix<double> T = identity_matrix<double>(4);
-    T(4, 0) = centres(0);
-    T(4, 1) = centres(1);
-    T(4, 2) = centres(2);
+    T(3, 0) = centres(0);
+    T(3, 1) = centres(1);
+    T(3, 2) = centres(2);
     
     matrix<double> R = prod(matrix<double>(prod(T, A)), 
         matrix<double>(trans(T)));
+    matrix<double, column_major> eigvecs = 
+        subrange(R, 0, 3, 0, 3) / -R(3, 3);
+    vector<std::complex<double> > eigvals(3);
+    
+    geev(eigvecs, eigvals, (matrix<double, column_major>*) 0, 
+        (matrix<double, column_major>*) 0, optimal_workspace());
+    
     std::cout << centres << std::endl;
+    std::cout << eigvals << std::endl;
 }
 
 /*
