@@ -1,6 +1,6 @@
 /* 
  * File:   main.cpp
- * Author: ivan
+ * Author: Ivan Gubochkin
  *
  * Created on January 28, 2014, 10:49 PM
  */
@@ -25,9 +25,10 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 #include <boost/numeric/ublas/io.hpp>
+#include <boost/program_options.hpp>
 
 #define HMC5883L_I2C_ADDR   0x1E
-#define I2CDEV              "/dev/i2c-1"
+#define I2CDEV              "/dev/i2c"
 
 struct CompassMeasurement
 {
@@ -39,6 +40,7 @@ struct CompassMeasurement
 timer_t gTimerid;
 int file;
 std::list<CompassMeasurement> gMeasurements;
+uint gAdapterIndex = 1;
 
 std::ofstream stream;
 
@@ -276,26 +278,44 @@ void calibration()
         D(i, 8) = 2.0f * it->B_z;
     }
     
-    matrix<double> ones(gMeasurements.size(), 1, 1.0f);
-    matrix<double> a, C, E;
+    vector<double> ones(gMeasurements.size(), 1.0), v;
     matrix<double> D_t = trans(D);
-    C = prod(D_t, D);
-    E = prod(D_t, ones);
     
     bool s;
-    a = gjinverse(C, s);
-    matrix<float> v = prod(a, E);
+    v = prod(gjinverse(matrix<double>(prod(D_t, D)), s), 
+        prod<vector<double> >(D_t, ones));
     
-    matrix<double> A(4, 4), centres;
+    if (s)
+    {
+        std::cerr << "Singular matrix found. " << 
+                "Terminate clasibration process." << std::endl;
+        exit(1);
+    }
     
-    A(0, 0) = v(0, 0); A(0, 1) = v(3, 0); A(0, 2) = v(4, 0); A(0, 3) = v(6, 0);
-    A(1, 0) = v(3, 0); A(1, 1) = v(1, 0); A(1, 2) = v(5, 0); A(1, 3) = v(7, 0);
-    A(2, 0) = v(4, 0); A(2, 1) = v(5, 0); A(2, 2) = v(2, 0); A(2, 3) = v(8, 0);
-    A(3, 0) = v(6, 0); A(3, 1) = v(7, 0); A(3, 2) = v(8, 0); A(3, 3) = -1.0;
+    matrix<double> A(4, 4);
+    
+    A(0, 0) = v(0); A(0, 1) = v(3); A(0, 2) = v(4); A(0, 3) = v(6);
+    A(1, 0) = v(3); A(1, 1) = v(1); A(1, 2) = v(5); A(1, 3) = v(7);
+    A(2, 0) = v(4); A(2, 1) = v(5); A(2, 2) = v(2); A(2, 3) = v(8);
+    A(3, 0) = v(6); A(3, 1) = v(7); A(3, 2) = v(8); A(3, 3) = -1.0;
     
     matrix<double> A_3 = -subrange(A, 0, 3, 0, 3);
-    centres = prod(gjinverse(A_3, s), subrange(v, 6, 9, 0, 1));
+    vector<double> centres = prod(gjinverse(A_3, s), subrange(v, 6, 9));
     
+    if (s)
+    {
+        std::cerr << "Singular matrix found. " << 
+                "Terminate clasibration process." << std::endl;
+        exit(1);
+    }
+
+    matrix<double> T = identity_matrix<double>(4);
+    T(4, 0) = centres(0);
+    T(4, 1) = centres(1);
+    T(4, 2) = centres(2);
+    
+    matrix<double> R = prod(matrix<double>(prod(T, A)), 
+        matrix<double>(trans(T)));
     std::cout << centres << std::endl;
 }
 
@@ -304,9 +324,12 @@ void calibration()
  */
 int main(int argc, char** argv) 
 {
-    if ((file = open(I2CDEV, O_RDWR)) < 0) 
+    std::ostringstream stringStream;
+    
+    stringStream << I2CDEV << "-" << gAdapterIndex;
+    if ((file = open(stringStream.str().c_str(), O_RDWR)) < 0) 
     {
-        std::cerr << "Failed to open the bus." << std::endl;
+        std::cerr << "Failed to open I2C bus." << std::endl;
         exit(1);
     }
     
