@@ -52,7 +52,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L../../3pty/lib -lrt -lpthread -llapack -lblas -lf2c
+LDLIBSOPTIONS=-L../../3pty/lib -lrt -lpthread -llapack -lblas -lf2c -lboost_program_options
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}

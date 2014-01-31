@@ -53,6 +53,7 @@
             <linkerLibLibItem>lapack</linkerLibLibItem>
             <linkerLibLibItem>blas</linkerLibLibItem>
             <linkerLibLibItem>f2c</linkerLibLibItem>
+            <linkerLibLibItem>boost_program_options</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>

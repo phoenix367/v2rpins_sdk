@@ -20,11 +20,11 @@
 #include <time.h>
 #include <termios.h>
 #include <list>
-#include <fstream>
+#include <iomanip>
 
 #include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/banded.hpp> 
 #include <boost/numeric/ublas/lu.hpp>
-#include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/bindings/lapack/geev.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/program_options.hpp>
@@ -43,11 +43,12 @@ timer_t gTimerid;
 int file;
 std::list<CompassMeasurement> gMeasurements;
 uint gAdapterIndex = 1;
-
-std::ofstream stream;
+double gMeasurementFrequency = 10.0;
+bool gSIMatrixNormalize = true;
 
 using namespace boost::numeric::ublas;
 using namespace boost::numeric::bindings::lapack;
+namespace po = boost::program_options;
 
 void writeToDevice(int file, const char * buf, int len) 
 {
@@ -67,13 +68,19 @@ void selectDevice(int file, int addr, const char * name)
 
 void start_timer(void)
 {
+    double period = 1.0 / gMeasurementFrequency;
+    double fractpart, intpart;
+    fractpart = modf(period, &intpart);
+    
+    double nsec = fractpart * 1e9;
+    
     struct itimerspec value;
 
-    value.it_value.tv_sec = 0;
-    value.it_value.tv_nsec = 10000000;
+    value.it_value.tv_sec = (int) intpart;
+    value.it_value.tv_nsec = nsec;
 
-    value.it_interval.tv_sec = 0;
-    value.it_interval.tv_nsec = 10000000;
+    value.it_interval.tv_sec = (int) intpart;
+    value.it_interval.tv_nsec = nsec;
 
     timer_create (CLOCK_REALTIME, NULL, &gTimerid);
     timer_settime (gTimerid, 0, &value, NULL);
@@ -116,8 +123,6 @@ void readSensors()
         m.B_z = z;
         
         gMeasurements.push_back(m);
-        
-        stream << x << " " << y << " " << z << std::endl;
     }
 }
 
@@ -319,15 +324,52 @@ void calibration()
     
     matrix<double> R = prod(matrix<double>(prod(T, A)), 
         matrix<double>(trans(T)));
-    matrix<double, column_major> eigvecs = 
+    matrix<double, column_major> R_scaled = 
         subrange(R, 0, 3, 0, 3) / -R(3, 3);
+    matrix<double, column_major> eigvecs(3, 3);
     vector<std::complex<double> > eigvals(3);
     
-    geev(eigvecs, eigvals, (matrix<double, column_major>*) 0, 
-        (matrix<double, column_major>*) 0, optimal_workspace());
+    geev(R_scaled, eigvals, (matrix<double, column_major>*) 0, 
+        &eigvecs, optimal_workspace());
     
-    std::cout << centres << std::endl;
-    std::cout << eigvals << std::endl;
+    diagonal_matrix<double> rad(3, 3);
+    double norm_W = 0;
+    for (size_t i = 0; i < 3; i++)
+    {
+        if (fabs(eigvals[i].imag()) > 1e-10 || eigvals[i].real() <= 0.0)
+        {
+            std::cerr << "Eigen value is complex. Bad input data" << std::endl;
+            exit(1);
+        }
+        
+        rad(i, i) = sqrt(1.0 / eigvals[i].real());
+        norm_W = std::max(norm_W, rad(i, i));
+    }
+    
+    matrix<double> W = prod(prod<matrix<double>>(eigvecs, rad), 
+        matrix<double>(trans(eigvecs)));
+    
+    if (!gSIMatrixNormalize)
+    {
+        W /= norm_W;
+    }
+    
+    matrix<double> W_inv = gjinverse(W, s);
+    
+    std::cout << "Calibration values:" << std::endl;
+    std::cout << "Hard-Iron offset V" << std::endl;
+    std::cout << "X offset = " << centres[0] << std::endl;
+    std::cout << "Y offset = " << centres[1] << std::endl;
+    std::cout << "Z offset = " << centres[2] << std::endl;
+    std::cout << std::endl;
+    
+    std::cout << "Soft-Iron matrix W^-1" << std::endl;
+    std::cout << std::setw(15) << W_inv(0, 0) << std::setw(15) << 
+            W_inv(0, 1) << std::setw(15) << W_inv(0, 2) << std::endl;
+    std::cout << std::setw(15) << W_inv(1, 0) << std::setw(15) << 
+            W_inv(1, 1) << std::setw(15) << W_inv(1, 2) << std::endl;
+    std::cout << std::setw(15) << W_inv(2, 0) << std::setw(15) << 
+            W_inv(2, 1) << std::setw(15) << W_inv(2, 2) << std::endl;
 }
 
 /*
@@ -335,6 +377,37 @@ void calibration()
  */
 int main(int argc, char** argv) 
 {
+    // Declare the supported options.
+    po::options_description desc("Allowed options");
+    desc.add_options()
+        ("help,h", "produce help message")
+        ("rate,r", po::value<double>(&gMeasurementFrequency)->default_value(10), 
+            "set reading frequency in Hz")
+        ("adapter,a", po::value<uint>(&gAdapterIndex)->default_value(1), 
+            "set I2C adapter index")
+        ("si-norm", po::value<bool>(&gSIMatrixNormalize)->default_value(false), 
+            "normalize Soft-Iron matrix to receive results in 0..1 range")
+    ;
+
+    po::variables_map vm;
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);    
+
+    if (vm.count("help")) 
+    {
+        std::cout << desc << std::endl;
+        return 1;
+    }
+    
+    if (vm.count("help"))
+    {
+        if (gMeasurementFrequency < 1.0 || gMeasurementFrequency > 400)
+        {
+            std::cerr << "Invalid reading rate." << std::endl;
+            exit(1);
+        }
+    }
+
     std::ostringstream stringStream;
     
     stringStream << I2CDEV << "-" << gAdapterIndex;
@@ -344,11 +417,11 @@ int main(int argc, char** argv)
         exit(1);
     }
     
-    stream.open("raw_data.txt");
-
     /* initialize HMC5883L */
     selectDevice(file, HMC5883L_I2C_ADDR, "HMC5883L");
     writeToDevice(file, "\x02\x00", 2);
+    
+    std::cout << "Start HMC5883L magnetometer reading..." << std::endl;
     
     (void) signal(SIGALRM, timer_callback);
     start_timer();
@@ -361,7 +434,6 @@ int main(int argc, char** argv)
     
     std::cout << "Readed " << gMeasurements.size() << " samples." << std::endl;
     calibration();
-    stream.close();
     
     return 0;
 }
