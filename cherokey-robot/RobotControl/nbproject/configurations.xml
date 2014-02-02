@@ -68,6 +68,10 @@
         <modules>core gui opengl</modules>
         <mocDir>moc</mocDir>
         <uiDir>ui</uiDir>
+        <defs>
+          <Elem>"CONFIG += link_pkgconfig"</Elem>
+          <Elem>PKGCONFIG += QtGStreamer-0.10</Elem>
+        </defs>
       </qt>
       <compileType>
         <ccTool>
@@ -76,6 +80,9 @@
             <pElem>messages</pElem>
             <pElem>../../3pty/include</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>BOOST_TT_HAS_OPERATOR_HPP_INCLUDED</Elem>
+          </preprocessorList>
         </ccTool>
         <linkerTool>
           <linkerLibItems>

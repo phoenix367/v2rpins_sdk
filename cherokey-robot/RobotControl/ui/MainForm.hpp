@@ -12,6 +12,9 @@
 #include "RemoteConnector.hpp"
 #include "../PlatformModel.hpp"
 
+#include <QGst/Pipeline>
+#include <QGst/Ui/VideoWidget>
+
 class MainForm : public QDialog 
 {
     Q_OBJECT
@@ -47,6 +50,7 @@ private:
     RemoteConnector *connectorPtr;
     bool connected;
     PlatformModel *platformWidget;
+    QGst::PipelinePtr m_pipeline;
 };
 
 #endif	/* _MAINFORM_HPP */

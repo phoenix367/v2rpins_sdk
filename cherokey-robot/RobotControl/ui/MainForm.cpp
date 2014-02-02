@@ -18,6 +18,7 @@
 
 MainForm::MainForm()
 : connected(false)
+, m_pipeline(NULL)
 {
     widget.setupUi(this);
     
@@ -67,6 +68,11 @@ MainForm::MainForm()
 MainForm::~MainForm() 
 {
     connectorPtr->disconnectFromServer();
+
+    if (m_pipeline) 
+    {
+        m_pipeline->setState(QGst::StateNull);
+    }
 }
 
 void MainForm::onConnect()
