@@ -8,6 +8,7 @@
 #include "PlatformModel.hpp"
 
 #include <iostream>
+#include <GL/glu.h>
 
 PlatformModel::PlatformModel(QWidget *parent)
 : QGLWidget(parent) 

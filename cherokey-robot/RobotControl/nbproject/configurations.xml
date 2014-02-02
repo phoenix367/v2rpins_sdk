@@ -81,6 +81,7 @@
           <linkerLibItems>
             <linkerLibLibItem>protobuf</linkerLibLibItem>
             <linkerLibLibItem>zmq</linkerLibLibItem>
+            <linkerLibLibItem>GLU</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>

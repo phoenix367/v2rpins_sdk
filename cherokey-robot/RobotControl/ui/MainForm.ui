@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>870</width>
-    <height>442</height>
+    <height>611</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -53,7 +53,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>220</y>
+     <y>330</y>
      <width>201</width>
      <height>161</height>
     </rect>
@@ -152,7 +152,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>200</y>
+     <y>310</y>
      <width>131</width>
      <height>20</height>
     </rect>
@@ -165,7 +165,7 @@
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>220</y>
+     <y>330</y>
      <width>201</width>
      <height>161</height>
     </rect>
@@ -298,7 +298,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>200</y>
+     <y>310</y>
      <width>51</width>
      <height>17</height>
     </rect>
@@ -311,13 +311,13 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>390</y>
+     <y>190</y>
      <width>131</width>
      <height>27</height>
     </rect>
    </property>
    <property name="text">
-    <string>Composite video</string>
+    <string>Start video</string>
    </property>
    <property name="checkable">
     <bool>true</bool>
@@ -375,7 +375,7 @@
      <x>450</x>
      <y>40</y>
      <width>401</width>
-     <height>341</height>
+     <height>251</height>
     </rect>
    </property>
   </widget>
@@ -391,6 +391,71 @@
    <property name="text">
     <string>Platform position</string>
    </property>
+  </widget>
+  <widget class="QGraphicsView" name="videoView">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>330</y>
+     <width>401</width>
+     <height>271</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_12">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>300</y>
+     <width>101</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Platform Video</string>
+   </property>
+  </widget>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>230</y>
+     <width>201</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QRadioButton" name="rbtWiFi">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>131</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Video via Wi-Fi</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="rbtRadio">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>181</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Analog Video via RC</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

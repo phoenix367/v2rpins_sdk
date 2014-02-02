@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'MainForm.ui'
 **
-** Created: Sun Jan 19 17:18:25 2014
-**      by: Qt User Interface Compiler version 4.6.2
+** Created: Mon Feb 3 01:38:42 2014
+**      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -21,6 +21,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
 #include <QtGui/QPushButton>
+#include <QtGui/QRadioButton>
 #include <QtGui/QSlider>
 #include <QtGui/QToolButton>
 
@@ -57,12 +58,17 @@ public:
     QLineEdit *txtSensorsPort;
     QGraphicsView *graphicsView;
     QLabel *label_11;
+    QGraphicsView *videoView;
+    QLabel *label_12;
+    QFrame *frame;
+    QRadioButton *rbtWiFi;
+    QRadioButton *rbtRadio;
 
     void setupUi(QDialog *MainForm)
     {
         if (MainForm->objectName().isEmpty())
             MainForm->setObjectName(QString::fromUtf8("MainForm"));
-        MainForm->resize(870, 442);
+        MainForm->resize(870, 611);
         btnConnect = new QPushButton(MainForm);
         btnConnect->setObjectName(QString::fromUtf8("btnConnect"));
         btnConnect->setGeometry(QRect(240, 40, 93, 27));
@@ -74,7 +80,7 @@ public:
         txtConnectionString->setGeometry(QRect(20, 40, 211, 27));
         frmMove = new QFrame(MainForm);
         frmMove->setObjectName(QString::fromUtf8("frmMove"));
-        frmMove->setGeometry(QRect(20, 220, 201, 161));
+        frmMove->setGeometry(QRect(20, 330, 201, 161));
         frmMove->setFrameShape(QFrame::StyledPanel);
         frmMove->setFrameShadow(QFrame::Raised);
         btnBackward = new QToolButton(frmMove);
@@ -101,10 +107,10 @@ public:
         sldDrivePower->setOrientation(Qt::Vertical);
         label_2 = new QLabel(MainForm);
         label_2->setObjectName(QString::fromUtf8("label_2"));
-        label_2->setGeometry(QRect(60, 200, 131, 20));
+        label_2->setGeometry(QRect(60, 310, 131, 20));
         frmSensors = new QFrame(MainForm);
         frmSensors->setObjectName(QString::fromUtf8("frmSensors"));
-        frmSensors->setGeometry(QRect(240, 220, 201, 161));
+        frmSensors->setGeometry(QRect(240, 330, 201, 161));
         frmSensors->setFrameShape(QFrame::StyledPanel);
         frmSensors->setFrameShadow(QFrame::Raised);
         label_4 = new QLabel(frmSensors);
@@ -136,10 +142,10 @@ public:
         lblLongitude->setGeometry(QRect(100, 100, 91, 17));
         label_3 = new QLabel(MainForm);
         label_3->setObjectName(QString::fromUtf8("label_3"));
-        label_3->setGeometry(QRect(310, 200, 51, 17));
+        label_3->setGeometry(QRect(310, 310, 51, 17));
         btnShowComposite = new QPushButton(MainForm);
         btnShowComposite->setObjectName(QString::fromUtf8("btnShowComposite"));
-        btnShowComposite->setGeometry(QRect(20, 390, 131, 27));
+        btnShowComposite->setGeometry(QRect(20, 190, 131, 27));
         btnShowComposite->setCheckable(true);
         label_6 = new QLabel(MainForm);
         label_6->setObjectName(QString::fromUtf8("label_6"));
@@ -155,10 +161,27 @@ public:
         txtSensorsPort->setGeometry(QRect(20, 150, 81, 27));
         graphicsView = new QGraphicsView(MainForm);
         graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
-        graphicsView->setGeometry(QRect(450, 40, 401, 341));
+        graphicsView->setGeometry(QRect(450, 40, 401, 251));
         label_11 = new QLabel(MainForm);
         label_11->setObjectName(QString::fromUtf8("label_11"));
         label_11->setGeometry(QRect(450, 20, 121, 17));
+        videoView = new QGraphicsView(MainForm);
+        videoView->setObjectName(QString::fromUtf8("videoView"));
+        videoView->setGeometry(QRect(450, 330, 401, 271));
+        label_12 = new QLabel(MainForm);
+        label_12->setObjectName(QString::fromUtf8("label_12"));
+        label_12->setGeometry(QRect(450, 300, 101, 17));
+        frame = new QFrame(MainForm);
+        frame->setObjectName(QString::fromUtf8("frame"));
+        frame->setGeometry(QRect(20, 230, 201, 71));
+        frame->setFrameShape(QFrame::StyledPanel);
+        frame->setFrameShadow(QFrame::Raised);
+        rbtWiFi = new QRadioButton(frame);
+        rbtWiFi->setObjectName(QString::fromUtf8("rbtWiFi"));
+        rbtWiFi->setGeometry(QRect(10, 10, 131, 22));
+        rbtRadio = new QRadioButton(frame);
+        rbtRadio->setObjectName(QString::fromUtf8("rbtRadio"));
+        rbtRadio->setGeometry(QRect(10, 40, 181, 22));
 
         retranslateUi(MainForm);
 
@@ -185,10 +208,13 @@ public:
         lblLatitude->setText(QApplication::translate("MainForm", "-", 0, QApplication::UnicodeUTF8));
         lblLongitude->setText(QApplication::translate("MainForm", "-", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("MainForm", "Sensors", 0, QApplication::UnicodeUTF8));
-        btnShowComposite->setText(QApplication::translate("MainForm", "Composite video", 0, QApplication::UnicodeUTF8));
+        btnShowComposite->setText(QApplication::translate("MainForm", "Start video", 0, QApplication::UnicodeUTF8));
         label_6->setText(QApplication::translate("MainForm", "Command server port:", 0, QApplication::UnicodeUTF8));
         label_7->setText(QApplication::translate("MainForm", "Sensors publisher port:", 0, QApplication::UnicodeUTF8));
         label_11->setText(QApplication::translate("MainForm", "Platform position", 0, QApplication::UnicodeUTF8));
+        label_12->setText(QApplication::translate("MainForm", "Platform Video", 0, QApplication::UnicodeUTF8));
+        rbtWiFi->setText(QApplication::translate("MainForm", "Video via Wi-Fi", 0, QApplication::UnicodeUTF8));
+        rbtRadio->setText(QApplication::translate("MainForm", "Analog Video via RC", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
