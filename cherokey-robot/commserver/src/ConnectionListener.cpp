@@ -207,28 +207,11 @@ void ConnectionListener::processVideo(zmq::socket_t& socket,
         cherokey::common::CommandMessage& msg)
 {
     auto cookie = msg.cookie();
-    auto videoMsg = msg.mutable_show_video();
     
-    switch (videoMsg->channel_type())
-    {
-        case cc::WIFI:
-            sendNack("Not implemented yet", cookie, socket);
-            break;
-        case cc::RADIO:
-            processVideoComposite(socket, msg);
-            break;
-    }
-}
-
-void ConnectionListener::processVideoComposite(zmq::socket_t& socket, 
-        cherokey::common::CommandMessage& msg)
-{
-    auto cookie = msg.cookie();
-
     try
     {
-        auto compositeMsg = msg.mutable_show_video();
-        auto showState = compositeMsg->show_state();
+        auto videoMsg = msg.mutable_show_video();
+        auto showState = videoMsg->show_state();
         
         auto videoInstance = VideoController::getInstance();
         if (!videoInstance)
@@ -237,7 +220,15 @@ void ConnectionListener::processVideoComposite(zmq::socket_t& socket,
                 "is null.");
         }
         
-        videoInstance->compositeVideo(showState == cc::ON);
+        switch (videoMsg->channel_type())
+        {
+            case cc::WIFI:
+                videoInstance->digitalVideo(showState == cc::ON);
+                break;
+            case cc::RADIO:
+                videoInstance->compositeVideo(showState == cc::ON);
+                break;
+        }
         
         sendAck(cookie, socket);
     }

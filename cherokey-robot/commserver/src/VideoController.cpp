@@ -83,3 +83,31 @@ void VideoController::stopChild()
         videoProcessPID = -1;
     }
 }
+
+void VideoController::digitalVideo(bool showState)
+{
+    if (showState)
+    {
+        pid_t pid = fork();
+        if (pid == -1)
+        {
+            COMM_EXCEPTION(LaunchException, "Failed to fork server process");
+        }
+        
+        if (pid == 0)
+        {
+            int execResult = execlp(
+                "/etc/cherokey-robot/run_video_wifi", NULL);
+            
+            exit(execResult);
+        }
+        else
+        {
+            videoProcessPID = pid;
+        }
+    }
+    else
+    {
+        stopChild();
+    }
+}

@@ -21,6 +21,7 @@ public:
     static VideoController* getInstance();
     
     void compositeVideo(bool showState);
+    void digitalVideo(bool showState);
     
 private:
     void stopChild();
