@@ -229,8 +229,9 @@ RotateCounterClockwise::~RotateCounterClockwise()
     
 }
 
-ShowVideoComposite::ShowVideoComposite(bool show)
+ShowVideoComposite::ShowVideoComposite(bool show, VideoType vt)
 : showState(show)
+, videoType(vt)
 {
     
 }
@@ -243,11 +244,20 @@ ShowVideoComposite::~ShowVideoComposite()
 bool ShowVideoComposite::doCommand(zmq::socket_t& socket)
 {
     cc::CommandMessage commandMessage;
-    commandMessage.set_type(cc::CommandMessage::SHOW_VIDEO_COMPOSITE);
+    commandMessage.set_type(cc::CommandMessage::SHOW_VIDEO);
     commandMessage.set_cookie(0);
-    cc::ShowVideoComposite* videoMsg = 
-            commandMessage.mutable_show_video_composite();
+    cc::ShowVideo* videoMsg = 
+            commandMessage.mutable_show_video();
     videoMsg->set_show_state((showState) ? cc::ON : cc::OFF);
+    switch (videoType)
+    {
+        case analog:
+            videoMsg->set_channel_type(cc::RADIO);
+            break;
+        case digital:
+            videoMsg->set_channel_type(cc::WIFI);
+            break;
+    }
 
     if (!serializeMessage(commandMessage, socket))
     {

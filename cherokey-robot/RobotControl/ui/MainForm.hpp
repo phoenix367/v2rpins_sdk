@@ -44,6 +44,8 @@ protected:
     
 private:
     void doDisconnect();
+    void startVideo();
+    void stopVideo();
     
 private:
     Ui::MainForm widget;
@@ -51,6 +53,7 @@ private:
     bool connected;
     PlatformModel *platformWidget;
     QGst::PipelinePtr m_pipeline;
+    QGst::Ui::VideoWidget *videoWidget;
 };
 
 #endif	/* _MAINFORM_HPP */

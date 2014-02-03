@@ -39,6 +39,8 @@ private:
     void sendAck(int64_t cookie, zmq::socket_t& socket);
     void runDriveGroup(const cherokey::common::RunDriveGroup& group,
             DriveController::DriveGroup groupType);
+    void processVideo(zmq::socket_t& socket, 
+            cherokey::common::CommandMessage& msg);
     void processVideoComposite(zmq::socket_t& socket, 
             cherokey::common::CommandMessage& msg);
     void processSensrosInfo(zmq::socket_t& socket, 

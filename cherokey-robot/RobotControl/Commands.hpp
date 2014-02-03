@@ -102,13 +102,21 @@ public:
 class ShowVideoComposite : public SocketCommand
 {
 public:
-    ShowVideoComposite(bool show);
+    enum VideoType
+    {
+        analog,
+        digital
+    };
+    
+public:
+    ShowVideoComposite(bool show, VideoType vt);
     virtual ~ShowVideoComposite();
     
     virtual bool doCommand(zmq::socket_t& socket);
     
 private:
     bool showState;
+    VideoType videoType;
 };
 
 class SendSensorsInfo : public SocketCommand

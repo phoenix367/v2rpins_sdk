@@ -9,6 +9,7 @@
 #include <QtGui/QApplication>
 #include <QTextCodec>
 #include <QMetaType>
+#include <QGst/Init>
 
 #include "MainForm.hpp"
 #include "SensorsConnector.hpp"
@@ -18,6 +19,13 @@ Q_DECLARE_METATYPE(GPSInfo);
 
 int main(int argc, char *argv[]) 
 {
+#if defined(QTVIDEOSINK_PATH)
+    //this allows the example to run from the QtGStreamer build tree without installing QtGStreamer
+    setenv("GST_PLUGIN_PATH", QTVIDEOSINK_PATH, 0);
+#endif
+    
+    QGst::init();
+
     qRegisterMetaType<GPSInfo>();
     
     GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -34,6 +42,7 @@ int main(int argc, char *argv[])
 
     int result = app.exec();
     google::protobuf::ShutdownProtobufLibrary();
+    QGst::cleanup();
 
     return result;
 }

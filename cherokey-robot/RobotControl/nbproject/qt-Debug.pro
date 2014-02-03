@@ -22,5 +22,6 @@ QMAKE_CXX = g++
 DEFINES += BOOST_TT_HAS_OPERATOR_HPP_INCLUDED 
 INCLUDEPATH += ui messages ../../3pty/include 
 LIBS += -lprotobuf -lzmq -lGLU  
-"CONFIG += link_pkgconfig"
+CONFIG += link_pkgconfig
+PKGCONFIG += QtGStreamerUi-0.10
 PKGCONFIG += QtGStreamer-0.10

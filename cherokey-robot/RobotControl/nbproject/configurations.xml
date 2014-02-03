@@ -69,7 +69,8 @@
         <mocDir>moc</mocDir>
         <uiDir>ui</uiDir>
         <defs>
-          <Elem>"CONFIG += link_pkgconfig"</Elem>
+          <Elem>CONFIG += link_pkgconfig</Elem>
+          <Elem>PKGCONFIG += QtGStreamerUi-0.10</Elem>
           <Elem>PKGCONFIG += QtGStreamer-0.10</Elem>
         </defs>
       </qt>

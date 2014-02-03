@@ -5,6 +5,11 @@ enum SwitchState
     ON = 1; OFF = 2;
 }
 
+enum VideoChannelType
+{
+    WIFI = 1; RADIO = 2;
+}
+
 message Ping 
 {
     required int64 seq_no = 1;
@@ -41,16 +46,17 @@ message SendSensorsInfo
     required SwitchState send_state = 1;
 }
 
-message ShowVideoComposite
+message ShowVideo
 {
     required SwitchState show_state = 1;
+    required VideoChannelType channel_type = 2;
 }
 
 message CommandMessage 
 {
     enum Type { 
         PING = 1; MOVE = 2; RUN_DRIVE = 3; SENSORS_INFO = 4; 
-        SHOW_VIDEO_COMPOSITE = 5;
+        SHOW_VIDEO = 5;
     }
 
     // Identifies which field is filled in.
@@ -63,7 +69,7 @@ message CommandMessage
     optional MoveAction move_action = 4;
     optional RunDriveGroup run_drive = 5;
     optional SendSensorsInfo sensors_send_state = 6;
-    optional ShowVideoComposite show_video_composite = 7;
+    optional ShowVideo show_video = 7;
 }
 
 message CommandReply {

@@ -15,10 +15,10 @@
 #include <QSharedPointer>
 #include <QKeyEvent>
 #include <QHBoxLayout>
+#include <QGst/Parse>
 
 MainForm::MainForm()
 : connected(false)
-, m_pipeline(NULL)
 {
     widget.setupUi(this);
     
@@ -58,21 +58,22 @@ MainForm::MainForm()
     
     qApp->installEventFilter(this);
     
-    widget.graphicsView->setLayout(new QHBoxLayout());
     platformWidget = new PlatformModel(widget.graphicsView);
     
     QSize widgetSize = widget.graphicsView->size();
     platformWidget->resize(widgetSize.width(), widgetSize.height());
+        
+    videoWidget = new QGst::Ui::VideoWidget(widget.videoView);
+    widgetSize = widget.videoView->size();
+    videoWidget->resize(widgetSize.width(), widgetSize.height());
+    
+    widget.rbtWiFi->setChecked(true);
 }
 
 MainForm::~MainForm() 
 {
     connectorPtr->disconnectFromServer();
-
-    if (m_pipeline) 
-    {
-        m_pipeline->setState(QGst::StateNull);
-    }
+    stopVideo();
 }
 
 void MainForm::onConnect()
@@ -121,6 +122,9 @@ void MainForm::doDisconnect()
     
     widget.frmMove->setEnabled(false);
     widget.btnShowComposite->setEnabled(false);
+    widget.btnShowComposite->setChecked(false);
+    
+    stopVideo();
 }
 
 void MainForm::onMoveForwardPressed()
@@ -184,9 +188,28 @@ void MainForm::onRotateLeftReleased()
 void MainForm::onShowVideoComposite()
 {
     bool showVideo = widget.btnShowComposite->isChecked();
+    ShowVideoComposite::VideoType videoType;
+    
+    if (widget.rbtRadio->isChecked())
+    {
+        videoType = ShowVideoComposite::analog;
+    }
+    else
+    {
+        videoType = ShowVideoComposite::digital;
+    }
+    
+    if (showVideo)
+    {
+        startVideo();
+    }
+    else
+    {
+        stopVideo();
+    }
     
     QSharedPointer<SocketCommand> showCommand(
-        new ShowVideoComposite(showVideo));
+        new ShowVideoComposite(showVideo, videoType));
     connectorPtr->handleCommand(showCommand);
 }
 
@@ -265,4 +288,39 @@ void MainForm::onGPSData(GPSInfo info)
 void MainForm::onModelRotation(float angleX, float angleY, float angleZ)
 {
     platformWidget->rotateModel(angleX, angleY, angleZ);
+}
+
+void MainForm::startVideo()
+{
+    QString pipeDescr;
+
+    if (widget.rbtWiFi->isChecked())
+    {
+        pipeDescr = "udpsrc port=3000 ! application/x-rtp, media=video, "
+            "payload=96 ! rtph264depay ! ffdec_h264 ! ffmpegcolorspace ! "
+            "videoscale add-borders=true ! ximagesink sync=false";
+    }
+    else
+    {
+        return;
+    }
+
+    m_pipeline = QGst::Parse::launch(
+            pipeDescr).dynamicCast<QGst::Pipeline>();
+
+    if (m_pipeline)
+    {
+        videoWidget->watchPipeline(m_pipeline);
+        m_pipeline->setState(QGst::StatePlaying);
+    }
+}
+
+void MainForm::stopVideo()
+{
+    if (m_pipeline) 
+    {
+        videoWidget->stopPipelineWatch();
+        m_pipeline->setState(QGst::StateNull);
+        m_pipeline.clear();
+    }
 }

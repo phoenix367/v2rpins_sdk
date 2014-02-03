@@ -85,8 +85,8 @@ void ConnectionListener::run()
                 case cc::CommandMessage::MOVE:
                     processMove(socket, commandMsg);
                     break;
-                case cc::CommandMessage::SHOW_VIDEO_COMPOSITE:
-                    processVideoComposite(socket, commandMsg);
+                case cc::CommandMessage::SHOW_VIDEO:
+                    processVideo(socket, commandMsg);
                     break;
                 case cc::CommandMessage::SENSORS_INFO:
                     processSensrosInfo(socket, commandMsg);
@@ -203,6 +203,23 @@ void ConnectionListener::runDriveGroup(
     driveInstance->runDriveGroup(groupType, direction, group.power());
 }
 
+void ConnectionListener::processVideo(zmq::socket_t& socket, 
+        cherokey::common::CommandMessage& msg)
+{
+    auto cookie = msg.cookie();
+    auto videoMsg = msg.mutable_show_video();
+    
+    switch (videoMsg->channel_type())
+    {
+        case cc::WIFI:
+            sendNack("Not implemented yet", cookie, socket);
+            break;
+        case cc::RADIO:
+            processVideoComposite(socket, msg);
+            break;
+    }
+}
+
 void ConnectionListener::processVideoComposite(zmq::socket_t& socket, 
         cherokey::common::CommandMessage& msg)
 {
@@ -210,8 +227,8 @@ void ConnectionListener::processVideoComposite(zmq::socket_t& socket,
 
     try
     {
-        auto showAction = msg.mutable_show_video_composite();
-        auto showState = showAction->show_state();
+        auto compositeMsg = msg.mutable_show_video();
+        auto showState = compositeMsg->show_state();
         
         auto videoInstance = VideoController::getInstance();
         if (!videoInstance)
