@@ -8,8 +8,8 @@
 #ifndef SENSORREADER_HPP
 #define	SENSORREADER_HPP
 
-#include <boost/thread/thread.hpp>
-#include <boost/atomic.hpp>
+#include <thread>
+#include <atomic>
 #include <memory>
 #include <zmq.hpp>
 #include <vector>
@@ -28,10 +28,10 @@ protected:
     void sendData(const std::vector<int8_t>& data);
     
 private:
-    std::unique_ptr<boost::thread> readerThread;
+    std::unique_ptr<std::thread> readerThread;
     
 protected:
-    boost::atomic<bool> stopVariable;
+    std::atomic<bool> stopVariable;
     std::unique_ptr<zmq::socket_t> socket;
 };
 

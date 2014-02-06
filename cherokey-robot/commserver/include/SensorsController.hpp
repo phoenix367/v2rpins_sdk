@@ -9,8 +9,10 @@
 #define	SENSORSCONTROLLER_HPP
 
 #include <memory>
-#include <boost/thread/thread.hpp>
-#include <boost/atomic.hpp>
+#include <thread>
+#include <atomic>
+#include <queue>
+#include <mutex>
 #include <zmq.hpp>
 
 #include "ConfigManager.hpp"
@@ -30,19 +32,25 @@ public:
     void startPublisher(const ConnectionInfo& info);
     void stopPublisher();
     
+    void putMessage(const std::vector<int8_t>& msg);
+    
 private:
     void run();
     void processSensorMessages(zmq::socket_t& pubSocket,
             zmq::socket_t& sensorSocket);
+    bool getMessage(std::vector<int8_t>& msg);
 
 private:
     static std::unique_ptr<SensorsController> instance;
     
-    std::unique_ptr<boost::thread> producerThread;
+    std::unique_ptr<std::thread> producerThread;
     bool started;
-    boost::atomic<bool> stopVariable;
+    std::atomic<bool> stopVariable;
     pc::ADCReader adcReader;
     ConnectionInfo connectionInfo;
+    
+    std::queue<std::vector<int8_t>> messageQueue;
+    std::mutex queueMutex;
 };
 
 #endif	/* SENSORSCONTROLLER_HPP */

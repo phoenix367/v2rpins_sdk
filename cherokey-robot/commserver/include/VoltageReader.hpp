@@ -8,8 +8,6 @@
 #ifndef VOLTAGEREADER_HPP
 #define	VOLTAGEREADER_HPP
 
-#include <boost/atomic.hpp>
-#include <boost/thread.hpp>
 #include <zmq.hpp>
 
 #include "pincontroller/adc_reader.hpp"

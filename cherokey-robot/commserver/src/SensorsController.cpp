@@ -11,8 +11,7 @@
 #include "VoltageReader.hpp"
 #include "IMUReader.hpp"
 
-#include <boost/thread/thread.hpp>
-#include <boost/exception/diagnostic_information.hpp>
+#define MAX_QUEUE_LENGTH                100
 
 extern zmq::context_t gContext;
 
@@ -74,14 +73,14 @@ void SensorsController::startPublisher(const ConnectionInfo& info)
     {
         stopVariable = false;
         connectionInfo = info;
-        producerThread = std::unique_ptr<boost::thread>(
-                new boost::thread(
-                boost::bind(&SensorsController::run, this)));
+        producerThread = std::unique_ptr<std::thread>(
+                new std::thread(
+                std::bind(&SensorsController::run, this)));
     }
-    catch (boost::exception& e)
+    catch (std::exception& e)
     {
         started = false;
-        COMM_EXCEPTION(LaunchException, boost::diagnostic_information(e));
+        COMM_EXCEPTION(LaunchException, e.what());
     }
 }
 
@@ -118,4 +117,29 @@ void SensorsController::processSensorMessages(zmq::socket_t& pubSocket,
             }
         }
     }
+}
+
+void SensorsController::putMessage(const std::vector<int8_t>& msg)
+{
+    std::lock_guard<std::mutex> lock(queueMutex);
+    
+    if (messageQueue.size() < MAX_QUEUE_LENGTH)
+    {
+        messageQueue.push(msg);
+    }
+}
+
+bool SensorsController::getMessage(std::vector<int8_t>& msg)
+{
+    std::lock_guard<std::mutex> lock(queueMutex);
+    
+    if (!messageQueue.empty())
+    {
+        msg = messageQueue.back();
+        messageQueue.pop();
+        
+        return true;
+    }
+    
+    return false;
 }

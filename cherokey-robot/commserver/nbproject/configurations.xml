@@ -210,6 +210,9 @@
             <pElem>../nmea/include</pElem>
             <pElem>../madgwik_ahrs/include</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_GLIBCXX_USE_NANOSLEEP</Elem>
+          </preprocessorList>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
@@ -237,8 +240,6 @@
             <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
             <linkerLibLibItem>boost_date_time</linkerLibLibItem>
             <linkerLibLibItem>boost_program_options</linkerLibLibItem>
-            <linkerLibLibItem>boost_system</linkerLibLibItem>
-            <linkerLibLibItem>boost_thread</linkerLibLibItem>
             <linkerLibLibItem>protobuf-c</linkerLibLibItem>
             <linkerLibLibItem>protobuf</linkerLibLibItem>
             <linkerLibLibItem>zmq</linkerLibLibItem>
@@ -259,15 +260,16 @@
             <linkerLibProjectItem>
               <makeArtifact PL="../madgwik_ahrs"
                             CT="3"
-                            CN="Debug"
-                            AC="true"
+                            CN="Release"
+                            AC="false"
                             BL="true"
                             WD="../madgwik_ahrs"
-                            BC="${MAKE}  -f Makefile CONF=Debug"
-                            CC="${MAKE}  -f Makefile CONF=Debug clean"
+                            BC="${MAKE}  -f Makefile CONF=Release"
+                            CC="${MAKE}  -f Makefile CONF=Release clean"
                             OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libmadgwik_ahrs.a">
               </makeArtifact>
             </linkerLibProjectItem>
+            <linkerLibLibItem>boost_system</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>

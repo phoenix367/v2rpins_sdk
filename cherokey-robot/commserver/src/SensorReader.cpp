@@ -27,9 +27,9 @@ void SensorReader::initThread()
             gContext, ZMQ_PUSH));
     socket->connect(SensorsController::SENSORS_CONN_POINT);
     
-    readerThread = std::unique_ptr<boost::thread>(
-                    new boost::thread(
-                    boost::bind(&SensorReader::run, this)));
+    readerThread = std::unique_ptr<std::thread>(
+                    new std::thread(
+                    std::bind(&SensorReader::run, this)));
 }
 
 void SensorReader::stopThread()

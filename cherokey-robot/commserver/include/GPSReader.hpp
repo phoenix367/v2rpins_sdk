@@ -8,9 +8,6 @@
 #ifndef GPSREADER_HPP
 #define	GPSREADER_HPP
 
-#include <boost/thread/thread.hpp>
-#include <boost/atomic.hpp>
-
 #include "serialstream.h"
 #include "nmea/nmea.h"
 #include "Exceptions.hpp"
