@@ -16,7 +16,6 @@
 extern zmq::context_t gContext;
 
 std::unique_ptr<SensorsController> SensorsController::instance;
-const char* SensorsController::SENSORS_CONN_POINT = "inproc://sensors";
 
 SensorsController::SensorsController()
 : started(false)
@@ -50,14 +49,8 @@ void SensorsController::run()
             connectionInfo.port;
     
     publisher.bind(stream.str().c_str());
-        
-    zmq::socket_t socket(gContext, ZMQ_PULL);
-    socket.bind(SENSORS_CONN_POINT);
-    
-    processSensorMessages(publisher, socket);
-    
+    processSensorMessages(publisher);    
     publisher.close();
-    socket.close();
 }
 
 void SensorsController::startPublisher(const ConnectionInfo& info)
@@ -96,8 +89,7 @@ void SensorsController::stopPublisher()
     started = false;
 }
 
-void SensorsController::processSensorMessages(zmq::socket_t& pubSocket,
-        zmq::socket_t& sensorSocket)
+void SensorsController::processSensorMessages(zmq::socket_t& pubSocket)
 {
     GPSReader gpsReader;
     VoltageReader voltageReader;
@@ -105,16 +97,15 @@ void SensorsController::processSensorMessages(zmq::socket_t& pubSocket,
 
     while (!stopVariable)
     {
-        zmq::pollitem_t items [] = { { sensorSocket, 0, ZMQ_POLLIN, 0 } };
-        zmq::poll(items, 1, 100);
-
-        if (items [0].revents & ZMQ_POLLIN) 
+        std::vector<int8_t> msg;
+        
+        if (getMessage(msg))
         {
-            zmq::message_t msg;
-            if (sensorSocket.recv(&msg))
-            {
-                pubSocket.send(msg);
-            }
+            pubSocket.send(&msg[0], msg.size());
+        }
+        else
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
     }
 }

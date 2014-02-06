@@ -21,9 +21,6 @@
 class SensorsController 
 {
 public:
-    static const char* SENSORS_CONN_POINT;
-    
-public:
     SensorsController();
     virtual ~SensorsController();
     
@@ -36,8 +33,7 @@ public:
     
 private:
     void run();
-    void processSensorMessages(zmq::socket_t& pubSocket,
-            zmq::socket_t& sensorSocket);
+    void processSensorMessages(zmq::socket_t& pubSocket);
     bool getMessage(std::vector<int8_t>& msg);
 
 private:

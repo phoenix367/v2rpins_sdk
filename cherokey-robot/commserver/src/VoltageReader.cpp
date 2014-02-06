@@ -11,10 +11,6 @@
 #include "GPSReader.hpp"
 #include "SensorsController.hpp"
 
-#include <boost/asio.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/exception/diagnostic_information.hpp>
-
 namespace cs = cherokey::sensors;
 
 VoltageReader::VoltageReader()
@@ -28,10 +24,6 @@ VoltageReader::~VoltageReader()
 
 void VoltageReader::run()
 {
-    boost::asio::io_service io;
-    auto delayTime = boost::posix_time::milliseconds(250);
-    boost::asio::deadline_timer t(io, delayTime);
-
     cs::SensorData sensorMessage;
 
     sensorMessage.set_sensor_id(0);
@@ -46,6 +38,9 @@ void VoltageReader::run()
     currentData->set_data_type(cs::REAL);
 
     float prevVoltageData = 0, prevCurrentData = 0;
+
+    auto delayTime = std::chrono::milliseconds(250);
+    auto t = std::chrono::high_resolution_clock::now();
 
     while (!stopVariable)
     {
@@ -69,7 +64,7 @@ void VoltageReader::run()
 
         sendData(outArray);
 
-        t.wait();
-        t.expires_at(t.expires_at() + delayTime);
+        std::this_thread::sleep_until(t + delayTime);
+        t += delayTime;
     }
 }

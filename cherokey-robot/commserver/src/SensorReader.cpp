@@ -8,8 +8,6 @@
 #include "SensorReader.hpp"
 #include "SensorsController.hpp"
 
-extern zmq::context_t gContext;
-
 SensorReader::SensorReader() 
 : stopVariable(false)
 {
@@ -22,11 +20,7 @@ SensorReader::~SensorReader()
 
 void SensorReader::initThread()
 {
-    stopVariable = false;
-    socket = std::unique_ptr<zmq::socket_t>(new zmq::socket_t(
-            gContext, ZMQ_PUSH));
-    socket->connect(SensorsController::SENSORS_CONN_POINT);
-    
+    stopVariable = false;    
     readerThread = std::unique_ptr<std::thread>(
                     new std::thread(
                     std::bind(&SensorReader::run, this)));
@@ -41,18 +35,15 @@ void SensorReader::stopThread()
         {
             readerThread->join();
         }
-        
-        if (socket)
-        {
-            socket->close();
-        }
     }
 }
 
 void SensorReader::sendData(const std::vector<int8_t>& data)
 {
-    if (socket)
+    auto instance = SensorsController::getInstance();
+    
+    if (instance)
     {
-        socket->send(&data[0], data.size());
+        instance->putMessage(data);
     }
 }

@@ -11,15 +11,12 @@
 #include "madgwik_ahrs.h"
 #include "ComplementaryFilter.hpp"
 
-#include <boost/asio.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
 #include <linux/i2c-dev.h>
 #include <linux/swab.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <boost/timer.hpp>
 
 #define I2CDEV                      "/dev/i2c-1"
 
@@ -50,10 +47,6 @@ IMUReader::~IMUReader()
 
 void IMUReader::run()
 {
-    boost::asio::io_service io;
-    auto delayTime = boost::posix_time::milliseconds(10);
-    boost::asio::deadline_timer t(io, delayTime);
-
     initSensors();
     
     cs::SensorData sensorMessage;
@@ -84,18 +77,19 @@ void IMUReader::run()
             "configuration manager");
     }
     
-    auto offsets = instance->getCompassOffsets();
-
     ComplementaryFilter filter;
     float pitch, roll, yaw;
     
+    auto delayTime = std::chrono::milliseconds(10);
+    auto t = std::chrono::high_resolution_clock::now();
+
     while (!stopVariable)
     {
         IMUSensorsData sensorsData = { 0 };
         readSensors(sensorsData, gyroState, accelState, calibration);
         
-        t.wait();                
-        t.expires_at(t.expires_at() + delayTime);
+        std::this_thread::sleep_until(t + delayTime);
+        t += delayTime;
         
         if (!calibration)
         {

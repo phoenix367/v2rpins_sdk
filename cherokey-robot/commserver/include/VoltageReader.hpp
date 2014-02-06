@@ -8,8 +8,6 @@
 #ifndef VOLTAGEREADER_HPP
 #define	VOLTAGEREADER_HPP
 
-#include <zmq.hpp>
-
 #include "pincontroller/adc_reader.hpp"
 #include "SensorReader.hpp"
 

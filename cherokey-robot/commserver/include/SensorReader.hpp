@@ -11,7 +11,6 @@
 #include <thread>
 #include <atomic>
 #include <memory>
-#include <zmq.hpp>
 #include <vector>
 
 class SensorReader 
@@ -32,7 +31,6 @@ private:
     
 protected:
     std::atomic<bool> stopVariable;
-    std::unique_ptr<zmq::socket_t> socket;
 };
 
 #endif	/* SENSORREADER_HPP */
