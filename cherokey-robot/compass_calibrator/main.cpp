@@ -32,6 +32,21 @@
 #define HMC5883L_I2C_ADDR   0x1E
 #define I2CDEV              "/dev/i2c"
 
+#define CONFIG_B_REGISTER   0x01
+#define MODE_REGISTER       0x02
+
+#define RAW_MES_RANGE       2048
+#define OVERFLOW_VALUE      (-4096)
+
+#define RANGE_0_88_GA       0
+#define RANGE_1_3_GA        (1 << 5)
+#define RANGE_1_9_GA        (2 << 5)
+#define RANGE_2_5_GA        (3 << 5)
+#define RANGE_4_0_GA        (4 << 5)
+#define RANGE_4_7_GA        (5 << 5)
+#define RANGE_5_6_GA        (6 << 5)
+#define RANGE_8_1_GA        (7 << 5)
+
 struct CompassMeasurement
 {
     float B_x;
@@ -45,6 +60,21 @@ std::list<CompassMeasurement> gMeasurements;
 uint gAdapterIndex = 1;
 double gMeasurementFrequency = 10.0;
 bool gSIMatrixNormalize = true;
+int gMeasurementRange = 2;
+bool gReadScaled = false;
+float scale = 0;
+
+const float magnetometerLimit[8] =
+{
+    0.88f,
+    1.3f,
+    1.9f,
+    2.5f,
+    4.0f,
+    4.7f,
+    5.6f,
+    8.1f
+};
 
 using namespace boost::numeric::ublas;
 using namespace boost::numeric::bindings::lapack;
@@ -118,9 +148,17 @@ void readSensors()
         y = __swab16(*(short*) &buf[4]);
         
         CompassMeasurement m;
-        m.B_x = x;
-        m.B_y = y;
-        m.B_z = z;
+        
+        m.B_x = (x != OVERFLOW_VALUE) ? x : 0.0f;
+        m.B_y = (y != OVERFLOW_VALUE) ? y : 0.0f;
+        m.B_z = (z != OVERFLOW_VALUE) ? z : 0.0f;
+        
+        if (gReadScaled)
+        {
+            m.B_x *= scale;
+            m.B_y *= scale;
+            m.B_z *= scale;
+        }
         
         gMeasurements.push_back(m);
     }
@@ -372,6 +410,57 @@ void calibration()
             W_inv(2, 1) << std::setw(15) << W_inv(2, 2) << std::endl;
 }
 
+void initDevice()
+{
+    char contMeasurementCmd[2] = { MODE_REGISTER, 0x00 };
+    char gainCmd[2] = { CONFIG_B_REGISTER };
+    
+    /* initialize HMC5883L */
+    selectDevice(file, HMC5883L_I2C_ADDR, "HMC5883L");
+    writeToDevice(file, contMeasurementCmd, sizeof(contMeasurementCmd));
+    
+    if (gMeasurementRange != -1)
+    {
+        switch (gMeasurementRange)
+        {
+            case 0:
+                gainCmd[1] = RANGE_0_88_GA;
+                break;
+            case 1:
+                gainCmd[1] = RANGE_1_3_GA;
+                break;
+            case 2:
+                gainCmd[1] = RANGE_1_9_GA;
+                break;
+            case 3:
+                gainCmd[1] = RANGE_2_5_GA;
+                break;
+            case 4:
+                gainCmd[1] = RANGE_4_0_GA;
+                break;
+            case 5:
+                gainCmd[1] = RANGE_4_7_GA;
+                break;
+            case 6:
+                gainCmd[1] = RANGE_5_6_GA;
+                break;
+            case 7:
+                gainCmd[1] = RANGE_8_1_GA;
+                break;
+            default:
+                std::cerr << "Invalid gain value" << std::endl;
+                exit(1);
+                break;
+        }        
+    }
+    else
+    {
+        gainCmd[1] = RANGE_1_3_GA;
+    }
+
+    writeToDevice(file, gainCmd, sizeof(gainCmd));
+}
+
 /*
  * 
  */
@@ -387,6 +476,10 @@ int main(int argc, char** argv)
             "set I2C adapter index")
         ("si-norm", po::value<bool>(&gSIMatrixNormalize)->default_value(false), 
             "normalize Soft-Iron matrix to receive results in 0..1 range")
+        ("read-scaled,s", po::value<bool>(&gReadScaled)->default_value(false), 
+            "operate with scaled (absolute) measurements")
+        ("gain,g", po::value<int>(&gMeasurementRange)->default_value(1), 
+            "magnetometer gain (0 - 5)")
     ;
 
     po::variables_map vm;
@@ -399,13 +492,27 @@ int main(int argc, char** argv)
         return 1;
     }
     
-    if (vm.count("help"))
+    if (vm.count("rate"))
     {
         if (gMeasurementFrequency < 1.0 || gMeasurementFrequency > 400)
         {
             std::cerr << "Invalid reading rate." << std::endl;
             exit(1);
         }
+    }
+    
+    if (vm.count("gain"))
+    {
+        if (gMeasurementRange < 0 || gMeasurementRange > 7)
+        {
+            std::cerr << "Invalid gain value." << std::endl;
+            exit(1);
+        }
+    }
+    
+    if (gReadScaled)
+    {
+        scale = magnetometerLimit[gMeasurementRange] / RAW_MES_RANGE;
     }
 
     std::ostringstream stringStream;
@@ -417,10 +524,8 @@ int main(int argc, char** argv)
         exit(1);
     }
     
-    /* initialize HMC5883L */
-    selectDevice(file, HMC5883L_I2C_ADDR, "HMC5883L");
-    writeToDevice(file, "\x02\x00", 2);
-    
+    initDevice();
+        
     std::cout << "Start HMC5883L magnetometer reading..." << std::endl;
     
     (void) signal(SIGALRM, timer_callback);
