@@ -65,7 +65,7 @@ private:
     void readSensors(IMUSensorsData& data, GyroState& gyroState,
             AccelState& accelState, bool calibration);
     float getCompassAngle(short x, short y, short z);
-    void quat2Euler(float w, float x, float y, float z,
+    void quat2Euler(float q0, float q1, float q2, float q3,
         float& roll, float& pitch, float& yaw);
     
 private:

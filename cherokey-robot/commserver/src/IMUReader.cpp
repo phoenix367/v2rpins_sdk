@@ -68,7 +68,7 @@ void IMUReader::run()
     
     int64_t calibrationDelay = 100;
     AHRS_INFO ahrsInfo;
-    InitAHRS(100, &ahrsInfo);
+    InitAHRS(1, &ahrsInfo);
     
     auto instance = ConfigManager::getInstance();
     if (!instance)
@@ -94,26 +94,34 @@ void IMUReader::run()
         if (!calibration)
         {
 //            MadgwickAHRSupdate(
-//                    sensorsData.rawGyroX * M_PI / 180, 
-//                    sensorsData.rawGyroY * M_PI / 180, 
-//                    sensorsData.rawGyroZ * M_PI / 180, 
+//                    sensorsData.rawGyroX * M_PI / 180 * 0.01, 
+//                    sensorsData.rawGyroY * M_PI / 180 * 0.01, 
+//                    sensorsData.rawGyroZ * M_PI / 180 * 0.01, 
 //                    sensorsData.rawAccelX, 
 //                    sensorsData.rawAccelY, 
 //                    sensorsData.rawAccelZ,
-//                    sensorsData.rawCompassX - offsets.V_x,
-//                    sensorsData.rawCompassY - offsets.V_y,
-//                    sensorsData.rawCompassZ - offsets.V_z,
+//                    sensorsData.rawCompassX,
+//                    sensorsData.rawCompassY,
+//                    sensorsData.rawCompassZ,
 //                    &ahrsInfo);
-//            quat2Euler(ahrsInfo.q0, ahrsInfo.q1, ahrsInfo.q2, ahrsInfo.q3,
-//                    roll, pitch, yaw);
+            MadgwickAHRSupdateIMU(
+                    (sensorsData.rawGyroX - gyroState.offsetX) * M_PI / 180 * 0.01, 
+                    (sensorsData.rawGyroY - gyroState.offsetY) * M_PI / 180 * 0.01, 
+                    (sensorsData.rawGyroZ - gyroState.offsetZ) * M_PI / 180 * 0.01, 
+                    sensorsData.rawAccelX, 
+                    sensorsData.rawAccelY, 
+                    sensorsData.rawAccelZ,
+                    &ahrsInfo);
+            quat2Euler(ahrsInfo.q0, ahrsInfo.q1, ahrsInfo.q2, ahrsInfo.q3,
+                    roll, pitch, yaw);
         }
-        
-        filter.getAngles(sensorsData.rawAccelX, sensorsData.rawAccelY,
-                sensorsData.rawAccelZ, sensorsData.rawGyroX,
-                sensorsData.rawGyroY, sensorsData.rawGyroZ, 
-                sensorsData.rawCompassX, sensorsData.rawCompassY,
-                sensorsData.rawCompassZ,
-                0.01f, pitch, roll, yaw);
+//        
+//        filter.getAngles(sensorsData.rawAccelX, sensorsData.rawAccelY,
+//                sensorsData.rawAccelZ, sensorsData.rawGyroX,
+//                sensorsData.rawGyroY, sensorsData.rawGyroZ, 
+//                sensorsData.rawCompassX, sensorsData.rawCompassY,
+//                sensorsData.rawCompassZ,
+//                0.01f, pitch, roll, yaw);
         
         gyroCoords->set_x(roll);
         gyroCoords->set_y(pitch);
@@ -283,16 +291,30 @@ float IMUReader::getCompassAngle(short x, short y, short z)
     return 0.0;
 }
 
-void IMUReader::quat2Euler(float w, float x, float y, float z, float& roll, 
+void IMUReader::quat2Euler(float q0, float q1, float q2, float q3, float& roll, 
         float& pitch, float& yaw)
 {
-    float sqw = w * w;
-    float sqx = x * x;
-    float sqy = y * y;
-    float sqz = z * z;
-    roll = atan2(2.f * (x * y + z * w), sqx - sqy - sqz + sqw);
-    pitch = asin(-2.f * (x * z - y * w));
-    yaw = atan2(2.f * (y * z + x * w), -sqx - sqy + sqz + sqw);
+    float R[3][3];
+    
+    R[0][0] = 2 * q0 * q0 - 1 + 2 * q1 * q1;
+    R[1][0] = 2 * (q1 * q2 - q0 * q3);
+    R[2][0] = 2 *(q1 * q3 + q0 * q2);
+    R[2][1] = 2 *(q2 * q3 - q0 * q1);
+    R[2][2] = 2 * q0 * q0 - 1 + 2 * q3 * q3;
+    
+    roll = atan2(R[2][1], R[2][2]);
+    pitch = -atan(R[2][0] / sqrt(1 - R[2][0] * R[2][0]));
+    yaw = atan2(R[1][0], R[0][0]);
+
+//    phi = atan2(R(3,2,:), R(3,3,:) );
+//    theta = -atan(R(3,1,:) ./ sqrt(1-R(3,1,:).^2) );
+//    psi = atan2(R(2,1,:), R(1,1,:) );
+    
+//    R(1,1,:) = 2.*q(:,1).^2-1+2.*q(:,2).^2;
+//    R(2,1,:) = 2.*(q(:,2).*q(:,3)-q(:,1).*q(:,4));
+//    R(3,1,:) = 2.*(q(:,2).*q(:,4)+q(:,1).*q(:,3));
+//    R(3,2,:) = 2.*(q(:,3).*q(:,4)-q(:,1).*q(:,2));
+//    R(3,3,:) = 2.*q(:,1).^2-1+2.*q(:,4).^2;
     
     roll *= 180 / M_PI;
     pitch *= 180 / M_PI;
