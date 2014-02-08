@@ -97,7 +97,7 @@ void PlatformModel::draw()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(0.0, 0.0, -10.0);
-    glRotatef(rotationX, 1.0, 0.0, 0.0);
+    glRotatef(rotationX + 22.5, 1.0, 0.0, 0.0);
     glRotatef(rotationY, 0.0, 1.0, 0.0);
     glRotatef(rotationZ, 0.0, 0.0, 1.0);
     for (int i = 0; i < 6; ++i) 
@@ -142,8 +142,8 @@ int PlatformModel::faceAtPosition(const QPoint &pos)
 
 void PlatformModel::rotateModel(GLfloat angleX, GLfloat angleY, GLfloat angleZ)
 {
-    rotationX = angleY + 22.5;
-    rotationY = angleZ + 45;
+    rotationX = angleY;
+    rotationY = angleZ;
     rotationZ = angleX;
     
     std::cout << angleX << " " << angleY << " " << angleZ << std::endl;

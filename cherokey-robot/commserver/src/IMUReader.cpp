@@ -10,6 +10,7 @@
 #include "sensors.pb.h"
 #include "madgwik_ahrs.h"
 #include "ConfigManager.hpp"
+#include "AHRSProcessor.hpp"
 
 #include <linux/i2c-dev.h>
 #include <linux/swab.h>
@@ -28,8 +29,6 @@
 #define BMA180_I2C_ADDR             0x40
 
 namespace cs = cherokey::sensors;
-
-const float IMUReader::GYROSCOPE_SENSITIVITY = 14.375;
 
 IMUReader::IMUReader() 
 {
@@ -69,8 +68,7 @@ void IMUReader::run()
     bool calibration = true;
     
     int64_t calibrationDelay = 500;
-    AHRS_INFO ahrsInfo;
-    InitAHRS(100, &ahrsInfo);
+    AHRSProcessor ahrsProcessor(100);
     
     auto instance = ConfigManager::getInstance();
     if (!instance)
@@ -94,37 +92,7 @@ void IMUReader::run()
         
         if (!calibration)
         {
-//            MadgwickAHRSupdate(
-//                    (sensorsData.rawGyroX - gyroState.offsetX) * M_PI / 180 / 
-//                        GYROSCOPE_SENSITIVITY, 
-//                    (sensorsData.rawGyroY - gyroState.offsetY) * M_PI / 180 / 
-//                        GYROSCOPE_SENSITIVITY, 
-//                    (sensorsData.rawGyroZ - gyroState.offsetZ) * M_PI / 180 /
-//                        GYROSCOPE_SENSITIVITY,
-//                    sensorsData.rawAccelX, 
-//                    sensorsData.rawAccelY, 
-//                    sensorsData.rawAccelZ,
-//                    sensorsData.rawCompassX + 0.0950f,
-//                    sensorsData.rawCompassY + 187.4286,
-//                    sensorsData.rawCompassZ + 60.8529,
-//                    &ahrsInfo);
-            MadgwickAHRSupdateIMU(
-                    (sensorsData.rawGyroX - gyroState.offsetX) * M_PI / 180 /
-                        GYROSCOPE_SENSITIVITY, 
-                    (sensorsData.rawGyroY - gyroState.offsetY) * M_PI / 180 /
-                        GYROSCOPE_SENSITIVITY, 
-                    (sensorsData.rawGyroZ - gyroState.offsetZ) * M_PI / 180 /
-                        GYROSCOPE_SENSITIVITY, 
-                    sensorsData.rawAccelX, 
-                    sensorsData.rawAccelY, 
-                    sensorsData.rawAccelZ,
-                    &ahrsInfo);
-            
-            Quaternion2Euler(&ahrsInfo, &roll, &pitch, &yaw);
-            
-            roll *= 180 / M_PI;
-            pitch *= 180 / M_PI;
-            yaw *= 180 / M_PI;
+            ahrsProcessor.updateState(sensorsData, roll, pitch, yaw);
         }
         
         gyroCoords->set_x(roll);
@@ -152,9 +120,8 @@ void IMUReader::run()
             gyroState.offsetY /= calibrationDelay;
             gyroState.offsetZ /= calibrationDelay;
             
-            accelState.offsetX /= calibrationDelay;
-            accelState.offsetY /= calibrationDelay;
-            accelState.offsetZ /= calibrationDelay;
+            ahrsProcessor.setGyroOffsets(gyroState.offsetX, gyroState.offsetY,
+                    gyroState.offsetZ);
         }
     }
 }

@@ -18,23 +18,24 @@ namespace cherokey
     }
 }
 
+struct IMUSensorsData
+{
+    float rawCompassX;
+    float rawCompassY;
+    float rawCompassZ;
+
+    float rawAccelX;
+    float rawAccelY;
+    float rawAccelZ;
+
+    float rawGyroX;
+    float rawGyroY;
+    float rawGyroZ;
+};
+
 class IMUReader : public SensorReader
 {
 private:
-    struct IMUSensorsData
-    {
-        float rawCompassX;
-        float rawCompassY;
-        float rawCompassZ;
-        
-        float rawAccelX;
-        float rawAccelY;
-        float rawAccelZ;
-        
-        float rawGyroX;
-        float rawGyroY;
-        float rawGyroZ;
-    };
     
     struct GyroState
     {
@@ -49,8 +50,6 @@ private:
         float offsetY;
         float offsetZ;
     };
-
-    static const float GYROSCOPE_SENSITIVITY;    
     
 public:
     IMUReader();
