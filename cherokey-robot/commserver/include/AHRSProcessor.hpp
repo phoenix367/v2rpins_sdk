@@ -22,6 +22,7 @@ public:
     void updateState(const IMUSensorsData& data, float &roll,
         float& pitch, float& yaw);
     void setGyroOffsets(float offX, float offY, float offZ);
+    void setAngleOffsets(float ofsRoll, float ofsPitch, float ofsYaw);
     
 private:
     static const float GYROSCOPE_SENSITIVITY;    
@@ -31,8 +32,11 @@ private:
     float gyroOffsetY;
     float gyroOffsetZ;
     
+    float angleOffsetRoll;
+    float angleOffsetPitch;
+    float angleOffsetYaw;
+    
     CompassOffsets compassOffsets;
 };
 
 #endif	/* AHRSPROCESSOR_HPP */
-

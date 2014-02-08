@@ -73,7 +73,7 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libmadgwik_ahrs.a: ${OBJECTFILES}
 ${OBJECTDIR}/src/madgwik_ahrs.o: src/madgwik_ahrs.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -Iinclude -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/madgwik_ahrs.o src/madgwik_ahrs.c
+	$(COMPILE.c) -O3 -Iinclude -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/madgwik_ahrs.o src/madgwik_ahrs.c
 
 # Subprojects
 .build-subprojects:
@@ -105,7 +105,7 @@ ${OBJECTDIR}/src/madgwik_ahrs_nomain.o: ${OBJECTDIR}/src/madgwik_ahrs.o src/madg
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.c) -O2 -Iinclude -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/madgwik_ahrs_nomain.o src/madgwik_ahrs.c;\
+	    $(COMPILE.c) -O3 -Iinclude -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/madgwik_ahrs_nomain.o src/madgwik_ahrs.c;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/madgwik_ahrs.o ${OBJECTDIR}/src/madgwik_ahrs_nomain.o;\
 	fi

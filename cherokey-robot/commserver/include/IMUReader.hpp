@@ -64,7 +64,7 @@ private:
     
     void initSensors();
     void readSensors(IMUSensorsData& data, GyroState& gyroState,
-            AccelState& accelState, bool calibration);
+            bool calibration);
     
 private:
     int file;

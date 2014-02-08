@@ -199,7 +199,7 @@
           <developmentMode>5</developmentMode>
         </cTool>
         <ccTool>
-          <developmentMode>5</developmentMode>
+          <developmentMode>6</developmentMode>
           <standard>8</standard>
           <incDir>
             <pElem>../../3pty/include</pElem>
@@ -224,6 +224,7 @@
           <linkerAddLib>
             <pElem>../../3pty/lib</pElem>
           </linkerAddLib>
+          <stripSymbols>true</stripSymbols>
           <linkerLibItems>
             <linkerLibProjectItem>
               <makeArtifact PL="../../pincontroller"

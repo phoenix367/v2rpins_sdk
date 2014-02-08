@@ -64,7 +64,6 @@ void IMUReader::run()
 
     int64_t loopCount = 0;
     GyroState gyroState = { 0 };
-    AccelState accelState = { 0 };
     bool calibration = true;
     
     int64_t calibrationDelay = 500;
@@ -78,6 +77,7 @@ void IMUReader::run()
     }
     
     float pitch, roll, yaw;
+    float offsetRoll = 0.0f, offsetPitch = 0.0f, offsetYaw = 0.0f;
     
     auto delayTime = std::chrono::milliseconds(10);
     auto t = std::chrono::high_resolution_clock::now();
@@ -85,7 +85,7 @@ void IMUReader::run()
     while (!stopVariable)
     {
         IMUSensorsData sensorsData = { 0 };
-        readSensors(sensorsData, gyroState, accelState, calibration);
+        readSensors(sensorsData, gyroState, calibration);
         
         std::this_thread::sleep_until(t + delayTime);
         t += delayTime;
@@ -93,6 +93,21 @@ void IMUReader::run()
         if (!calibration)
         {
             ahrsProcessor.updateState(sensorsData, roll, pitch, yaw);
+        }
+        else
+        {
+            float tmpRoll, tmpPitch, tmpYaw;
+            IMUSensorsData tmpData = { 0 };
+            
+            tmpData.rawAccelX = sensorsData.rawAccelX;
+            tmpData.rawAccelY = sensorsData.rawAccelY;
+            tmpData.rawAccelZ = sensorsData.rawAccelZ;
+            
+            ahrsProcessor.updateState(tmpData, tmpRoll, tmpPitch, tmpYaw);
+            
+            offsetRoll += tmpRoll;
+            offsetPitch += tmpPitch;
+            offsetYaw += tmpYaw;
         }
         
         gyroCoords->set_x(roll);
@@ -120,8 +135,13 @@ void IMUReader::run()
             gyroState.offsetY /= calibrationDelay;
             gyroState.offsetZ /= calibrationDelay;
             
+            offsetRoll /= calibrationDelay;
+            offsetPitch /= calibrationDelay;
+            offsetYaw /= calibrationDelay;
+            
             ahrsProcessor.setGyroOffsets(gyroState.offsetX, gyroState.offsetY,
                     gyroState.offsetZ);
+            ahrsProcessor.setAngleOffsets(offsetRoll, offsetPitch, offsetYaw);
         }
     }
 }
@@ -166,7 +186,7 @@ void IMUReader::initSensors()
 }
 
 void IMUReader::readSensors(IMUSensorsData& data, GyroState& gyroState,
-            AccelState& accelState, bool calibration)
+            bool calibration)
 {
     short x, y, z;
     unsigned char buf[16];
@@ -201,13 +221,6 @@ void IMUReader::readSensors(IMUSensorsData& data, GyroState& gyroState,
         x = buf[1] << 8 | buf[0];
         y = buf[3] << 8 | buf[2];
         z = buf[5] << 8 | buf[4];
-        
-        if (calibration)
-        {
-            accelState.offsetX += x;
-            accelState.offsetY += y;
-            accelState.offsetZ += z;
-        }
         
         data.rawAccelX = x;
         data.rawAccelY = y;

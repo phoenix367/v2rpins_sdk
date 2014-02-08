@@ -17,6 +17,9 @@ AHRSProcessor::AHRSProcessor(float sf)
 : gyroOffsetX(0.0f)
 , gyroOffsetY(0.0f)
 , gyroOffsetZ(0.0f)
+, angleOffsetRoll(0.0f)
+, angleOffsetPitch(0.0f)
+, angleOffsetYaw(0.0f)
 {
     InitAHRS(sf, &ahrsInfo);
     
@@ -48,12 +51,26 @@ void AHRSProcessor::updateState(const IMUSensorsData& data, float& roll,
             data.rawAccelY, 
             data.rawAccelZ,
             &ahrsInfo);
+//    MadgwickAHRSupdate(
+//            (data.rawGyroX - gyroOffsetX) * M_PI / 180 /
+//                GYROSCOPE_SENSITIVITY, 
+//            (data.rawGyroY - gyroOffsetY) * M_PI / 180 /
+//                GYROSCOPE_SENSITIVITY, 
+//            (data.rawGyroZ - gyroOffsetZ) * M_PI / 180 /
+//                GYROSCOPE_SENSITIVITY, 
+//            data.rawAccelX, 
+//            data.rawAccelY, 
+//            data.rawAccelZ,
+//            data.rawCompassX - compassOffsets.V_x,
+//            data.rawCompassY - compassOffsets.V_y,
+//            data.rawCompassZ - compassOffsets.V_z,
+//            &ahrsInfo);
 
     Quaternion2Euler(&ahrsInfo, &roll, &pitch, &yaw);
 
-    roll *= 180 / M_PI;
-    pitch *= 180 / M_PI;
-    yaw *= 180 / M_PI;
+    roll = roll * 180 / M_PI - angleOffsetRoll;
+    pitch = pitch * 180 / M_PI - angleOffsetPitch;
+    yaw = yaw * 180 / M_PI - angleOffsetYaw;
 }
 
 void AHRSProcessor::setGyroOffsets(float offX, float offY, float offZ)
@@ -61,4 +78,12 @@ void AHRSProcessor::setGyroOffsets(float offX, float offY, float offZ)
     gyroOffsetX = offX;
     gyroOffsetY = offY;
     gyroOffsetZ = offZ;
+}
+
+void AHRSProcessor::setAngleOffsets(float ofsRoll, float ofsPitch, 
+        float ofsYaw)
+{
+    angleOffsetPitch = ofsPitch;
+    angleOffsetRoll = ofsRoll;
+    angleOffsetYaw = ofsYaw;
 }
