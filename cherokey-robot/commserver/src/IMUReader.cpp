@@ -9,14 +9,16 @@
 #include "Exceptions.hpp"
 #include "sensors.pb.h"
 #include "madgwik_ahrs.h"
-#include "ComplementaryFilter.hpp"
+#include "ConfigManager.hpp"
 
 #include <linux/i2c-dev.h>
 #include <linux/swab.h>
+#include <unistd.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <cmath>
 
 #define I2CDEV                      "/dev/i2c-1"
 
@@ -27,7 +29,7 @@
 
 namespace cs = cherokey::sensors;
 
-const float QuatToEulerAccuracy = 0.001;
+const float IMUReader::GYROSCOPE_SENSITIVITY = 14.375;
 
 IMUReader::IMUReader() 
 {
@@ -66,9 +68,9 @@ void IMUReader::run()
     AccelState accelState = { 0 };
     bool calibration = true;
     
-    int64_t calibrationDelay = 100;
+    int64_t calibrationDelay = 500;
     AHRS_INFO ahrsInfo;
-    InitAHRS(1, &ahrsInfo);
+    InitAHRS(100, &ahrsInfo);
     
     auto instance = ConfigManager::getInstance();
     if (!instance)
@@ -77,7 +79,6 @@ void IMUReader::run()
             "configuration manager");
     }
     
-    ComplementaryFilter filter;
     float pitch, roll, yaw;
     
     auto delayTime = std::chrono::milliseconds(10);
@@ -94,34 +95,37 @@ void IMUReader::run()
         if (!calibration)
         {
 //            MadgwickAHRSupdate(
-//                    sensorsData.rawGyroX * M_PI / 180 * 0.01, 
-//                    sensorsData.rawGyroY * M_PI / 180 * 0.01, 
-//                    sensorsData.rawGyroZ * M_PI / 180 * 0.01, 
+//                    (sensorsData.rawGyroX - gyroState.offsetX) * M_PI / 180 / 
+//                        GYROSCOPE_SENSITIVITY, 
+//                    (sensorsData.rawGyroY - gyroState.offsetY) * M_PI / 180 / 
+//                        GYROSCOPE_SENSITIVITY, 
+//                    (sensorsData.rawGyroZ - gyroState.offsetZ) * M_PI / 180 /
+//                        GYROSCOPE_SENSITIVITY,
 //                    sensorsData.rawAccelX, 
 //                    sensorsData.rawAccelY, 
 //                    sensorsData.rawAccelZ,
-//                    sensorsData.rawCompassX,
-//                    sensorsData.rawCompassY,
-//                    sensorsData.rawCompassZ,
+//                    sensorsData.rawCompassX + 0.0950f,
+//                    sensorsData.rawCompassY + 187.4286,
+//                    sensorsData.rawCompassZ + 60.8529,
 //                    &ahrsInfo);
             MadgwickAHRSupdateIMU(
-                    (sensorsData.rawGyroX - gyroState.offsetX) * M_PI / 180 * 0.01, 
-                    (sensorsData.rawGyroY - gyroState.offsetY) * M_PI / 180 * 0.01, 
-                    (sensorsData.rawGyroZ - gyroState.offsetZ) * M_PI / 180 * 0.01, 
+                    (sensorsData.rawGyroX - gyroState.offsetX) * M_PI / 180 /
+                        GYROSCOPE_SENSITIVITY, 
+                    (sensorsData.rawGyroY - gyroState.offsetY) * M_PI / 180 /
+                        GYROSCOPE_SENSITIVITY, 
+                    (sensorsData.rawGyroZ - gyroState.offsetZ) * M_PI / 180 /
+                        GYROSCOPE_SENSITIVITY, 
                     sensorsData.rawAccelX, 
                     sensorsData.rawAccelY, 
                     sensorsData.rawAccelZ,
                     &ahrsInfo);
-            quat2Euler(ahrsInfo.q0, ahrsInfo.q1, ahrsInfo.q2, ahrsInfo.q3,
-                    roll, pitch, yaw);
+            
+            Quaternion2Euler(&ahrsInfo, &roll, &pitch, &yaw);
+            
+            roll *= 180 / M_PI;
+            pitch *= 180 / M_PI;
+            yaw *= 180 / M_PI;
         }
-//        
-//        filter.getAngles(sensorsData.rawAccelX, sensorsData.rawAccelY,
-//                sensorsData.rawAccelZ, sensorsData.rawGyroX,
-//                sensorsData.rawGyroY, sensorsData.rawGyroZ, 
-//                sensorsData.rawCompassX, sensorsData.rawCompassY,
-//                sensorsData.rawCompassZ,
-//                0.01f, pitch, roll, yaw);
         
         gyroCoords->set_x(roll);
         gyroCoords->set_y(pitch);
@@ -218,23 +222,6 @@ void IMUReader::readSensors(IMUSensorsData& data, GyroState& gyroState,
         data.rawCompassZ = z;
     }
 
-
-      /*
-      selectDevice(file, BMA180_I2C_ADDR, "BMA180");
-      writeToDevice(file, "\x02", 1);
-   
-      if (read(file, buf, 6) != 6) {
-         printf("Unable to read from BMA180\n");
-      }
-      else {
-         x = buf[1]<<8| buf[0];
-         y = buf[3]<<8| buf[2];
-         z = buf[5]<<8| buf[4];
-         printf("BMA180: x=%d, y=%d, z=%d\n", x, y, z);
-      }
-      */
-
-
     selectDevice(file, ADXL345_I2C_ADDR, "ADXL345");
     writeToDevice(file, "\x32", 1);
 
@@ -284,39 +271,4 @@ void IMUReader::readSensors(IMUSensorsData& data, GyroState& gyroState,
             gyroState.offsetZ += z;
         }
     }
-}
-
-float IMUReader::getCompassAngle(short x, short y, short z)
-{
-    return 0.0;
-}
-
-void IMUReader::quat2Euler(float q0, float q1, float q2, float q3, float& roll, 
-        float& pitch, float& yaw)
-{
-    float R[3][3];
-    
-    R[0][0] = 2 * q0 * q0 - 1 + 2 * q1 * q1;
-    R[1][0] = 2 * (q1 * q2 - q0 * q3);
-    R[2][0] = 2 *(q1 * q3 + q0 * q2);
-    R[2][1] = 2 *(q2 * q3 - q0 * q1);
-    R[2][2] = 2 * q0 * q0 - 1 + 2 * q3 * q3;
-    
-    roll = atan2(R[2][1], R[2][2]);
-    pitch = -atan(R[2][0] / sqrt(1 - R[2][0] * R[2][0]));
-    yaw = atan2(R[1][0], R[0][0]);
-
-//    phi = atan2(R(3,2,:), R(3,3,:) );
-//    theta = -atan(R(3,1,:) ./ sqrt(1-R(3,1,:).^2) );
-//    psi = atan2(R(2,1,:), R(1,1,:) );
-    
-//    R(1,1,:) = 2.*q(:,1).^2-1+2.*q(:,2).^2;
-//    R(2,1,:) = 2.*(q(:,2).*q(:,3)-q(:,1).*q(:,4));
-//    R(3,1,:) = 2.*(q(:,2).*q(:,4)+q(:,1).*q(:,3));
-//    R(3,2,:) = 2.*(q(:,3).*q(:,4)-q(:,1).*q(:,2));
-//    R(3,3,:) = 2.*q(:,1).^2-1+2.*q(:,4).^2;
-    
-    roll *= 180 / M_PI;
-    pitch *= 180 / M_PI;
-    yaw *= 180 / M_PI;
 }

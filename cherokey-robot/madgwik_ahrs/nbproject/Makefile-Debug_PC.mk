@@ -14,16 +14,16 @@ GREP=grep
 NM=nm
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=arm-none-linux-gnueabi-gcc
-CCC=arm-none-linux-gnueabi-g++
-CXX=arm-none-linux-gnueabi-g++
+CC=gcc
+CCC=g++
+CXX=g++
 FC=gfortran
-AS=arm-none-linux-gnueabi-as
+AS=as
 
 # Macros
-CND_PLATFORM=V2R-Linux-x86
+CND_PLATFORM=GNU-Linux-x86
 CND_DLIB_EXT=so
-CND_CONF=Debug
+CND_CONF=Debug_PC
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -88,13 +88,13 @@ ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/TestEuler.o ${TESTDIR}/tests/euler_tes
 ${TESTDIR}/tests/TestEuler.o: tests/TestEuler.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -g `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/TestEuler.o tests/TestEuler.cpp
+	$(COMPILE.cc) -g -Iinclude `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/TestEuler.o tests/TestEuler.cpp
 
 
 ${TESTDIR}/tests/euler_test.o: tests/euler_test.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -g `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/euler_test.o tests/euler_test.cpp
+	$(COMPILE.cc) -g -Iinclude `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/euler_test.o tests/euler_test.cpp
 
 
 ${OBJECTDIR}/src/madgwik_ahrs_nomain.o: ${OBJECTDIR}/src/madgwik_ahrs.o src/madgwik_ahrs.c 

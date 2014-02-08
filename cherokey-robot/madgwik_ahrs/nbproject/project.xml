@@ -5,8 +5,8 @@
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
             <name>madgwik_ahrs</name>
             <c-extensions>c</c-extensions>
-            <cpp-extensions/>
-            <header-extensions>h</header-extensions>
+            <cpp-extensions>cpp</cpp-extensions>
+            <header-extensions>h,hpp</header-extensions>
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList/>
@@ -17,6 +17,10 @@
                 </confElem>
                 <confElem>
                     <name>Release</name>
+                    <type>3</type>
+                </confElem>
+                <confElem>
+                    <name>Debug_PC</name>
                     <type>3</type>
                 </confElem>
             </confList>

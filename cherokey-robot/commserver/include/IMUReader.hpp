@@ -50,6 +50,8 @@ private:
         float offsetZ;
     };
 
+    static const float GYROSCOPE_SENSITIVITY;    
+    
 public:
     IMUReader();
     virtual ~IMUReader();
@@ -64,9 +66,6 @@ private:
     void initSensors();
     void readSensors(IMUSensorsData& data, GyroState& gyroState,
             AccelState& accelState, bool calibration);
-    float getCompassAngle(short x, short y, short z);
-    void quat2Euler(float q0, float q1, float q2, float q3,
-        float& roll, float& pitch, float& yaw);
     
 private:
     int file;

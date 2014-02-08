@@ -25,6 +25,8 @@
 extern "C" {
 #endif
     
+#include <stdbool.h>
+
 typedef struct {
     float sampleFreq;
     float beta;
@@ -42,6 +44,8 @@ void MadgwickAHRSupdate(float gx, float gy, float gz, float ax, float ay,
         float az, float mx, float my, float mz, AHRS_INFO* ahrs);
 void MadgwickAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay, 
         float az, AHRS_INFO* ahrs);
+bool Quaternion2Euler(const AHRS_INFO* ahrs, float *phi, float* theta,
+        float* psi);
 
 #ifdef	__cplusplus
 }

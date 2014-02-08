@@ -22,6 +22,14 @@ CND_ARTIFACT_PATH_Release=dist/Release/V2R-Linux-x86/libmadgwik_ahrs.a
 CND_PACKAGE_DIR_Release=dist/Release/V2R-Linux-x86/package
 CND_PACKAGE_NAME_Release=madgwikahrs.tar
 CND_PACKAGE_PATH_Release=dist/Release/V2R-Linux-x86/package/madgwikahrs.tar
+# Debug_PC configuration
+CND_PLATFORM_Debug_PC=GNU-Linux-x86
+CND_ARTIFACT_DIR_Debug_PC=dist/Debug_PC/GNU-Linux-x86
+CND_ARTIFACT_NAME_Debug_PC=libmadgwik_ahrs.a
+CND_ARTIFACT_PATH_Debug_PC=dist/Debug_PC/GNU-Linux-x86/libmadgwik_ahrs.a
+CND_PACKAGE_DIR_Debug_PC=dist/Debug_PC/GNU-Linux-x86/package
+CND_PACKAGE_NAME_Debug_PC=madgwikahrs.tar
+CND_PACKAGE_PATH_Debug_PC=dist/Debug_PC/GNU-Linux-x86/package/madgwikahrs.tar
 #
 # include compiler specific variables
 #

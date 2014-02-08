@@ -259,7 +259,6 @@ void MadgwickAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay,
 
 float invSqrt(float x) 
 {
-    /*
 	float halfx = 0.5f * x;
 	float y = x;
 	long i = *(long*)&y;
@@ -267,8 +266,43 @@ float invSqrt(float x)
 	y = *(float*)&i;
 	y = y * (1.5f - (halfx * y * y));
 	return y;
-    */
-    return 1 / sqrt(x);
+}
+
+bool Quaternion2Euler(const AHRS_INFO* ahrs, float *phi, float* theta,
+        float* psi)
+{
+    if (!ahrs)
+    {
+        return false;
+    }
+    
+    float q0 = ahrs->q0;
+    float q1 = -ahrs->q1;
+    float q2 = -ahrs->q2;
+    float q3 = -ahrs->q3;
+    
+    float R_1_1 = 2.0f * q0 * q0 - 1.0f + 2.0f * q1 * q1;
+    float R_2_1 = 2.0f * (q1 * q2 - q0 * q3);
+    float R_3_1 = 2.0f * (q1 * q3 + q0 * q2);
+    float R_3_2 = 2.0f * (q2 * q3 - q0 * q1);
+    float R_3_3 = 2.0f * q0 * q0 - 1.0f + 2.0f * q3 * q3;
+
+    if (phi)
+    {
+        *phi = atan2(R_3_2, R_3_3);
+    }
+    
+    if (theta)
+    {
+        *theta = -atan(R_3_1 / sqrt(1.0f - R_3_1 * R_3_1));
+    }
+    
+    if (psi)
+    {
+        *psi = atan2(R_2_1, R_1_1);
+    }
+
+    return true;
 }
 
 //====================================================================================================
