@@ -25,6 +25,9 @@ public:
     void setAngleOffsets(float ofsRoll, float ofsPitch, float ofsYaw);
     
 private:
+    float filterGyroValue(float rawGyroValue, float& offset);
+    
+private:
     static const float GYROSCOPE_SENSITIVITY;    
     
     AHRS_INFO ahrsInfo;
@@ -37,6 +40,7 @@ private:
     float angleOffsetYaw;
     
     CompassOffsets compassOffsets;
+    float gyroThreshold;
 };
 
 #endif	/* AHRSPROCESSOR_HPP */

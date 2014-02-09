@@ -24,6 +24,7 @@ const std::string ConfigManager::GPS_SERIAL_BAUDRATE = "GPS.Baudrate";
 const std::string ConfigManager::IMU_COMPASS_X_OFFSET = "IMU.V_x";
 const std::string ConfigManager::IMU_COMPASS_Y_OFFSET = "IMU.V_y";
 const std::string ConfigManager::IMU_COMPASS_Z_OFFSET = "IMU.V_z";
+const std::string ConfigManager::IMU_GYRO_THRESHOLD = "IMU.GyroThreshold";
 
 ConfigManager::ConfigManager() 
 : desc("Options")
@@ -47,7 +48,9 @@ ConfigManager::ConfigManager()
         (IMU_COMPASS_Y_OFFSET.c_str(), boost::program_options::value<float>(),
             "Offset of compass Y axis")
         (IMU_COMPASS_Z_OFFSET.c_str(), boost::program_options::value<float>(),
-            "Offset of compass Z axis");
+            "Offset of compass Z axis")
+        (IMU_GYRO_THRESHOLD.c_str(), boost::program_options::value<float>(),
+            "Gyroscope angular threshold");
 }
 
 ConfigManager::~ConfigManager() 
@@ -168,6 +171,21 @@ void ConfigManager::loadConfiguration(const std::string& fileName)
         {
             compassOffsets.V_z = 0.0f;
         }
+        
+        if (vm.count(IMU_GYRO_THRESHOLD))
+        {
+            gyroThreshold = vm[IMU_GYRO_THRESHOLD].as<float>();
+            
+            if (gyroThreshold < 0.0f)
+            {
+                COMM_EXCEPTION(ConfigurationException, 
+                        "Invalid gyroscope yaw threshold");
+            }
+        }
+        else
+        {
+            gyroThreshold = 0.0f;
+        }
     }
     catch (Exception&)
     {
@@ -202,4 +220,9 @@ uint32_t ConfigManager::getGPSDeviceBaudrate()
 CompassOffsets ConfigManager::getCompassOffsets()
 {
     return compassOffsets;
+}
+
+float ConfigManager::getGyroThreshold()
+{
+    return gyroThreshold;
 }

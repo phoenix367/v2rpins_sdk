@@ -31,33 +31,46 @@ AHRSProcessor::AHRSProcessor(float sf)
     }
     
     compassOffsets = instance->getCompassOffsets();
+    gyroThreshold = instance->getGyroThreshold();
 }
 
 AHRSProcessor::~AHRSProcessor() 
 {
 }
 
+float AHRSProcessor::filterGyroValue(float rawGyroValue, float& offset)
+{
+    float gyroAngle = (rawGyroValue - offset) / GYROSCOPE_SENSITIVITY;
+    
+    if (fabs(gyroAngle) < gyroThreshold && gyroAngle != 0.0f)
+    {
+        offset = 0.9f * offset + 0.1f * rawGyroValue;
+        gyroAngle = 0.0f;
+    }
+    
+    return gyroAngle;
+}
+
 void AHRSProcessor::updateState(const IMUSensorsData& data, float& roll, 
         float& pitch, float& yaw)
 {
+    float gyroX = filterGyroValue(data.rawGyroX, gyroOffsetX);
+    float gyroY = filterGyroValue(data.rawGyroY, gyroOffsetY);
+    float gyroZ = filterGyroValue(data.rawGyroZ, gyroOffsetZ);
+
     MadgwickAHRSupdateIMU(
-            (data.rawGyroX - gyroOffsetX) * M_PI / 180 /
-                GYROSCOPE_SENSITIVITY, 
-            (data.rawGyroY - gyroOffsetY) * M_PI / 180 /
-                GYROSCOPE_SENSITIVITY, 
-            (data.rawGyroZ - gyroOffsetZ) * M_PI / 180 /
-                GYROSCOPE_SENSITIVITY, 
+            gyroX * M_PI / 180, 
+            gyroY * M_PI / 180, 
+            gyroZ * M_PI / 180, 
             data.rawAccelX, 
             data.rawAccelY, 
             data.rawAccelZ,
             &ahrsInfo);
+
 //    MadgwickAHRSupdate(
-//            (data.rawGyroX - gyroOffsetX) * M_PI / 180 /
-//                GYROSCOPE_SENSITIVITY, 
-//            (data.rawGyroY - gyroOffsetY) * M_PI / 180 /
-//                GYROSCOPE_SENSITIVITY, 
-//            (data.rawGyroZ - gyroOffsetZ) * M_PI / 180 /
-//                GYROSCOPE_SENSITIVITY, 
+//            gyroX * M_PI / 180, 
+//            gyroY * M_PI / 180, 
+//            gyroZ * M_PI / 180, 
 //            data.rawAccelX, 
 //            data.rawAccelY, 
 //            data.rawAccelZ,

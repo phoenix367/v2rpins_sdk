@@ -42,6 +42,7 @@ public:
     std::string getGPSDevice();
     uint32_t getGPSDeviceBaudrate();
     CompassOffsets getCompassOffsets();
+    float getGyroThreshold();
     
 private:
     static std::unique_ptr<ConfigManager> instance;
@@ -55,6 +56,7 @@ private:
     static const std::string IMU_COMPASS_X_OFFSET;
     static const std::string IMU_COMPASS_Y_OFFSET;
     static const std::string IMU_COMPASS_Z_OFFSET;
+    static const std::string IMU_GYRO_THRESHOLD;
     
     boost::program_options::options_description desc;
     std::shared_ptr<ConnectionInfo> connectionInfo;
@@ -62,6 +64,7 @@ private:
     std::string gpsSerial;
     uint32_t gpsSerialBaudrate;
     CompassOffsets compassOffsets;
+    float gyroThreshold;
 };
 
 #endif	/* CONFIGMANAGER_HPP */
