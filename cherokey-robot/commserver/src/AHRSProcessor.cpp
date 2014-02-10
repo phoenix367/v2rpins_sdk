@@ -20,14 +20,29 @@ AHRSProcessor::AHRSProcessor(float sf)
 , angleOffsetRoll(0.0f)
 , angleOffsetPitch(0.0f)
 , angleOffsetYaw(0.0f)
-{
-    InitAHRS(sf, &ahrsInfo);
-    
+{    
     auto instance = ConfigManager::getInstance();
     if (!instance)
     {
         COMM_EXCEPTION(NullPointerException, "Configuration manager instance "
             "is null");
+    }
+    
+    auto algoType = instance->getAHRSAlgorithm();
+    auto useMagnetometer = instance->isUseMagnetometer();
+    
+    switch (algoType)
+    {
+        case AHRSAlgorithm::Madgwick:
+            ahrsImpl = std::unique_ptr<AHRSStrategy>(new MadgwickAHRS(sf,
+                    useMagnetometer));
+            break;
+        case AHRSAlgorithm::Mahony:
+            ahrsImpl = std::unique_ptr<AHRSStrategy>(new MahonyAHRS(sf,
+                    useMagnetometer));
+            break;
+        default:
+            COMM_EXCEPTION(InternalError, "Unsupported AHRS algorithm");
     }
     
     compassOffsets = instance->getCompassOffsets();
@@ -57,29 +72,19 @@ void AHRSProcessor::updateState(const IMUSensorsData& data, float& roll,
     float gyroX = filterGyroValue(data.rawGyroX, gyroOffsetX);
     float gyroY = filterGyroValue(data.rawGyroY, gyroOffsetY);
     float gyroZ = filterGyroValue(data.rawGyroZ, gyroOffsetZ);
+    
+    IMUSensorsData processedData;
+    processedData.rawGyroX = gyroX * M_PI / 180;
+    processedData.rawGyroY = gyroY * M_PI / 180;
+    processedData.rawGyroZ = gyroZ * M_PI / 180;
+    processedData.rawAccelX = data.rawAccelX;
+    processedData.rawAccelY = data.rawAccelY;
+    processedData.rawAccelZ = data.rawAccelZ;
+    processedData.rawCompassX = data.rawCompassX - compassOffsets.V_x;
+    processedData.rawCompassY = data.rawCompassY - compassOffsets.V_y;
+    processedData.rawCompassZ = data.rawCompassZ - compassOffsets.V_z;
 
-    MadgwickAHRSupdateIMU(
-            gyroX * M_PI / 180, 
-            gyroY * M_PI / 180, 
-            gyroZ * M_PI / 180, 
-            data.rawAccelX, 
-            data.rawAccelY, 
-            data.rawAccelZ,
-            &ahrsInfo);
-
-//    MadgwickAHRSupdate(
-//            gyroX * M_PI / 180, 
-//            gyroY * M_PI / 180, 
-//            gyroZ * M_PI / 180, 
-//            data.rawAccelX, 
-//            data.rawAccelY, 
-//            data.rawAccelZ,
-//            data.rawCompassX - compassOffsets.V_x,
-//            data.rawCompassY - compassOffsets.V_y,
-//            data.rawCompassZ - compassOffsets.V_z,
-//            &ahrsInfo);
-
-    Quaternion2Euler(&ahrsInfo, &roll, &pitch, &yaw);
+    ahrsImpl->updateState(processedData, roll, pitch, yaw);
 
     roll = roll * 180 / M_PI - angleOffsetRoll;
     pitch = pitch * 180 / M_PI - angleOffsetPitch;

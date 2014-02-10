@@ -11,6 +11,7 @@
 #include <memory>
 #include <boost/program_options/options_description.hpp>
 #include <boost/asio/ip/address.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
 
 struct ConnectionInfo
 {
@@ -23,6 +24,12 @@ struct CompassOffsets
     float V_x;
     float V_y;
     float V_z;
+};
+
+enum class AHRSAlgorithm
+{
+    Madgwick,
+    Mahony
 };
 
 class ConfigManager 
@@ -43,6 +50,9 @@ public:
     uint32_t getGPSDeviceBaudrate();
     CompassOffsets getCompassOffsets();
     float getGyroThreshold();
+    AHRSAlgorithm getAHRSAlgorithm();
+    bool isUseMagnetometer();
+    boost::numeric::ublas::matrix<float> getSoftIronMatrix();
     
 private:
     static std::unique_ptr<ConfigManager> instance;
@@ -56,7 +66,10 @@ private:
     static const std::string IMU_COMPASS_X_OFFSET;
     static const std::string IMU_COMPASS_Y_OFFSET;
     static const std::string IMU_COMPASS_Z_OFFSET;
+    static const std::string IMU_COMPASS_SOFT_IRON;
     static const std::string IMU_GYRO_THRESHOLD;
+    static const std::string IMU_AHRS_ALGO;
+    static const std::string IMU_USE_MAGNETOMETER;
     
     boost::program_options::options_description desc;
     std::shared_ptr<ConnectionInfo> connectionInfo;
@@ -65,6 +78,9 @@ private:
     uint32_t gpsSerialBaudrate;
     CompassOffsets compassOffsets;
     float gyroThreshold;
+    AHRSAlgorithm ahrsAlgorithm;
+    bool useMagnetometer;
+    boost::numeric::ublas::matrix<float> softIronMatrix;
 };
 
 #endif	/* CONFIGMANAGER_HPP */

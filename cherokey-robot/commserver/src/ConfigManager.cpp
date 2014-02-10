@@ -12,6 +12,10 @@
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options.hpp>
 #include <boost/exception/diagnostic_information.hpp>
+#include <boost/algorithm/string.hpp>
+
+#define MAHONY_ALGO_NAME        "Mahony"
+#define MADGWICK_ALGO_NAME      "Madgwick"
 
 std::unique_ptr<ConfigManager> ConfigManager::instance;
 
@@ -25,6 +29,9 @@ const std::string ConfigManager::IMU_COMPASS_X_OFFSET = "IMU.V_x";
 const std::string ConfigManager::IMU_COMPASS_Y_OFFSET = "IMU.V_y";
 const std::string ConfigManager::IMU_COMPASS_Z_OFFSET = "IMU.V_z";
 const std::string ConfigManager::IMU_GYRO_THRESHOLD = "IMU.GyroThreshold";
+const std::string ConfigManager::IMU_AHRS_ALGO = "IMU.AHRSAlgo";
+const std::string ConfigManager::IMU_USE_MAGNETOMETER = "IMU.UseMagnetometer";
+const std::string ConfigManager::IMU_COMPASS_SOFT_IRON = "IMU.SoftIronMatrix";
 
 ConfigManager::ConfigManager() 
 : desc("Options")
@@ -50,7 +57,14 @@ ConfigManager::ConfigManager()
         (IMU_COMPASS_Z_OFFSET.c_str(), boost::program_options::value<float>(),
             "Offset of compass Z axis")
         (IMU_GYRO_THRESHOLD.c_str(), boost::program_options::value<float>(),
-            "Gyroscope angular threshold");
+            "Gyroscope angular threshold")
+        (IMU_AHRS_ALGO.c_str(), boost::program_options::value<std::string>(),
+            "AHRS algorithm")
+        (IMU_USE_MAGNETOMETER.c_str(), boost::program_options::value<bool>(),
+            "Specify use or not magnetometer data is AHRS algorithm")
+        (IMU_COMPASS_SOFT_IRON.c_str(), boost::program_options::value<std::string>(),
+            "Soft iron transform matrix")
+        ;
 }
 
 ConfigManager::~ConfigManager() 
@@ -186,6 +200,48 @@ void ConfigManager::loadConfiguration(const std::string& fileName)
         {
             gyroThreshold = 0.0f;
         }
+        
+        if (vm.count(IMU_AHRS_ALGO))
+        {
+            if (boost::iequals(MADGWICK_ALGO_NAME, 
+                    vm[IMU_AHRS_ALGO].as<std::string>()))
+            {
+                ahrsAlgorithm = AHRSAlgorithm::Madgwick;
+            }
+            else if (boost::iequals(MAHONY_ALGO_NAME, 
+                    vm[IMU_AHRS_ALGO].as<std::string>()))
+            {
+                ahrsAlgorithm = AHRSAlgorithm::Mahony;
+            }
+            else
+            {
+                COMM_EXCEPTION(ConfigurationException, 
+                        "Invalid AHRS algorithm type");
+            }
+        }
+        else
+        {
+            ahrsAlgorithm = AHRSAlgorithm::Madgwick;
+        }
+        
+        if (vm.count(IMU_USE_MAGNETOMETER))
+        {
+            useMagnetometer = vm[IMU_USE_MAGNETOMETER].as<bool>();
+        }
+        else
+        {
+            useMagnetometer = false;
+        }
+        
+        if (vm.count(IMU_COMPASS_SOFT_IRON))
+        {
+            std::cout << vm[IMU_COMPASS_SOFT_IRON].as<std::string>() << std::endl;
+        }
+        else
+        {
+            softIronMatrix = boost::numeric::ublas::identity_matrix<float>(3, 
+                    3);
+        }
     }
     catch (Exception&)
     {
@@ -225,4 +281,19 @@ CompassOffsets ConfigManager::getCompassOffsets()
 float ConfigManager::getGyroThreshold()
 {
     return gyroThreshold;
+}
+
+AHRSAlgorithm ConfigManager::getAHRSAlgorithm()
+{
+    return ahrsAlgorithm;
+}
+
+bool ConfigManager::isUseMagnetometer()
+{
+    return useMagnetometer;
+}
+
+boost::numeric::ublas::matrix<float> ConfigManager::getSoftIronMatrix()
+{
+    return softIronMatrix;
 }

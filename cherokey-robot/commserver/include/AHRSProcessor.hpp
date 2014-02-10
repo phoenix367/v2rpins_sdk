@@ -10,6 +10,7 @@
 
 #include "madgwik_ahrs.h"
 #include "ConfigManager.hpp"
+#include "AHRSStrategy.hpp"
 
 struct IMUSensorsData;
 
@@ -30,7 +31,7 @@ private:
 private:
     static const float GYROSCOPE_SENSITIVITY;    
     
-    AHRS_INFO ahrsInfo;
+    std::unique_ptr<AHRSStrategy> ahrsImpl;
     float gyroOffsetX;
     float gyroOffsetY;
     float gyroOffsetZ;

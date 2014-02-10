@@ -27,25 +27,50 @@ extern "C" {
     
 #include <stdbool.h>
 
-typedef struct {
-    float sampleFreq;
-    float beta;
+typedef struct
+{
     float q0;
     float q1;
     float q2;
     float q3;
-} AHRS_INFO;
+} QUATERNION;
+
+typedef struct 
+{
+    float sampleFreq;
+    float beta;
+    QUATERNION Q;
+} MADGWICK_AHRS_INFO;
+
+typedef struct 
+{
+    float sampleFreq;
+    float twoKp;
+    float twoKi;
+    QUATERNION Q;
+    
+    // integral error terms scaled by Ki
+    float integralFBx;
+    float integralFBy;
+    float integralFBz;
+} MAHONY_AHRS_INFO;
 
 //---------------------------------------------------------------------------------------------------
 // Function declarations
 
-void InitAHRS(float sampleRate, AHRS_INFO* ahrs);
+bool InitMadgwickAHRS(float sampleRate, MADGWICK_AHRS_INFO* ahrs);
 void MadgwickAHRSupdate(float gx, float gy, float gz, float ax, float ay, 
-        float az, float mx, float my, float mz, AHRS_INFO* ahrs);
+        float az, float mx, float my, float mz, MADGWICK_AHRS_INFO* ahrs);
 void MadgwickAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay, 
-        float az, AHRS_INFO* ahrs);
-bool Quaternion2Euler(const AHRS_INFO* ahrs, float *phi, float* theta,
+        float az, MADGWICK_AHRS_INFO* ahrs);
+bool Quaternion2Euler(const QUATERNION* q, float *phi, float* theta,
         float* psi);
+
+bool InitMahonyAHRS(float sampleRate, MAHONY_AHRS_INFO* ahrs);
+void MahonyAHRSupdate(float gx, float gy, float gz, float ax, float ay, 
+        float az, float mx, float my, float mz, MAHONY_AHRS_INFO* ahrs);
+void MahonyAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay, 
+        float az, MAHONY_AHRS_INFO* ahrs);
 
 #ifdef	__cplusplus
 }

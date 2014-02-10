@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/messages/common.pb.o \
 	${OBJECTDIR}/messages/sensors.pb.o \
 	${OBJECTDIR}/src/AHRSProcessor.o \
+	${OBJECTDIR}/src/AHRSStrategy.o \
 	${OBJECTDIR}/src/ConfigManager.o \
 	${OBJECTDIR}/src/ConnectionListener.o \
 	${OBJECTDIR}/src/DriveController.o \
@@ -93,6 +94,11 @@ ${OBJECTDIR}/src/AHRSProcessor.o: src/AHRSProcessor.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/AHRSProcessor.o src/AHRSProcessor.cpp
+
+${OBJECTDIR}/src/AHRSStrategy.o: src/AHRSStrategy.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/AHRSStrategy.o src/AHRSStrategy.cpp
 
 ${OBJECTDIR}/src/ConfigManager.o: src/ConfigManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src

@@ -8,6 +8,7 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>include/AHRSProcessor.hpp</itemPath>
+      <itemPath>include/AHRSStrategy.hpp</itemPath>
       <itemPath>include/ConfigManager.hpp</itemPath>
       <itemPath>include/ConnectionListener.hpp</itemPath>
       <itemPath>include/DriveController.hpp</itemPath>
@@ -36,6 +37,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>src/AHRSProcessor.cpp</itemPath>
+      <itemPath>src/AHRSStrategy.cpp</itemPath>
       <itemPath>src/ConfigManager.cpp</itemPath>
       <itemPath>src/ConnectionListener.cpp</itemPath>
       <itemPath>src/DriveController.cpp</itemPath>
@@ -132,6 +134,8 @@
       </item>
       <item path="include/AHRSProcessor.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/AHRSStrategy.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/ConfigManager.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/ConnectionListener.hpp" ex="false" tool="3" flavor2="0">
@@ -163,6 +167,8 @@
       <item path="messages/sensors.pb.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/AHRSProcessor.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/AHRSStrategy.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/ConfigManager.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -282,6 +288,8 @@
       </item>
       <item path="include/AHRSProcessor.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/AHRSStrategy.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/ConfigManager.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/ConnectionListener.hpp" ex="false" tool="3" flavor2="0">
@@ -313,6 +321,8 @@
       <item path="messages/sensors.pb.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/AHRSProcessor.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/AHRSStrategy.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/ConfigManager.cpp" ex="false" tool="1" flavor2="0">
       </item>
