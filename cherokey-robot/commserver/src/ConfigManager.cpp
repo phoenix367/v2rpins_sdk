@@ -235,7 +235,14 @@ void ConfigManager::loadConfiguration(const std::string& fileName)
         
         if (vm.count(IMU_COMPASS_SOFT_IRON))
         {
-            std::cout << vm[IMU_COMPASS_SOFT_IRON].as<std::string>() << std::endl;
+            softIronMatrix = parseMatrixFromString(
+                    vm[IMU_COMPASS_SOFT_IRON].as<std::string>());
+            
+            if (softIronMatrix.size1() != 3 && softIronMatrix.size2() != 3)
+            {
+                COMM_EXCEPTION(ConfigurationException, 
+                        "Invalid Soft-Iron matrix size");
+            }
         }
         else
         {
@@ -296,4 +303,66 @@ bool ConfigManager::isUseMagnetometer()
 boost::numeric::ublas::matrix<float> ConfigManager::getSoftIronMatrix()
 {
     return softIronMatrix;
+}
+
+boost::numeric::ublas::matrix<float> ConfigManager::parseMatrixFromString(
+    const std::string& str)
+{
+    boost::numeric::ublas::matrix<float> m;
+    
+    if (!(boost::starts_with(str, "[") && boost::ends_with(str, "]")))
+    {
+        COMM_EXCEPTION(ConfigurationException, "Can't parse matrix string");
+    }
+    
+    std::string unbrackedStr = str.substr(1, str.size() - 2);
+    std::istringstream rowStream(unbrackedStr);
+    std::vector<std::vector<float>> vectorizedMatrix;
+    
+    while (!rowStream.eof())
+    {
+        std::string columnStr;
+        std::getline(rowStream, columnStr, ';');
+        
+        std::istringstream columnStream(columnStr);
+        std::vector<float> columnVector;
+        while (!columnStream.eof())
+        {
+            float item;
+            columnStream >> item;
+            
+            columnVector.push_back(item);
+        }
+        
+        vectorizedMatrix.push_back(columnVector);
+    }
+    
+    // Check loaded matrix
+    
+    if (!vectorizedMatrix.empty())
+    {
+        size_t columnSize = vectorizedMatrix[0].size();
+        size_t rowSize = vectorizedMatrix.size();
+        
+        for (size_t i = 1; i < rowSize; i++)
+        {
+            if (columnSize != vectorizedMatrix[i].size())
+            {
+                COMM_EXCEPTION(ConfigurationException, 
+                        "Incorrect matrix string");
+            }
+        }
+        
+        m = boost::numeric::ublas::matrix<float>(rowSize, columnSize);
+        
+        for (size_t i = 0; i < rowSize; i++)
+        {
+            for (size_t j = 0; j < columnSize; j++)
+            {
+                m(i, j) = vectorizedMatrix[i][j];
+            }
+        }
+    }
+    
+    return m;
 }

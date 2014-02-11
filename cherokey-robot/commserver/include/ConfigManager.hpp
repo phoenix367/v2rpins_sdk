@@ -55,6 +55,10 @@ public:
     boost::numeric::ublas::matrix<float> getSoftIronMatrix();
     
 private:
+    boost::numeric::ublas::matrix<float> parseMatrixFromString(
+        const std::string& str);
+    
+private:
     static std::unique_ptr<ConfigManager> instance;
     
     static const std::string IP_ADDRESS_KEY;
