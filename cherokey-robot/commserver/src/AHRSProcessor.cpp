@@ -47,6 +47,9 @@ AHRSProcessor::AHRSProcessor(float sf)
     
     compassOffsets = instance->getCompassOffsets();
     gyroThreshold = instance->getGyroThreshold();
+    softIronMatrix = instance->getSoftIronMatrix();
+    
+    assert(softIronMatrix.size1() == 3 && softIronMatrix.size2() == 3);
 }
 
 AHRSProcessor::~AHRSProcessor() 
@@ -73,16 +76,27 @@ void AHRSProcessor::updateState(const IMUSensorsData& data, float& roll,
     float gyroY = filterGyroValue(data.rawGyroY, gyroOffsetY);
     float gyroZ = filterGyroValue(data.rawGyroZ, gyroOffsetZ);
     
-    IMUSensorsData processedData;
+    IMUSensorsData processedData = { 0 };
     processedData.rawGyroX = gyroX * M_PI / 180;
     processedData.rawGyroY = gyroY * M_PI / 180;
     processedData.rawGyroZ = gyroZ * M_PI / 180;
     processedData.rawAccelX = data.rawAccelX;
     processedData.rawAccelY = data.rawAccelY;
     processedData.rawAccelZ = data.rawAccelZ;
-    processedData.rawCompassX = data.rawCompassX - compassOffsets.V_x;
-    processedData.rawCompassY = data.rawCompassY - compassOffsets.V_y;
-    processedData.rawCompassZ = data.rawCompassZ - compassOffsets.V_z;
+    
+    if (ahrsImpl->isMagnetometerUsed())
+    {
+        float BcX = data.rawCompassX - compassOffsets.V_x;
+        float BcY = data.rawCompassY - compassOffsets.V_y;
+        float BcZ = data.rawCompassZ - compassOffsets.V_z;
+        
+        processedData.rawCompassX = softIronMatrix(0, 0) * BcX +
+                softIronMatrix(0, 1) * BcY + softIronMatrix(0, 2) * BcZ;
+        processedData.rawCompassY = softIronMatrix(1, 0) * BcX +
+                softIronMatrix(1, 1) * BcY + softIronMatrix(1, 2) * BcZ;
+        processedData.rawCompassZ = softIronMatrix(2, 0) * BcX +
+                softIronMatrix(2, 1) * BcY + softIronMatrix(2, 2) * BcZ;
+    }
 
     ahrsImpl->updateState(processedData, roll, pitch, yaw);
 

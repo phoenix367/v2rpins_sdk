@@ -13,6 +13,11 @@ AHRSStrategy::~AHRSStrategy()
     
 }
 
+bool AHRSStrategy::isMagnetometerUsed()
+{
+    return useMagnetometer;
+}
+
 MadgwickAHRS::MadgwickAHRS(float sr, bool um)
 : AHRSStrategy(sr, um)
 {

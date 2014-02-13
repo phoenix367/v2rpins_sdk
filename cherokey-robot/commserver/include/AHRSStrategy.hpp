@@ -20,6 +20,7 @@ public:
     
     virtual void updateState(const IMUSensorsData& data, float &roll,
         float& pitch, float& yaw) = 0;
+    bool isMagnetometerUsed();
     
 protected:
     float sampleRate;

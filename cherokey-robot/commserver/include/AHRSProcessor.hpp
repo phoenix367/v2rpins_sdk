@@ -42,6 +42,7 @@ private:
     
     CompassOffsets compassOffsets;
     float gyroThreshold;
+    boost::numeric::ublas::matrix<float> softIronMatrix;
 };
 
 #endif	/* AHRSPROCESSOR_HPP */
