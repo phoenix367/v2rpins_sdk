@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'MainForm.ui'
 **
-** Created: Wed Feb 5 01:33:45 2014
+** Created: Thu Feb 13 23:55:22 2014
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -23,7 +23,9 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QRadioButton>
 #include <QtGui/QSlider>
+#include <QtGui/QTabWidget>
 #include <QtGui/QToolButton>
+#include <QtGui/QWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -58,17 +60,19 @@ public:
     QLineEdit *txtSensorsPort;
     QGraphicsView *graphicsView;
     QLabel *label_11;
-    QGraphicsView *videoView;
-    QLabel *label_12;
     QFrame *frame;
     QRadioButton *rbtWiFi;
     QRadioButton *rbtRadio;
+    QTabWidget *tabWidget;
+    QWidget *tab;
+    QGraphicsView *videoView;
+    QWidget *tab_2;
 
     void setupUi(QDialog *MainForm)
     {
         if (MainForm->objectName().isEmpty())
             MainForm->setObjectName(QString::fromUtf8("MainForm"));
-        MainForm->resize(870, 611);
+        MainForm->resize(870, 617);
         btnConnect = new QPushButton(MainForm);
         btnConnect->setObjectName(QString::fromUtf8("btnConnect"));
         btnConnect->setGeometry(QRect(240, 40, 93, 27));
@@ -161,16 +165,10 @@ public:
         txtSensorsPort->setGeometry(QRect(20, 150, 81, 27));
         graphicsView = new QGraphicsView(MainForm);
         graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
-        graphicsView->setGeometry(QRect(450, 40, 401, 251));
+        graphicsView->setGeometry(QRect(450, 40, 411, 221));
         label_11 = new QLabel(MainForm);
         label_11->setObjectName(QString::fromUtf8("label_11"));
         label_11->setGeometry(QRect(450, 20, 121, 17));
-        videoView = new QGraphicsView(MainForm);
-        videoView->setObjectName(QString::fromUtf8("videoView"));
-        videoView->setGeometry(QRect(450, 330, 401, 271));
-        label_12 = new QLabel(MainForm);
-        label_12->setObjectName(QString::fromUtf8("label_12"));
-        label_12->setGeometry(QRect(450, 300, 101, 17));
         frame = new QFrame(MainForm);
         frame->setObjectName(QString::fromUtf8("frame"));
         frame->setGeometry(QRect(20, 230, 201, 71));
@@ -182,8 +180,23 @@ public:
         rbtRadio = new QRadioButton(frame);
         rbtRadio->setObjectName(QString::fromUtf8("rbtRadio"));
         rbtRadio->setGeometry(QRect(10, 40, 181, 22));
+        tabWidget = new QTabWidget(MainForm);
+        tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
+        tabWidget->setGeometry(QRect(450, 270, 411, 331));
+        tab = new QWidget();
+        tab->setObjectName(QString::fromUtf8("tab"));
+        videoView = new QGraphicsView(tab);
+        videoView->setObjectName(QString::fromUtf8("videoView"));
+        videoView->setGeometry(QRect(10, 10, 391, 281));
+        tabWidget->addTab(tab, QString());
+        tab_2 = new QWidget();
+        tab_2->setObjectName(QString::fromUtf8("tab_2"));
+        tabWidget->addTab(tab_2, QString());
 
         retranslateUi(MainForm);
+
+        tabWidget->setCurrentIndex(1);
+
 
         QMetaObject::connectSlotsByName(MainForm);
     } // setupUi
@@ -212,9 +225,10 @@ public:
         label_6->setText(QApplication::translate("MainForm", "Command server port:", 0, QApplication::UnicodeUTF8));
         label_7->setText(QApplication::translate("MainForm", "Sensors publisher port:", 0, QApplication::UnicodeUTF8));
         label_11->setText(QApplication::translate("MainForm", "Platform position", 0, QApplication::UnicodeUTF8));
-        label_12->setText(QApplication::translate("MainForm", "Platform Video", 0, QApplication::UnicodeUTF8));
         rbtWiFi->setText(QApplication::translate("MainForm", "Video via Wi-Fi", 0, QApplication::UnicodeUTF8));
         rbtRadio->setText(QApplication::translate("MainForm", "Analog Video via RC", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainForm", "Platform video", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("MainForm", "Odometry", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
