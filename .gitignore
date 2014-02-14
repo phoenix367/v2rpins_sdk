@@ -25,3 +25,5 @@ pincontroller/build/
 /cherokey-robot/madgwik_ahrs/dist/
 /cherokey-robot/compass_calibrator/build/
 /cherokey-robot/compass_calibrator/dist/
+/cherokey-robot/qwtplot3d/dist/
+/cherokey-robot/qwtplot3d/build/

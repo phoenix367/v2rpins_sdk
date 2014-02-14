@@ -16,6 +16,7 @@
 #include <QKeyEvent>
 #include <QHBoxLayout>
 #include <QGst/Parse>
+#include <QGridLayout>
 
 MainForm::MainForm()
 : connected(false)
@@ -68,6 +69,26 @@ MainForm::MainForm()
     videoWidget->resize(widgetSize.width(), widgetSize.height());
     
     widget.rbtWiFi->setChecked(true);
+    
+    QGridLayout *grid = new QGridLayout(widget.tabOdometry);
+    odometryPlot = new Qwt3D::SurfacePlot(widget.tabOdometry);
+    grid->addWidget( odometryPlot, 0, 0 );
+    
+    odometryPlot->setTitle("Platform IMU odometry");
+    odometryPlot->setTitleFont("Arial", 12);
+    odometryPlot->setCoordinateStyle(Qwt3D::FRAME);
+    for (size_t i = 0; i < odometryPlot->coordinates()->axes.size(); ++i)
+    {
+        odometryPlot->coordinates()->axes[i].setMajors(5);
+        odometryPlot->coordinates()->axes[i].setMinors(4);
+    }
+
+    odometryPlot->coordinates()->setGridLinesColor(Qwt3D::RGBA(0,0,0.5));
+    odometryPlot->coordinates()->setLineWidth(1);
+    odometryPlot->coordinates()->setNumberFont("Courier",8);
+    odometryPlot->coordinates()->adjustNumbers(5);
+    odometryPlot->updateData();
+    odometryPlot->updateGL();
 }
 
 MainForm::~MainForm() 

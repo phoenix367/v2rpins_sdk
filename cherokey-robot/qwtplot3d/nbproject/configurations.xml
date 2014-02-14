@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="89">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="f1" displayName="3pty" projectFiles="true" kind="ROOT">
+      <itemPath>3rdparty/gl2ps/gl2ps.c</itemPath>
+      <itemPath>3rdparty/gl2ps/gl2ps.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>include/qwt3d_autoptr.h</itemPath>
+      <itemPath>include/qwt3d_autoscaler.h</itemPath>
+      <itemPath>include/qwt3d_axis.h</itemPath>
+      <itemPath>include/qwt3d_color.h</itemPath>
+      <itemPath>include/qwt3d_colorlegend.h</itemPath>
+      <itemPath>include/qwt3d_coordsys.h</itemPath>
+      <itemPath>include/qwt3d_drawable.h</itemPath>
+      <itemPath>include/qwt3d_enrichment.h</itemPath>
+      <itemPath>include/qwt3d_enrichment_std.h</itemPath>
+      <itemPath>include/qwt3d_function.h</itemPath>
+      <itemPath>include/qwt3d_global.h</itemPath>
+      <itemPath>include/qwt3d_graphplot.h</itemPath>
+      <itemPath>include/qwt3d_gridmapping.h</itemPath>
+      <itemPath>include/qwt3d_helper.h</itemPath>
+      <itemPath>include/qwt3d_io.h</itemPath>
+      <itemPath>include/qwt3d_io_gl2ps.h</itemPath>
+      <itemPath>include/qwt3d_io_reader.h</itemPath>
+      <itemPath>include/qwt3d_label.h</itemPath>
+      <itemPath>include/qwt3d_mapping.h</itemPath>
+      <itemPath>include/qwt3d_multiplot.h</itemPath>
+      <itemPath>include/qwt3d_openglhelper.h</itemPath>
+      <itemPath>include/qwt3d_parametricsurface.h</itemPath>
+      <itemPath>include/qwt3d_plot.h</itemPath>
+      <itemPath>include/qwt3d_portability.h</itemPath>
+      <itemPath>include/qwt3d_scale.h</itemPath>
+      <itemPath>include/qwt3d_surfaceplot.h</itemPath>
+      <itemPath>include/qwt3d_types.h</itemPath>
+      <itemPath>include/qwt3d_volumeplot.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <itemPath>src/qwt3d_autoscaler.cpp</itemPath>
+      <itemPath>src/qwt3d_axis.cpp</itemPath>
+      <itemPath>src/qwt3d_color.cpp</itemPath>
+      <itemPath>src/qwt3d_colorlegend.cpp</itemPath>
+      <itemPath>src/qwt3d_coordsys.cpp</itemPath>
+      <itemPath>src/qwt3d_dataviews.cpp</itemPath>
+      <itemPath>src/qwt3d_drawable.cpp</itemPath>
+      <itemPath>src/qwt3d_enrichment_std.cpp</itemPath>
+      <itemPath>src/qwt3d_function.cpp</itemPath>
+      <itemPath>src/qwt3d_gridmapping.cpp</itemPath>
+      <itemPath>src/qwt3d_gridplot.cpp</itemPath>
+      <itemPath>src/qwt3d_io.cpp</itemPath>
+      <itemPath>src/qwt3d_io_gl2ps.cpp</itemPath>
+      <itemPath>src/qwt3d_io_reader.cpp</itemPath>
+      <itemPath>src/qwt3d_label.cpp</itemPath>
+      <itemPath>src/qwt3d_lighting.cpp</itemPath>
+      <itemPath>src/qwt3d_meshplot.cpp</itemPath>
+      <itemPath>src/qwt3d_mousekeyboard.cpp</itemPath>
+      <itemPath>src/qwt3d_movements.cpp</itemPath>
+      <itemPath>src/qwt3d_parametricsurface.cpp</itemPath>
+      <itemPath>src/qwt3d_plot.cpp</itemPath>
+      <itemPath>src/qwt3d_scale.cpp</itemPath>
+      <itemPath>src/qwt3d_surfaceplot.cpp</itemPath>
+      <itemPath>src/qwt3d_types.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="6">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <qt>
+        <modules>core gui opengl</modules>
+        <mocDir>moc</mocDir>
+      </qt>
+      <compileType>
+        <ccTool>
+          <incDir>
+            <pElem>include</pElem>
+          </incDir>
+        </ccTool>
+        <archiverTool>
+        </archiverTool>
+      </compileType>
+      <item path="3rdparty/gl2ps/gl2ps.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="3rdparty/gl2ps/gl2ps.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_autoptr.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_autoscaler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_axis.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_color.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_colorlegend.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_coordsys.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_drawable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_enrichment.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_enrichment_std.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_function.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_global.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_graphplot.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_gridmapping.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_helper.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_io.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_io_gl2ps.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_io_reader.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_label.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_mapping.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_multiplot.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_openglhelper.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_parametricsurface.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_plot.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_portability.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_scale.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_surfaceplot.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_types.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_volumeplot.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/qwt3d_autoscaler.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_axis.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_color.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_colorlegend.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_coordsys.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_dataviews.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_drawable.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_enrichment_std.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_function.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_gridmapping.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_gridplot.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_io.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_io_gl2ps.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_io_reader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_label.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_lighting.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_meshplot.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_mousekeyboard.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_movements.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_parametricsurface.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_plot.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_scale.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_surfaceplot.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_types.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="6">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <qt>
+        <buildMode>1</buildMode>
+        <modules>core gui</modules>
+      </qt>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <archiverTool>
+        </archiverTool>
+      </compileType>
+      <item path="3rdparty/gl2ps/gl2ps.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="3rdparty/gl2ps/gl2ps.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_autoptr.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_autoscaler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_axis.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_color.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_colorlegend.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_coordsys.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_drawable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_enrichment.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_enrichment_std.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_function.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_global.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_graphplot.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_gridmapping.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_helper.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_io.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_io_gl2ps.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_io_reader.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_label.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_mapping.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_multiplot.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_openglhelper.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_parametricsurface.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_plot.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_portability.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_scale.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_surfaceplot.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_types.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/qwt3d_volumeplot.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/qwt3d_autoscaler.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_axis.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_color.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_colorlegend.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_coordsys.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_dataviews.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_drawable.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_enrichment_std.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_function.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_gridmapping.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_gridplot.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_io.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_io_gl2ps.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_io_reader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_label.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_lighting.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_meshplot.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_mousekeyboard.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_movements.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_parametricsurface.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_plot.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_scale.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_surfaceplot.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/qwt3d_types.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

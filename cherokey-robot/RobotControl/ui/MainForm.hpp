@@ -11,6 +11,9 @@
 #include "ui_MainForm.h"
 #include "RemoteConnector.hpp"
 #include "../PlatformModel.hpp"
+#include "qwt3d_surfaceplot.h"
+#include "qwt3d_function.h"
+#include "qwt3d_plot.h"
 
 #include <QGst/Pipeline>
 #include <QGst/Ui/VideoWidget>
@@ -54,6 +57,7 @@ private:
     PlatformModel *platformWidget;
     QGst::PipelinePtr m_pipeline;
     QGst::Ui::VideoWidget *videoWidget;
+    Qwt3D::SurfacePlot* odometryPlot;
 };
 
 #endif	/* _MAINFORM_HPP */

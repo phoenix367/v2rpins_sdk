@@ -444,9 +444,9 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
-   <widget class="QWidget" name="tab">
+   <widget class="QWidget" name="tabVideo">
     <attribute name="title">
      <string>Platform video</string>
     </attribute>
@@ -461,7 +461,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="tab_2">
+   <widget class="QWidget" name="tabOdometry">
     <attribute name="title">
      <string>Odometry</string>
     </attribute>

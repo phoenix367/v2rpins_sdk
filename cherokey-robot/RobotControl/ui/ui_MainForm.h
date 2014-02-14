@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'MainForm.ui'
 **
-** Created: Thu Feb 13 23:55:22 2014
+** Created: Sat Feb 15 01:21:57 2014
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -64,9 +64,9 @@ public:
     QRadioButton *rbtWiFi;
     QRadioButton *rbtRadio;
     QTabWidget *tabWidget;
-    QWidget *tab;
+    QWidget *tabVideo;
     QGraphicsView *videoView;
-    QWidget *tab_2;
+    QWidget *tabOdometry;
 
     void setupUi(QDialog *MainForm)
     {
@@ -183,19 +183,19 @@ public:
         tabWidget = new QTabWidget(MainForm);
         tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
         tabWidget->setGeometry(QRect(450, 270, 411, 331));
-        tab = new QWidget();
-        tab->setObjectName(QString::fromUtf8("tab"));
-        videoView = new QGraphicsView(tab);
+        tabVideo = new QWidget();
+        tabVideo->setObjectName(QString::fromUtf8("tabVideo"));
+        videoView = new QGraphicsView(tabVideo);
         videoView->setObjectName(QString::fromUtf8("videoView"));
         videoView->setGeometry(QRect(10, 10, 391, 281));
-        tabWidget->addTab(tab, QString());
-        tab_2 = new QWidget();
-        tab_2->setObjectName(QString::fromUtf8("tab_2"));
-        tabWidget->addTab(tab_2, QString());
+        tabWidget->addTab(tabVideo, QString());
+        tabOdometry = new QWidget();
+        tabOdometry->setObjectName(QString::fromUtf8("tabOdometry"));
+        tabWidget->addTab(tabOdometry, QString());
 
         retranslateUi(MainForm);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainForm);
@@ -227,8 +227,8 @@ public:
         label_11->setText(QApplication::translate("MainForm", "Platform position", 0, QApplication::UnicodeUTF8));
         rbtWiFi->setText(QApplication::translate("MainForm", "Video via Wi-Fi", 0, QApplication::UnicodeUTF8));
         rbtRadio->setText(QApplication::translate("MainForm", "Analog Video via RC", 0, QApplication::UnicodeUTF8));
-        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainForm", "Platform video", 0, QApplication::UnicodeUTF8));
-        tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("MainForm", "Odometry", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(tabVideo), QApplication::translate("MainForm", "Platform video", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(tabOdometry), QApplication::translate("MainForm", "Odometry", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
