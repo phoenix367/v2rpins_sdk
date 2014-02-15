@@ -42,6 +42,7 @@ TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 
 # Test Files
 TESTFILES= \
+	${TESTDIR}/TestFiles/f2 \
 	${TESTDIR}/TestFiles/f1
 
 # C Compiler Flags
@@ -80,9 +81,25 @@ ${OBJECTDIR}/src/madgwik_ahrs.o: src/madgwik_ahrs.c
 
 # Build Test Targets
 .build-tests-conf: .build-conf ${TESTFILES}
+${TESTDIR}/TestFiles/f2: ${TESTDIR}/tests/QuaternionOperations.o ${TESTDIR}/tests/quaternion_operations.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc}   -o ${TESTDIR}/TestFiles/f2 $^ ${LDLIBSOPTIONS} `cppunit-config --libs`   
+
 ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/TestEuler.o ${TESTDIR}/tests/euler_test.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.cc}   -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS} `cppunit-config --libs`   
+
+
+${TESTDIR}/tests/QuaternionOperations.o: tests/QuaternionOperations.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} $@.d
+	$(COMPILE.cc) -g -Iinclude `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/QuaternionOperations.o tests/QuaternionOperations.cpp
+
+
+${TESTDIR}/tests/quaternion_operations.o: tests/quaternion_operations.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} $@.d
+	$(COMPILE.cc) -g -Iinclude `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/quaternion_operations.o tests/quaternion_operations.cpp
 
 
 ${TESTDIR}/tests/TestEuler.o: tests/TestEuler.cpp 
@@ -114,6 +131,7 @@ ${OBJECTDIR}/src/madgwik_ahrs_nomain.o: ${OBJECTDIR}/src/madgwik_ahrs.o src/madg
 .test-conf:
 	@if [ "${TEST}" = "" ]; \
 	then  \
+	    ${TESTDIR}/TestFiles/f2 || true; \
 	    ${TESTDIR}/TestFiles/f1 || true; \
 	else  \
 	    ./${TEST} || true; \

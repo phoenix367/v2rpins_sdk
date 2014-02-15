@@ -63,14 +63,18 @@ void MadgwickAHRSupdate(float gx, float gy, float gz, float ax, float ay,
         float az, float mx, float my, float mz, MADGWICK_AHRS_INFO* ahrs);
 void MadgwickAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay, 
         float az, MADGWICK_AHRS_INFO* ahrs);
-bool Quaternion2Euler(const QUATERNION* q, float *phi, float* theta,
-        float* psi);
 
 bool InitMahonyAHRS(float sampleRate, MAHONY_AHRS_INFO* ahrs);
 void MahonyAHRSupdate(float gx, float gy, float gz, float ax, float ay, 
         float az, float mx, float my, float mz, MAHONY_AHRS_INFO* ahrs);
 void MahonyAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay, 
         float az, MAHONY_AHRS_INFO* ahrs);
+
+bool Quaternion2Euler(const QUATERNION* q, float *phi, float* theta,
+        float* psi);
+bool QuaternionConj(const QUATERNION* q_in, QUATERNION* q_out);
+bool QuaternionProd(const QUATERNION* q_a, const QUATERNION* q_b,
+        QUATERNION* q_out);
 
 #ifdef	__cplusplus
 }

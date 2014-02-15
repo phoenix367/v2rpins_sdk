@@ -18,6 +18,21 @@
 #include <QGst/Parse>
 #include <QGridLayout>
 
+class Rosenbrock : public Qwt3D::Function
+{
+public:
+
+    Rosenbrock(Qwt3D::SurfacePlot& pw)
+    : Qwt3D::Function(pw)
+    {
+    }
+
+    double operator()(double x, double y)
+    {
+        return log((1-x)*(1-x) + 100 * (y - x*x)*(y - x*x)) / 8;
+    }
+};
+
 MainForm::MainForm()
 : connected(false)
 {
@@ -60,13 +75,13 @@ MainForm::MainForm()
     qApp->installEventFilter(this);
     
     platformWidget = new PlatformModel(widget.graphicsView);
+    QGridLayout *platformGrid = new QGridLayout(widget.graphicsView);
     
-    QSize widgetSize = widget.graphicsView->size();
-    platformWidget->resize(widgetSize.width(), widgetSize.height());
-        
-    videoWidget = new QGst::Ui::VideoWidget(widget.videoView);
-    widgetSize = widget.videoView->size();
-    videoWidget->resize(widgetSize.width(), widgetSize.height());
+    platformGrid->addWidget(platformWidget, 0, 0);
+
+    videoWidget = new QGst::Ui::VideoWidget(widget.tabVideo);
+    QGridLayout *videoGrid = new QGridLayout(widget.tabVideo);
+    videoGrid->addWidget(videoWidget, 0, 0);
     
     widget.rbtWiFi->setChecked(true);
     
@@ -74,19 +89,32 @@ MainForm::MainForm()
     odometryPlot = new Qwt3D::SurfacePlot(widget.tabOdometry);
     grid->addWidget( odometryPlot, 0, 0 );
     
+    Rosenbrock rosenbrock(*odometryPlot);
+
+    rosenbrock.setMesh(41,31);
+    rosenbrock.setDomain(-1.73,1.5,-1.5,1.5);
+    rosenbrock.setMinZ(-10);
+
+    rosenbrock.create();
+
+    odometryPlot->setRotation(30,0,15);
     odometryPlot->setTitle("Platform IMU odometry");
     odometryPlot->setTitleFont("Arial", 12);
-    odometryPlot->setCoordinateStyle(Qwt3D::FRAME);
     for (size_t i = 0; i < odometryPlot->coordinates()->axes.size(); ++i)
     {
-        odometryPlot->coordinates()->axes[i].setMajors(5);
-        odometryPlot->coordinates()->axes[i].setMinors(4);
+        odometryPlot->coordinates()->axes[i].setAutoScale(true);
     }
 
     odometryPlot->coordinates()->setGridLinesColor(Qwt3D::RGBA(0,0,0.5));
     odometryPlot->coordinates()->setLineWidth(1);
     odometryPlot->coordinates()->setNumberFont("Courier",8);
     odometryPlot->coordinates()->adjustNumbers(5);
+    
+    odometryPlot->coordinates()->axes[Qwt3D::X1].setLabelString("x-axis");
+    odometryPlot->coordinates()->axes[Qwt3D::Y1].setLabelString("y-axis");
+    odometryPlot->coordinates()->axes[Qwt3D::Z1].setLabelString("z-axis");
+
+    odometryPlot->setCoordinateStyle(Qwt3D::BOX);
     odometryPlot->updateData();
     odometryPlot->updateGL();
 }

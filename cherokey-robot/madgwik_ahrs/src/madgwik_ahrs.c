@@ -526,6 +526,28 @@ void MahonyAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay,
 	ahrs->Q.q2 *= recipNorm;
 	ahrs->Q.q3 *= recipNorm;
 }
+
+bool QuaternionConj(const QUATERNION* q_in, QUATERNION* q_out)
+{
+    if (!q_in || !q_out)
+    {
+        return false;
+    }
+    
+    q_out->q0 = q_in->q0;
+    q_out->q1 = -q_in->q1;
+    q_out->q2 = -q_in->q2;
+    q_out->q3 = -q_in->q3;
+
+    return true;
+}
+
+bool QuaternionProd(const QUATERNION* q_a, const QUATERNION* q_b,
+        QUATERNION* q_out)
+{
+    return false;
+}
+
 //====================================================================================================
 // END OF CODE
 //====================================================================================================

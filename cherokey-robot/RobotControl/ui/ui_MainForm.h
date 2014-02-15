@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'MainForm.ui'
 **
-** Created: Sat Feb 15 01:21:57 2014
+** Created: Sat Feb 15 23:55:40 2014
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -65,7 +65,6 @@ public:
     QRadioButton *rbtRadio;
     QTabWidget *tabWidget;
     QWidget *tabVideo;
-    QGraphicsView *videoView;
     QWidget *tabOdometry;
 
     void setupUi(QDialog *MainForm)
@@ -185,9 +184,6 @@ public:
         tabWidget->setGeometry(QRect(450, 270, 411, 331));
         tabVideo = new QWidget();
         tabVideo->setObjectName(QString::fromUtf8("tabVideo"));
-        videoView = new QGraphicsView(tabVideo);
-        videoView->setObjectName(QString::fromUtf8("videoView"));
-        videoView->setGeometry(QRect(10, 10, 391, 281));
         tabWidget->addTab(tabVideo, QString());
         tabOdometry = new QWidget();
         tabOdometry->setObjectName(QString::fromUtf8("tabOdometry"));

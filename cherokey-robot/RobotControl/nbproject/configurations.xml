@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>Commands.hpp</itemPath>
       <itemPath>Globals.hpp</itemPath>
+      <itemPath>GraphPlot.hpp</itemPath>
       <itemPath>IP4Validator.hpp</itemPath>
       <itemPath>PlatformModel.hpp</itemPath>
       <itemPath>PortValidator.hpp</itemPath>
@@ -28,6 +29,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>Commands.cpp</itemPath>
+      <itemPath>GraphPlot.cpp</itemPath>
       <itemPath>IP4Validator.cpp</itemPath>
       <itemPath>PlatformModel.cpp</itemPath>
       <itemPath>PortValidator.cpp</itemPath>
@@ -116,6 +118,10 @@
       </item>
       <item path="Globals.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="GraphPlot.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphPlot.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="IP4Validator.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="IP4Validator.hpp" ex="false" tool="3" flavor2="0">
@@ -187,6 +193,10 @@
       <item path="Commands.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Globals.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphPlot.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphPlot.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="IP4Validator.cpp" ex="false" tool="1" flavor2="0">
       </item>
