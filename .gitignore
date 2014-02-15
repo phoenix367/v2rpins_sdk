@@ -27,3 +27,4 @@ pincontroller/build/
 /cherokey-robot/compass_calibrator/dist/
 /cherokey-robot/qwtplot3d/dist/
 /cherokey-robot/qwtplot3d/build/
+/cherokey-robot/qwtplot3d/moc/
