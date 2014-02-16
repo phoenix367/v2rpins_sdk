@@ -32,9 +32,9 @@ void TestEuler::testQuaternion2Euler()
 {
     QUATERNION q;
     q.q0 = 9.999995e-01f;
-    q.q1 = -9.697057e-04f;
-    q.q2 = 2.426228e-04f;
-    q.q3 = 8.726642e-08f;
+    q.q1 = 9.697057e-04f;
+    q.q2 = -2.426228e-04f;
+    q.q3 = -8.726642e-08f;
     
     float phi, theta, psi;
     CPPUNIT_ASSERT(Quaternion2Euler(&q, &phi, &theta, &psi));

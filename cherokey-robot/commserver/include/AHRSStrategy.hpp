@@ -23,6 +23,10 @@ public:
     bool isMagnetometerUsed();
     
 protected:
+    void convertQ2Angles(const QUATERNION& q, float &roll,
+        float& pitch, float& yaw);
+    
+protected:
     float sampleRate;
     bool useMagnetometer;
 };

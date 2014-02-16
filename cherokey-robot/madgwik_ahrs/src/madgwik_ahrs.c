@@ -287,16 +287,11 @@ bool Quaternion2Euler(const QUATERNION* q, float *phi, float* theta,
         return false;
     }
     
-    float q0 = q->q0;
-    float q1 = -q->q1;
-    float q2 = -q->q2;
-    float q3 = -q->q3;
-    
-    float R_1_1 = 2.0f * q0 * q0 - 1.0f + 2.0f * q1 * q1;
-    float R_2_1 = 2.0f * (q1 * q2 - q0 * q3);
-    float R_3_1 = 2.0f * (q1 * q3 + q0 * q2);
-    float R_3_2 = 2.0f * (q2 * q3 - q0 * q1);
-    float R_3_3 = 2.0f * q0 * q0 - 1.0f + 2.0f * q3 * q3;
+    float R_1_1 = 2.0f * q->q0 * q->q0 - 1.0f + 2.0f * q->q1 * q->q1;
+    float R_2_1 = 2.0f * (q->q1 * q->q2 - q->q0 * q->q3);
+    float R_3_1 = 2.0f * (q->q1 * q->q3 + q->q0 * q->q2);
+    float R_3_2 = 2.0f * (q->q2 * q->q3 - q->q0 * q->q1);
+    float R_3_3 = 2.0f * q->q0 * q->q0 - 1.0f + 2.0f * q->q3 * q->q3;
 
     if (phi)
     {
@@ -545,7 +540,47 @@ bool QuaternionConj(const QUATERNION* q_in, QUATERNION* q_out)
 bool QuaternionProd(const QUATERNION* q_a, const QUATERNION* q_b,
         QUATERNION* q_out)
 {
-    return false;
+    if (!q_a || !q_b || !q_out)
+    {
+        return false;
+    }
+    
+    q_out->q0 = q_a->q0 * q_b->q0 - q_a->q1 * q_b->q1 - q_a->q2 * q_b->q2 -
+            q_a->q3 * q_b->q3;
+    q_out->q1 = q_a->q0 * q_b->q1 + q_a->q1 * q_b->q0 + q_a->q2 * q_b->q3 -
+            q_a->q3 * q_b->q2;
+    q_out->q2 = q_a->q0 * q_b->q2 - q_a->q1 * q_b->q3 + q_a->q2 * q_b->q0 +
+            q_a->q3 * q_b->q1;
+    q_out->q3 = q_a->q0 * q_b->q3 + q_a->q1 * q_b->q2 - q_a->q2 * q_b->q1 +
+            q_a->q3 * q_b->q0;
+    
+    return true;
+}
+
+bool QuaternionRotate(const COORD_3D* coord_in, const QUATERNION* q,
+        COORD_3D* coord_out)
+{
+    if (!coord_in || !q || !coord_out)
+    {
+        return false;
+    }
+
+    QUATERNION qCoord, qProd, qConj, OXYZ;
+    
+    qCoord.q0 = 0.0f;
+    qCoord.q1 = coord_in->x;
+    qCoord.q2 = coord_in->y;
+    qCoord.q3 = coord_in->z;
+    
+    QuaternionProd(q, &qCoord, &qProd);
+    QuaternionConj(q, &qConj);
+    QuaternionProd(&qProd, &qConj, &OXYZ);
+    
+    coord_out->x = OXYZ.q1;
+    coord_out->y = OXYZ.q2;
+    coord_out->z = OXYZ.q3;
+    
+    return true;
 }
 
 //====================================================================================================

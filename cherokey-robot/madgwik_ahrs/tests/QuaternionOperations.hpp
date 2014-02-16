@@ -13,8 +13,9 @@
 class QuaternionOperations : public CPPUNIT_NS::TestFixture {
     CPPUNIT_TEST_SUITE(QuaternionOperations);
 
-    CPPUNIT_TEST(testMethod);
-    CPPUNIT_TEST(testFailedMethod);
+    CPPUNIT_TEST(testQuaternionConj);
+    CPPUNIT_TEST(testQuaternionProd);
+    CPPUNIT_TEST(testQuaternionRotate);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -25,8 +26,9 @@ public:
     void tearDown();
 
 private:
-    void testMethod();
-    void testFailedMethod();
+    void testQuaternionConj();
+    void testQuaternionProd();
+    void testQuaternionRotate();
 };
 
 #endif	/* QUATERNIONOPERATIONS_HPP */

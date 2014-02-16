@@ -35,6 +35,13 @@ typedef struct
     float q3;
 } QUATERNION;
 
+typedef struct
+{
+    float x;
+    float y;
+    float z;
+} COORD_3D;
+
 typedef struct 
 {
     float sampleFreq;
@@ -75,6 +82,8 @@ bool Quaternion2Euler(const QUATERNION* q, float *phi, float* theta,
 bool QuaternionConj(const QUATERNION* q_in, QUATERNION* q_out);
 bool QuaternionProd(const QUATERNION* q_a, const QUATERNION* q_b,
         QUATERNION* q_out);
+bool QuaternionRotate(const COORD_3D* coord_in, const QUATERNION* q,
+        COORD_3D* coord_out);
 
 #ifdef	__cplusplus
 }
