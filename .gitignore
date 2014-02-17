@@ -28,3 +28,5 @@ pincontroller/build/
 /cherokey-robot/qwtplot3d/dist/
 /cherokey-robot/qwtplot3d/build/
 /cherokey-robot/qwtplot3d/moc/
+/cherokey-robot/filters/build/
+/cherokey-robot/filters/dist/
