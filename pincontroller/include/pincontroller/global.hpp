@@ -97,5 +97,7 @@ namespace pc
         low  = 0,
         high = 1
     };
+    
+    GPIO_PIN gpioPinFromIndex(int index);
 }
 #endif	/* PC_GLOBAL_HPP */

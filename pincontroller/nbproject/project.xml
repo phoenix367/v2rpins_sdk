@@ -19,6 +19,10 @@
                     <name>Release</name>
                     <type>2</type>
                 </confElem>
+                <confElem>
+                    <name>Debug_PC</name>
+                    <type>2</type>
+                </confElem>
             </confList>
         </data>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">

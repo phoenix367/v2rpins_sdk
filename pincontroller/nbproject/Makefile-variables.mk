@@ -22,6 +22,14 @@ CND_ARTIFACT_PATH_Release=dist/Release/V2R-Linux-x86/libpincontroller.so
 CND_PACKAGE_DIR_Release=dist/Release/V2R-Linux-x86/package
 CND_PACKAGE_NAME_Release=libpincontroller.so.tar
 CND_PACKAGE_PATH_Release=dist/Release/V2R-Linux-x86/package/libpincontroller.so.tar
+# Debug_PC configuration
+CND_PLATFORM_Debug_PC=GNU-Linux-x86
+CND_ARTIFACT_DIR_Debug_PC=dist/Debug_PC/GNU-Linux-x86
+CND_ARTIFACT_NAME_Debug_PC=libpincontroller.so
+CND_ARTIFACT_PATH_Debug_PC=dist/Debug_PC/GNU-Linux-x86/libpincontroller.so
+CND_PACKAGE_DIR_Debug_PC=dist/Debug_PC/GNU-Linux-x86/package
+CND_PACKAGE_NAME_Debug_PC=libpincontroller.so.tar
+CND_PACKAGE_PATH_Debug_PC=dist/Debug_PC/GNU-Linux-x86/package/libpincontroller.so.tar
 #
 # include compiler specific variables
 #

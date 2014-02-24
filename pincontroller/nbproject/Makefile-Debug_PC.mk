@@ -14,16 +14,16 @@ GREP=grep
 NM=nm
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=arm-none-linux-gnueabi-gcc
-CCC=arm-none-linux-gnueabi-g++
-CXX=arm-none-linux-gnueabi-g++
+CC=gcc
+CCC=g++
+CXX=g++
 FC=gfortran
-AS=arm-none-linux-gnueabi-as
+AS=as
 
 # Macros
-CND_PLATFORM=V2R-Linux-x86
+CND_PLATFORM=GNU-Linux-x86
 CND_DLIB_EXT=so
-CND_CONF=Debug
+CND_CONF=Debug_PC
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -58,8 +58,8 @@ TESTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=-std=c++0x
+CXXFLAGS=-std=c++0x
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -81,57 +81,57 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libpincontroller.${CND_DLIB_EXT}: ${O
 ${OBJECTDIR}/include/pincontroller/global.o: include/pincontroller/global.cpp 
 	${MKDIR} -p ${OBJECTDIR}/include/pincontroller
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/include/pincontroller/global.o include/pincontroller/global.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/include/pincontroller/global.o include/pincontroller/global.cpp
 
 ${OBJECTDIR}/src/adc_reader.o: src/adc_reader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/adc_reader.o src/adc_reader.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/adc_reader.o src/adc_reader.cpp
 
 ${OBJECTDIR}/src/details/dev_helper.o: src/details/dev_helper.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/details
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/dev_helper.o src/details/dev_helper.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/dev_helper.o src/details/dev_helper.cpp
 
 ${OBJECTDIR}/src/details/file_helper.o: src/details/file_helper.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/details
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/file_helper.o src/details/file_helper.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/file_helper.o src/details/file_helper.cpp
 
 ${OBJECTDIR}/src/details/gpio_manager.o: src/details/gpio_manager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/details
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/gpio_manager.o src/details/gpio_manager.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/gpio_manager.o src/details/gpio_manager.cpp
 
 ${OBJECTDIR}/src/details/gpio_pin_impl.o: src/details/gpio_pin_impl.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/details
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/gpio_pin_impl.o src/details/gpio_pin_impl.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/gpio_pin_impl.o src/details/gpio_pin_impl.cpp
 
 ${OBJECTDIR}/src/details/pwm_factory.o: src/details/pwm_factory.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/details
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/pwm_factory.o src/details/pwm_factory.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/pwm_factory.o src/details/pwm_factory.cpp
 
 ${OBJECTDIR}/src/details/pwm_impl.o: src/details/pwm_impl.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/details
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/pwm_impl.o src/details/pwm_impl.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/pwm_impl.o src/details/pwm_impl.cpp
 
 ${OBJECTDIR}/src/gpio_pin.o: src/gpio_pin.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/gpio_pin.o src/gpio_pin.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/gpio_pin.o src/gpio_pin.cpp
 
 ${OBJECTDIR}/src/pwm.o: src/pwm.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/pwm.o src/pwm.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/pwm.o src/pwm.cpp
 
 ${OBJECTDIR}/src/servo_rotator.o: src/servo_rotator.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/servo_rotator.o src/servo_rotator.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/servo_rotator.o src/servo_rotator.cpp
 
 # Subprojects
 .build-subprojects:
@@ -146,13 +146,13 @@ ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/GpioIndexTest.o ${TESTDIR}/tests/gpion
 ${TESTDIR}/tests/GpioIndexTest.o: tests/GpioIndexTest.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/GpioIndexTest.o tests/GpioIndexTest.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -Iinclude -std=c++0x `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/GpioIndexTest.o tests/GpioIndexTest.cpp
 
 
 ${TESTDIR}/tests/gpionindex.o: tests/gpionindex.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -g -Werror -Iinclude -std=c++11 `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/gpionindex.o tests/gpionindex.cpp
+	$(COMPILE.cc) -g -Werror -Iinclude -Iinclude -std=c++0x `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/gpionindex.o tests/gpionindex.cpp
 
 
 ${OBJECTDIR}/include/pincontroller/global_nomain.o: ${OBJECTDIR}/include/pincontroller/global.o include/pincontroller/global.cpp 
@@ -163,7 +163,7 @@ ${OBJECTDIR}/include/pincontroller/global_nomain.o: ${OBJECTDIR}/include/pincont
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/include/pincontroller/global_nomain.o include/pincontroller/global.cpp;\
+	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/include/pincontroller/global_nomain.o include/pincontroller/global.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/include/pincontroller/global.o ${OBJECTDIR}/include/pincontroller/global_nomain.o;\
 	fi
@@ -176,7 +176,7 @@ ${OBJECTDIR}/src/adc_reader_nomain.o: ${OBJECTDIR}/src/adc_reader.o src/adc_read
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/adc_reader_nomain.o src/adc_reader.cpp;\
+	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/adc_reader_nomain.o src/adc_reader.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/adc_reader.o ${OBJECTDIR}/src/adc_reader_nomain.o;\
 	fi
@@ -189,7 +189,7 @@ ${OBJECTDIR}/src/details/dev_helper_nomain.o: ${OBJECTDIR}/src/details/dev_helpe
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/dev_helper_nomain.o src/details/dev_helper.cpp;\
+	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/dev_helper_nomain.o src/details/dev_helper.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/details/dev_helper.o ${OBJECTDIR}/src/details/dev_helper_nomain.o;\
 	fi
@@ -202,7 +202,7 @@ ${OBJECTDIR}/src/details/file_helper_nomain.o: ${OBJECTDIR}/src/details/file_hel
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/file_helper_nomain.o src/details/file_helper.cpp;\
+	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/file_helper_nomain.o src/details/file_helper.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/details/file_helper.o ${OBJECTDIR}/src/details/file_helper_nomain.o;\
 	fi
@@ -215,7 +215,7 @@ ${OBJECTDIR}/src/details/gpio_manager_nomain.o: ${OBJECTDIR}/src/details/gpio_ma
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/gpio_manager_nomain.o src/details/gpio_manager.cpp;\
+	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/gpio_manager_nomain.o src/details/gpio_manager.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/details/gpio_manager.o ${OBJECTDIR}/src/details/gpio_manager_nomain.o;\
 	fi
@@ -228,7 +228,7 @@ ${OBJECTDIR}/src/details/gpio_pin_impl_nomain.o: ${OBJECTDIR}/src/details/gpio_p
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/gpio_pin_impl_nomain.o src/details/gpio_pin_impl.cpp;\
+	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/gpio_pin_impl_nomain.o src/details/gpio_pin_impl.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/details/gpio_pin_impl.o ${OBJECTDIR}/src/details/gpio_pin_impl_nomain.o;\
 	fi
@@ -241,7 +241,7 @@ ${OBJECTDIR}/src/details/pwm_factory_nomain.o: ${OBJECTDIR}/src/details/pwm_fact
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/pwm_factory_nomain.o src/details/pwm_factory.cpp;\
+	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/pwm_factory_nomain.o src/details/pwm_factory.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/details/pwm_factory.o ${OBJECTDIR}/src/details/pwm_factory_nomain.o;\
 	fi
@@ -254,7 +254,7 @@ ${OBJECTDIR}/src/details/pwm_impl_nomain.o: ${OBJECTDIR}/src/details/pwm_impl.o 
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/pwm_impl_nomain.o src/details/pwm_impl.cpp;\
+	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/details/pwm_impl_nomain.o src/details/pwm_impl.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/details/pwm_impl.o ${OBJECTDIR}/src/details/pwm_impl_nomain.o;\
 	fi
@@ -267,7 +267,7 @@ ${OBJECTDIR}/src/gpio_pin_nomain.o: ${OBJECTDIR}/src/gpio_pin.o src/gpio_pin.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/gpio_pin_nomain.o src/gpio_pin.cpp;\
+	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/gpio_pin_nomain.o src/gpio_pin.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/gpio_pin.o ${OBJECTDIR}/src/gpio_pin_nomain.o;\
 	fi
@@ -280,7 +280,7 @@ ${OBJECTDIR}/src/pwm_nomain.o: ${OBJECTDIR}/src/pwm.o src/pwm.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/pwm_nomain.o src/pwm.cpp;\
+	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/pwm_nomain.o src/pwm.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/pwm.o ${OBJECTDIR}/src/pwm_nomain.o;\
 	fi
@@ -293,7 +293,7 @@ ${OBJECTDIR}/src/servo_rotator_nomain.o: ${OBJECTDIR}/src/servo_rotator.o src/se
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++11 -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/servo_rotator_nomain.o src/servo_rotator.cpp;\
+	    $(COMPILE.cc) -g -Werror -Iinclude -std=c++0x -fPIC  -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/servo_rotator_nomain.o src/servo_rotator.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/servo_rotator.o ${OBJECTDIR}/src/servo_rotator_nomain.o;\
 	fi
