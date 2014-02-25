@@ -107,6 +107,18 @@
             </linkerLibProjectItem>
           </linkerLibItems>
         </linkerTool>
+        <requiredProjects>
+          <makeArtifact PL="../qwtplot3d"
+                        CT="6"
+                        CN="Debug"
+                        AC="true"
+                        BL="true"
+                        WD="../qwtplot3d"
+                        BC="${MAKE}  -f Makefile CONF=Debug"
+                        CC="${MAKE}  -f Makefile CONF=Debug clean"
+                        OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libqwtplot3d.a">
+          </makeArtifact>
+        </requiredProjects>
       </compileType>
       <item path="../messages/common.proto" ex="false" tool="3" flavor2="0">
       </item>

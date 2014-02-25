@@ -69,6 +69,7 @@ ${CND_BUILDDIR}/Debug/%.o: nbproject/qt-${CND_CONF}.mk
 
 # Subprojects
 .build-subprojects:
+	cd ../qwtplot3d && ${MAKE}  -f Makefile CONF=Debug
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS} nbproject/qt-${CND_CONF}.mk
@@ -76,3 +77,4 @@ ${CND_BUILDDIR}/Debug/%.o: nbproject/qt-${CND_CONF}.mk
 
 # Subprojects
 .clean-subprojects:
+	cd ../qwtplot3d && ${MAKE}  -f Makefile CONF=Debug clean
