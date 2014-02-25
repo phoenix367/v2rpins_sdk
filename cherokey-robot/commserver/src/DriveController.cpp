@@ -9,6 +9,7 @@
 
 #include "DriveController.hpp"
 #include "Exceptions.hpp"
+#include "ConfigManager.hpp"
 
 #define PWM_FREQUENCY 400                           // PWM frequency is 400 Hz
 #define PWM_PERIOD (1000000 / PWM_FREQUENCY)        // PWM period in 
@@ -19,12 +20,23 @@ std::unique_ptr<DriveController> DriveController::instance;
 DriveController::DriveController()
 : pwmA(new pc::PWM(pc::PWM_CHANNEL::PWM_0))
 , pwmB(new pc::PWM(pc::PWM_CHANNEL::PWM_1))
-, gpioDirectionA(new pc::GPIOPin(pc::GPIO_PIN::gpio85, 
-                pc::GPIO_DIRECTION::output))
-, gpioDirectionB(new pc::GPIOPin(pc::GPIO_PIN::gpio86, 
-                pc::GPIO_DIRECTION::output))
 {
-
+    auto instance = ConfigManager::getInstance();
+    
+    if (!instance)
+    {
+        COMM_EXCEPTION(NullPointerException, "Configuration manager "
+            "instance is null.");
+    }
+    
+    auto pinConfig = instance->getPinsInfo();
+    
+    gpioDirectionA = std::unique_ptr<pc::GPIOPin>(
+            new pc::GPIOPin(pinConfig.driveADirectionPin, 
+                pc::GPIO_DIRECTION::output));
+    gpioDirectionB = std::unique_ptr<pc::GPIOPin>(
+            new pc::GPIOPin(pinConfig.driveBDirectionPin, 
+                pc::GPIO_DIRECTION::output));
 }
 
 DriveController::~DriveController() 

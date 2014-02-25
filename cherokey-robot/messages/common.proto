@@ -50,6 +50,7 @@ message ShowVideo
 {
     required SwitchState show_state = 1;
     required VideoChannelType channel_type = 2;
+    optional uint32 receiver_address = 3;
 }
 
 message CommandMessage 

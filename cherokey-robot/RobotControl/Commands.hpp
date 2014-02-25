@@ -22,6 +22,8 @@ namespace cherokey
 class SocketCommand
 {
 public:
+    virtual ~SocketCommand();
+    
     virtual bool doCommand(zmq::socket_t& socket) = 0;
     
 protected:
@@ -113,6 +115,9 @@ public:
     virtual ~ShowVideoComposite();
     
     virtual bool doCommand(zmq::socket_t& socket);
+    
+private:
+    quint32 getHostAddress();
     
 private:
     bool showState;

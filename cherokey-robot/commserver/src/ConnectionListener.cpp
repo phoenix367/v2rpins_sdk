@@ -223,7 +223,11 @@ void ConnectionListener::processVideo(zmq::socket_t& socket,
         switch (videoMsg->channel_type())
         {
             case cc::WIFI:
-                videoInstance->digitalVideo(showState == cc::ON);
+                {
+                    uint32_t ipAddress = videoMsg->receiver_address();
+                    videoInstance->digitalVideo(showState == cc::ON,
+                            ipAddress);
+                }
                 break;
             case cc::RADIO:
                 videoInstance->compositeVideo(showState == cc::ON);

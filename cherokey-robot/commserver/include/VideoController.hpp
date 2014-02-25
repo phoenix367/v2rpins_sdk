@@ -21,7 +21,7 @@ public:
     static VideoController* getInstance();
     
     void compositeVideo(bool showState);
-    void digitalVideo(bool showState);
+    void digitalVideo(bool showState, uint32_t ipAddress);
     
 private:
     void stopChild();

@@ -32,6 +32,12 @@ const std::string ConfigManager::IMU_GYRO_THRESHOLD = "IMU.GyroThreshold";
 const std::string ConfigManager::IMU_AHRS_ALGO = "IMU.AHRSAlgo";
 const std::string ConfigManager::IMU_USE_MAGNETOMETER = "IMU.UseMagnetometer";
 const std::string ConfigManager::IMU_COMPASS_SOFT_IRON = "IMU.SoftIronMatrix";
+const std::string ConfigManager::PINS_DRIVE_A_DIRECTION_PIN =
+    "Pins.DriveADirectionPin";
+const std::string ConfigManager::PINS_DRIVE_B_DIRECTION_PIN =
+    "Pins.DriveBDirectionPin";
+const std::string ConfigManager::PINS_VIDEO_TX_PWR_PIN =
+    "Pins.VideoTxPwrPin";
 
 ConfigManager::ConfigManager() 
 : desc("Options")
@@ -64,6 +70,12 @@ ConfigManager::ConfigManager()
             "Specify use or not magnetometer data is AHRS algorithm")
         (IMU_COMPASS_SOFT_IRON.c_str(), boost::program_options::value<std::string>(),
             "Soft iron transform matrix")
+        (PINS_DRIVE_A_DIRECTION_PIN.c_str(), boost::program_options::value<uint32_t>()->required(),
+            "Drive A group direction pin")
+        (PINS_DRIVE_B_DIRECTION_PIN.c_str(), boost::program_options::value<uint32_t>()->required(),
+            "Drive B group direction pin")
+        (PINS_VIDEO_TX_PWR_PIN.c_str(), boost::program_options::value<uint32_t>()->required(),
+            "Video transmitter power pin")
         ;
 }
 
@@ -249,6 +261,39 @@ void ConfigManager::loadConfiguration(const std::string& fileName)
             softIronMatrix = boost::numeric::ublas::identity_matrix<float>(3, 
                     3);
         }
+        
+        if (vm.count(PINS_DRIVE_A_DIRECTION_PIN))
+        {
+            pins.driveADirectionPin = pc::gpioPinFromIndex(
+                    vm[PINS_DRIVE_A_DIRECTION_PIN].as<uint32_t>());
+        }
+        else
+        {
+            COMM_EXCEPTION(ConfigurationException, 
+                    "Pin for drive A direction isn't specified");
+        }
+
+        if (vm.count(PINS_DRIVE_B_DIRECTION_PIN))
+        {
+            pins.driveBDirectionPin = pc::gpioPinFromIndex(
+                    vm[PINS_DRIVE_B_DIRECTION_PIN].as<uint32_t>());
+        }
+        else
+        {
+            COMM_EXCEPTION(ConfigurationException, 
+                    "Pin for drive B direction isn't specified");
+        }
+
+        if (vm.count(PINS_VIDEO_TX_PWR_PIN))
+        {
+            pins.videoTxPowerPin = pc::gpioPinFromIndex(
+                    vm[PINS_VIDEO_TX_PWR_PIN].as<uint32_t>());
+        }
+        else
+        {
+            COMM_EXCEPTION(ConfigurationException, 
+                    "Pin for video transmitter power isn't specified");
+        }
     }
     catch (Exception&)
     {
@@ -365,4 +410,9 @@ boost::numeric::ublas::matrix<float> ConfigManager::parseMatrixFromString(
     }
     
     return m;
+}
+
+PinsInfo ConfigManager::getPinsInfo()
+{
+    return pins;
 }

@@ -67,7 +67,7 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <qt>
-        <modules>core gui opengl</modules>
+        <modules>core gui network opengl</modules>
         <mocDir>moc</mocDir>
         <uiDir>ui</uiDir>
         <defs>

@@ -1,7 +1,14 @@
 #include "Commands.hpp"
 #include "messages/common.pb.h"
 
+#include<QNetworkInterface>
+
 namespace cc = cherokey::common;
+
+SocketCommand::~SocketCommand()
+{
+    
+}
 
 bool SocketCommand::serializeMessage(const cc::CommandMessage& commandMessage,
         zmq::socket_t& socket)
@@ -256,6 +263,7 @@ bool ShowVideoComposite::doCommand(zmq::socket_t& socket)
             break;
         case digital:
             videoMsg->set_channel_type(cc::WIFI);
+            videoMsg->set_receiver_address(getHostAddress());
             break;
     }
 
@@ -267,6 +275,28 @@ bool ShowVideoComposite::doCommand(zmq::socket_t& socket)
     bool replyResult = handleReplyAck(socket);
 
     return replyResult;
+}
+
+quint32 ShowVideoComposite::getHostAddress()
+{
+    QList<QNetworkInterface> list = QNetworkInterface::allInterfaces();
+    
+    for (int i = 0; i < list.size(); ++i) 
+    {
+        QNetworkInterface inter = list.at(i);
+        QNetworkInterface::InterfaceFlags flags = inter.flags();
+        if ((flags & QNetworkInterface::IsUp) &&
+            !(flags & QNetworkInterface::IsLoopBack))
+        {
+            QList<QNetworkAddressEntry> addresses = inter.addressEntries();
+            if (!addresses.empty())
+            {
+                return addresses.at(0).ip().toIPv4Address();
+            }
+        }
+    }
+    
+    return 0;
 }
 
 SendSensorsInfo::SendSensorsInfo(bool send)

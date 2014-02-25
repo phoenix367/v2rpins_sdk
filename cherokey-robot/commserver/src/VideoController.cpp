@@ -7,18 +7,33 @@
 
 #include "VideoController.hpp"
 #include "Exceptions.hpp"
+#include "ConfigManager.hpp"
 
 #include <boost/system/error_code.hpp>
+#include <boost/asio/ip/address.hpp>
 #include <signal.h>
 #include <sys/wait.h>
+
+namespace ip = boost::asio::ip;
 
 std::unique_ptr<VideoController> VideoController::instance;
 
 VideoController::VideoController() 
-: videoTXPower(new pc::GPIOPin(pc::GPIO_PIN::gpio33, 
-                pc::GPIO_DIRECTION::output))
-, videoProcessPID(-1)
+: videoProcessPID(-1)
 {
+    auto instance = ConfigManager::getInstance();
+    
+    if (!instance)
+    {
+        COMM_EXCEPTION(NullPointerException, "Configuration manager "
+            "instance is null.");
+    }
+    
+    auto pinConfig = instance->getPinsInfo();
+    
+    videoTXPower = std::unique_ptr<pc::GPIOPin>(
+            new pc::GPIOPin(pinConfig.videoTxPowerPin, 
+                pc::GPIO_DIRECTION::output));
 }
 
 VideoController::~VideoController() 
@@ -84,7 +99,7 @@ void VideoController::stopChild()
     }
 }
 
-void VideoController::digitalVideo(bool showState)
+void VideoController::digitalVideo(bool showState, uint32_t ipAddress)
 {
     if (showState)
     {
@@ -96,8 +111,13 @@ void VideoController::digitalVideo(bool showState)
         
         if (pid == 0)
         {
+            ip::address_v4 addr(ipAddress);
+            std::string str = addr.to_string();
+            
+            std::cout << "Send video to " << str << std::endl;
             int execResult = execlp(
-                "/etc/cherokey-robot/run_video_wifi", NULL);
+                "/etc/cherokey-robot/run_video_wifi", "run_video_wifi",
+                str.c_str(), NULL);
             
             exit(execResult);
         }

@@ -20,6 +20,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <cmath>
+#include <fstream>
 
 #define I2CDEV                      "/dev/i2c-1"
 
@@ -29,6 +30,8 @@
 #define BMA180_I2C_ADDR             0x40
 
 namespace cs = cherokey::sensors;
+
+#define WRITE_SENSORS_DATA          0
 
 IMUReader::IMUReader() 
 {
@@ -81,6 +84,10 @@ void IMUReader::run()
     
     auto delayTime = std::chrono::milliseconds(10);
     auto t = std::chrono::high_resolution_clock::now();
+    
+#if WRITE_SENSORS_DATA
+    std::ofstream stream("raw_data.txt");
+#endif
 
     while (!stopVariable)
     {
@@ -89,6 +96,13 @@ void IMUReader::run()
         
         std::this_thread::sleep_until(t + delayTime);
         t += delayTime;
+        
+#if WRITE_SENSORS_DATA
+        stream << sensorsData.rawAccelX << " " << sensorsData.rawAccelY <<
+                " " << sensorsData.rawAccelZ << " " << sensorsData.rawGyroX << 
+                " " << sensorsData.rawGyroY << " " << sensorsData.rawGyroZ <<
+                std::endl;
+#endif
         
         if (!calibration)
         {
@@ -144,6 +158,10 @@ void IMUReader::run()
             ahrsProcessor.setAngleOffsets(offsetRoll, offsetPitch, offsetYaw);
         }
     }
+
+#if WRITE_SENSORS_DATA    
+    stream.close();
+#endif
 }
 
 void IMUReader::writeToDevice(int file, const char * buf, int len) 

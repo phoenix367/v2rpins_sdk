@@ -329,6 +329,9 @@
       <item path="src/ConnectionListener.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/DriveController.cpp" ex="false" tool="1" flavor2="0">
+        <ccTool>
+          <commandLine>-mfp16-format=ieee</commandLine>
+        </ccTool>
       </item>
       <item path="src/GPSReader.cpp" ex="false" tool="1" flavor2="0">
       </item>

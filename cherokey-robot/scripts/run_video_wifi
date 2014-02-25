@@ -10,7 +10,7 @@ trap 'on_exit' INT
 eval "gst-launch v4l2src always-copy=false chain-ipipe=true ! video/x-raw-yuv,format='(fourcc)'NV12, \
 width=640, height=480, framerate='(fraction)'30/1 ! dmaiaccel  ! dmaienc_h264 ddrbuf=true rcalgo=0 \
 bytestream=true encodingpreset=2 ratecontrol=1 intraframeinterval=46 idrinterval=46 \
-targetbitrate=1000000 ! rtph264pay ! udpsink port=3000 host=192.168.1.3 sync=false enable-last-buffer=false &"
+targetbitrate=1000000 ! rtph264pay ! udpsink port=3000 host=$1 sync=false enable-last-buffer=false &"
 gstreamer_pid=$!
 
 wait $gstreamer_pid

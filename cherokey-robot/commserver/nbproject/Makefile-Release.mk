@@ -115,7 +115,7 @@ ${OBJECTDIR}/src/ConnectionListener.o: src/ConnectionListener.cpp
 ${OBJECTDIR}/src/DriveController.o: src/DriveController.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -O3 -D_GLIBCXX_USE_NANOSLEEP -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -I../madgwik_ahrs/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/DriveController.o src/DriveController.cpp
+	$(COMPILE.cc) -O3 -D_GLIBCXX_USE_NANOSLEEP -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -I../madgwik_ahrs/include -std=c++11 -mfp16-format=ieee -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/DriveController.o src/DriveController.cpp
 
 ${OBJECTDIR}/src/GPSReader.o: src/GPSReader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src

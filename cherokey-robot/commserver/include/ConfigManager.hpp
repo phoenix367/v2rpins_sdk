@@ -13,6 +13,8 @@
 #include <boost/asio/ip/address.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 
+#include "pincontroller/global.hpp"
+
 struct ConnectionInfo
 {
     boost::asio::ip::address ipAddress;
@@ -24,6 +26,13 @@ struct CompassOffsets
     float V_x;
     float V_y;
     float V_z;
+};
+
+struct PinsInfo
+{
+    pc::GPIO_PIN driveADirectionPin;
+    pc::GPIO_PIN driveBDirectionPin;
+    pc::GPIO_PIN videoTxPowerPin;
 };
 
 enum class AHRSAlgorithm
@@ -53,6 +62,7 @@ public:
     AHRSAlgorithm getAHRSAlgorithm();
     bool isUseMagnetometer();
     boost::numeric::ublas::matrix<float> getSoftIronMatrix();
+    PinsInfo getPinsInfo();
     
 private:
     boost::numeric::ublas::matrix<float> parseMatrixFromString(
@@ -74,6 +84,9 @@ private:
     static const std::string IMU_GYRO_THRESHOLD;
     static const std::string IMU_AHRS_ALGO;
     static const std::string IMU_USE_MAGNETOMETER;
+    static const std::string PINS_DRIVE_A_DIRECTION_PIN;
+    static const std::string PINS_DRIVE_B_DIRECTION_PIN;
+    static const std::string PINS_VIDEO_TX_PWR_PIN;
     
     boost::program_options::options_description desc;
     std::shared_ptr<ConnectionInfo> connectionInfo;
@@ -85,6 +98,7 @@ private:
     AHRSAlgorithm ahrsAlgorithm;
     bool useMagnetometer;
     boost::numeric::ublas::matrix<float> softIronMatrix;
+    PinsInfo pins;
 };
 
 #endif	/* CONFIGMANAGER_HPP */
