@@ -41,7 +41,7 @@ private:
     Q_SLOT void onRotateLeftReleased();
     Q_SLOT void onShowVideoComposite();
     Q_SLOT void onModelRotation(float angleX, float angleY, float angleZ);
-    Q_SLOT void onCommandSuccess(int commandType, uint64_t commandIndex);
+    Q_SLOT void onCommandSuccess(int commandType, quint64 commandIndex);
     
 protected:
     virtual bool eventFilter(QObject *object, QEvent *event);

@@ -32,7 +32,7 @@ public:
     
 public:
     Q_SIGNAL void ConversationTerminated(const QString& msg);
-    Q_SIGNAL void CommandSuccess(int commandType, uint64_t commandIndex);
+    Q_SIGNAL void CommandSuccess(int commandType, quint64 commandIndex);
     
 private:
     Q_SLOT void onPingTimeout();
