@@ -70,6 +70,11 @@ void RemoteConnector::run()
                             std::cout << "Failed to handle command" << 
                                     std::endl;
                         }
+                        else
+                        {
+                            emit CommandSuccess(commandItem->getCommandType(),
+                                    commandItem->getCommandIndex());
+                        }
                     }
                     
                     lock.relock();

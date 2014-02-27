@@ -35,6 +35,7 @@ public:
 
 MainForm::MainForm()
 : connected(false)
+, disconnectCmdId(0)
 {
     widget.setupUi(this);
     
@@ -61,6 +62,8 @@ MainForm::MainForm()
     connectorPtr = new RemoteConnector(this);
     connect(connectorPtr, SIGNAL(ConversationTerminated(const QString&)),
             SLOT(onConnectionTerminated(const QString&)));
+    connect(connectorPtr, SIGNAL(CommandSuccess(int, uint64_t)),
+            SLOT(onCommandSuccess(int, uint64_t)));
     
     widget.frmMove->setEnabled(false);
     widget.btnShowComposite->setEnabled(false);
@@ -143,13 +146,13 @@ void MainForm::onConnect()
         widget.frmMove->setEnabled(true);
         widget.btnShowComposite->setEnabled(true);
 
-        QSharedPointer<SocketCommand> showCommand(
+        QSharedPointer<SocketCommand> sendCommand(
             new SendSensorsInfo(true));
-        connectorPtr->handleCommand(showCommand);
+        connectorPtr->handleCommand(sendCommand);
     }
     else
     {
-        doDisconnect();
+        prepareDisconnect();
     }
 }
 
@@ -372,4 +375,20 @@ void MainForm::stopVideo()
         m_pipeline->setState(QGst::StateNull);
         m_pipeline.clear();
     }
+}
+
+void MainForm::onCommandSuccess(int commandType, uint64_t commandIndex)
+{
+    if (commandType == sendSensorsType && commandIndex == disconnectCmdId)
+    {
+        doDisconnect();
+    }
+}
+
+void MainForm::prepareDisconnect()
+{
+    QSharedPointer<SocketCommand> sendCommand(
+        new SendSensorsInfo(false));
+    disconnectCmdId = sendCommand->getCommandIndex();
+    connectorPtr->handleCommand(sendCommand);
 }

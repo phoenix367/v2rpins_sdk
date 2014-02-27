@@ -5,6 +5,18 @@
 
 namespace cc = cherokey::common;
 
+uint64_t SocketCommand::indexCounter = 0;
+
+SocketCommand::SocketCommand()
+{
+    commandIndex = indexCounter++;
+}
+
+SocketCommand::SocketCommand(const SocketCommand&)
+{
+    
+}
+
 SocketCommand::~SocketCommand()
 {
     
@@ -58,6 +70,11 @@ bool SocketCommand::handleReplyAck(zmq::socket_t& socket)
     }
 
     return true;
+}
+
+uint64_t SocketCommand::getCommandIndex()
+{
+    return commandIndex;
 }
 
 PingCommand::PingCommand(QTimer& t, int64_t sn)
@@ -133,6 +150,11 @@ bool PingCommand::commandHandler(zmq::socket_t& socket)
     return true;
 }
 
+CommandType PingCommand::getCommandType()
+{
+    return pingCommandType;
+}
+
 MoveCommand::MoveCommand(GroupDirection directionA, GroupDirection directionB,
         float power)
 : groupDirectionA(directionA)
@@ -190,6 +212,11 @@ bool MoveCommand::doCommand(zmq::socket_t& socket)
     bool replyResult = handleReplyAck(socket);
 
     return replyResult;
+}
+
+CommandType MoveCommand::getCommandType()
+{
+    return moveCommandType;
 }
 
 MoveForward::MoveForward(float power)
@@ -299,6 +326,11 @@ quint32 ShowVideoComposite::getHostAddress()
     return 0;
 }
 
+CommandType ShowVideoComposite::getCommandType()
+{
+    return showVideoType;
+}
+
 SendSensorsInfo::SendSensorsInfo(bool send)
 : sendState(send)
 {
@@ -327,4 +359,9 @@ bool SendSensorsInfo::doCommand(zmq::socket_t& socket)
     bool replyResult = handleReplyAck(socket);
 
     return replyResult;
+}
+
+CommandType SendSensorsInfo::getCommandType()
+{
+    return sendSensorsType;
 }

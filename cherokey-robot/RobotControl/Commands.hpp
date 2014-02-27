@@ -19,18 +19,36 @@ namespace cherokey
     }
 }
 
+enum CommandType
+{
+    pingCommandType,
+    moveCommandType,
+    showVideoType,
+    sendSensorsType
+};
+
 class SocketCommand
 {
+protected:
+    SocketCommand();
+    SocketCommand(const SocketCommand&);
+    
 public:
     virtual ~SocketCommand();
     
     virtual bool doCommand(zmq::socket_t& socket) = 0;
+    virtual CommandType getCommandType() = 0;
+    uint64_t getCommandIndex();
     
 protected:
     bool serializeMessage(
             const cherokey::common::CommandMessage& commandMessage,
             zmq::socket_t& socket);
     bool handleReplyAck(zmq::socket_t& socket);
+    
+private:
+    uint64_t commandIndex;
+    static uint64_t indexCounter;
 };
 
 class PingCommand : public SocketCommand
@@ -40,6 +58,7 @@ public:
     virtual ~PingCommand();
     
     virtual bool doCommand(zmq::socket_t& socket);
+    virtual CommandType getCommandType();
     
 private:
     bool commandHandler(zmq::socket_t& socket);
@@ -66,6 +85,7 @@ public:
     virtual ~MoveCommand();
     
     virtual bool doCommand(zmq::socket_t& socket);
+    virtual CommandType getCommandType();
     
 private:
     GroupDirection groupDirectionA;
@@ -115,6 +135,7 @@ public:
     virtual ~ShowVideoComposite();
     
     virtual bool doCommand(zmq::socket_t& socket);
+    virtual CommandType getCommandType();
     
 private:
     quint32 getHostAddress();
@@ -131,6 +152,7 @@ public:
     virtual ~SendSensorsInfo();
     
     virtual bool doCommand(zmq::socket_t& socket);
+    virtual CommandType getCommandType();
     
 private:
     bool sendState;

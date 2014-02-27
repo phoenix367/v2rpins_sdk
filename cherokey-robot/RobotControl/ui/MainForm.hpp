@@ -41,6 +41,7 @@ private:
     Q_SLOT void onRotateLeftReleased();
     Q_SLOT void onShowVideoComposite();
     Q_SLOT void onModelRotation(float angleX, float angleY, float angleZ);
+    Q_SLOT void onCommandSuccess(int commandType, uint64_t commandIndex);
     
 protected:
     virtual bool eventFilter(QObject *object, QEvent *event);
@@ -49,6 +50,7 @@ private:
     void doDisconnect();
     void startVideo();
     void stopVideo();
+    void prepareDisconnect();
     
 private:
     Ui::MainForm widget;
@@ -58,6 +60,7 @@ private:
     QGst::PipelinePtr m_pipeline;
     QGst::Ui::VideoWidget *videoWidget;
     Qwt3D::SurfacePlot* odometryPlot;
+    uint64_t disconnectCmdId;
 };
 
 #endif	/* _MAINFORM_HPP */
