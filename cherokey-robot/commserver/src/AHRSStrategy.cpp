@@ -18,15 +18,6 @@ bool AHRSStrategy::isMagnetometerUsed()
     return useMagnetometer;
 }
 
-void AHRSStrategy::convertQ2Angles(const QUATERNION& q, float& roll, 
-        float& pitch, float& yaw)
-{
-    QUATERNION qConj;
-    
-    QuaternionConj(&q, &qConj);
-    Quaternion2Euler(&qConj, &roll, &pitch, &yaw);
-}
-
 MadgwickAHRS::MadgwickAHRS(float sr, bool um)
 : AHRSStrategy(sr, um)
 {
@@ -38,8 +29,7 @@ MadgwickAHRS::~MadgwickAHRS()
     
 }
 
-void MadgwickAHRS::updateState(const IMUSensorsData& data, float& roll, 
-        float& pitch, float& yaw)
+void MadgwickAHRS::updateState(const IMUSensorsData& data, QUATERNION& q)
 {
     if (useMagnetometer)
     {
@@ -55,7 +45,7 @@ void MadgwickAHRS::updateState(const IMUSensorsData& data, float& roll,
                 &ahrsInfo);
     }
     
-    convertQ2Angles(ahrsInfo.Q, roll, pitch, yaw);
+    q = ahrsInfo.Q;
 }
 
 MahonyAHRS::MahonyAHRS(float sr, bool um)
@@ -69,8 +59,7 @@ MahonyAHRS::~MahonyAHRS()
     
 }
 
-void MahonyAHRS::updateState(const IMUSensorsData& data, float& roll, 
-        float& pitch, float& yaw)
+void MahonyAHRS::updateState(const IMUSensorsData& data, QUATERNION& q)
 {
     if (useMagnetometer)
     {
@@ -86,5 +75,5 @@ void MahonyAHRS::updateState(const IMUSensorsData& data, float& roll,
                 &ahrsInfo);
     }
     
-    convertQ2Angles(ahrsInfo.Q, roll, pitch, yaw);
+    q = ahrsInfo.Q;
 }

@@ -22,11 +22,15 @@ public:
     
     void updateState(const IMUSensorsData& data, float &roll,
         float& pitch, float& yaw);
+    void updateState(const IMUSensorsData& data, QUATERNION& q);
+
     void setGyroOffsets(float offX, float offY, float offZ);
-    void setAngleOffsets(float ofsRoll, float ofsPitch, float ofsYaw);
+    void setOffsetQuaternion(const QUATERNION& q);
     
 private:
     float filterGyroValue(float rawGyroValue, float& offset);
+    void convertQ2Angles(const QUATERNION& q, float& roll, 
+        float& pitch, float& yaw);
     
 private:
     static const float GYROSCOPE_SENSITIVITY;    
@@ -36,13 +40,10 @@ private:
     float gyroOffsetY;
     float gyroOffsetZ;
     
-    float angleOffsetRoll;
-    float angleOffsetPitch;
-    float angleOffsetYaw;
-    
     CompassOffsets compassOffsets;
     float gyroThreshold;
     boost::numeric::ublas::matrix<float> softIronMatrix;
+    QUATERNION offsetQ;
 };
 
 #endif	/* AHRSPROCESSOR_HPP */

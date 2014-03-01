@@ -80,7 +80,7 @@ void IMUReader::run()
     }
     
     float pitch, roll, yaw;
-    float offsetRoll = 0.0f, offsetPitch = 0.0f, offsetYaw = 0.0f;
+    QUATERNION offsetQ;
     
     auto delayTime = std::chrono::milliseconds(10);
     auto t = std::chrono::high_resolution_clock::now();
@@ -110,18 +110,13 @@ void IMUReader::run()
         }
         else
         {
-            float tmpRoll, tmpPitch, tmpYaw;
             IMUSensorsData tmpData = { 0 };
             
             tmpData.rawAccelX = sensorsData.rawAccelX;
             tmpData.rawAccelY = sensorsData.rawAccelY;
             tmpData.rawAccelZ = sensorsData.rawAccelZ;
             
-            ahrsProcessor.updateState(tmpData, tmpRoll, tmpPitch, tmpYaw);
-            
-            offsetRoll += tmpRoll;
-            offsetPitch += tmpPitch;
-            offsetYaw += tmpYaw;
+            ahrsProcessor.updateState(tmpData, offsetQ);
         }
         
         gyroCoords->set_x(roll);
@@ -149,13 +144,9 @@ void IMUReader::run()
             gyroState.offsetY /= calibrationDelay;
             gyroState.offsetZ /= calibrationDelay;
             
-            offsetRoll /= calibrationDelay;
-            offsetPitch /= calibrationDelay;
-            offsetYaw /= calibrationDelay;
-            
             ahrsProcessor.setGyroOffsets(gyroState.offsetX, gyroState.offsetY,
                     gyroState.offsetZ);
-            ahrsProcessor.setAngleOffsets(offsetRoll, offsetPitch, offsetYaw);
+            ahrsProcessor.setOffsetQuaternion(offsetQ);
         }
     }
 

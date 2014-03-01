@@ -18,13 +18,8 @@ public:
     AHRSStrategy(float sr, bool um);
     virtual ~AHRSStrategy();
     
-    virtual void updateState(const IMUSensorsData& data, float &roll,
-        float& pitch, float& yaw) = 0;
+    virtual void updateState(const IMUSensorsData& data, QUATERNION& q) = 0;
     bool isMagnetometerUsed();
-    
-protected:
-    void convertQ2Angles(const QUATERNION& q, float &roll,
-        float& pitch, float& yaw);
     
 protected:
     float sampleRate;
@@ -37,8 +32,7 @@ public:
     MadgwickAHRS(float sr, bool um);
     virtual ~MadgwickAHRS();
     
-    virtual void updateState(const IMUSensorsData& data, float &roll,
-        float& pitch, float& yaw);
+    virtual void updateState(const IMUSensorsData& data, QUATERNION& q);
     
 private:
     MADGWICK_AHRS_INFO ahrsInfo;
@@ -50,8 +44,7 @@ public:
     MahonyAHRS(float sr, bool um);
     virtual ~MahonyAHRS();
     
-    virtual void updateState(const IMUSensorsData& data, float &roll,
-        float& pitch, float& yaw);
+    virtual void updateState(const IMUSensorsData& data, QUATERNION& q);
     
 private:
     MAHONY_AHRS_INFO ahrsInfo;

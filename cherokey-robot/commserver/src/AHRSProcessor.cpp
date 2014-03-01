@@ -17,10 +17,9 @@ AHRSProcessor::AHRSProcessor(float sf)
 : gyroOffsetX(0.0f)
 , gyroOffsetY(0.0f)
 , gyroOffsetZ(0.0f)
-, angleOffsetRoll(0.0f)
-, angleOffsetPitch(0.0f)
-, angleOffsetYaw(0.0f)
-{    
+{
+    offsetQ = { 1.0f, 0.0f, 0.0f, 0.0f };
+    
     auto instance = ConfigManager::getInstance();
     if (!instance)
     {
@@ -72,6 +71,17 @@ float AHRSProcessor::filterGyroValue(float rawGyroValue, float& offset)
 void AHRSProcessor::updateState(const IMUSensorsData& data, float& roll, 
         float& pitch, float& yaw)
 {
+    QUATERNION q;
+    updateState(data, q);
+    convertQ2Angles(q, roll, pitch, yaw);
+    
+    roll = roll * 180 / M_PI;
+    pitch = pitch * 180 / M_PI;
+    yaw = yaw * 180 / M_PI;
+}
+
+void AHRSProcessor::updateState(const IMUSensorsData& data, QUATERNION& q)
+{
     float gyroX = filterGyroValue(data.rawGyroX, gyroOffsetX);
     float gyroY = filterGyroValue(data.rawGyroY, gyroOffsetY);
     float gyroZ = filterGyroValue(data.rawGyroZ, gyroOffsetZ);
@@ -98,11 +108,10 @@ void AHRSProcessor::updateState(const IMUSensorsData& data, float& roll,
                 softIronMatrix(2, 1) * BcY + softIronMatrix(2, 2) * BcZ;
     }
 
-    ahrsImpl->updateState(processedData, roll, pitch, yaw);
-
-    roll = roll * 180 / M_PI - angleOffsetRoll;
-    pitch = pitch * 180 / M_PI - angleOffsetPitch;
-    yaw = yaw * 180 / M_PI - angleOffsetYaw;
+    QUATERNION qRaw;
+    ahrsImpl->updateState(processedData, qRaw);
+    
+    QuaternionProd(&qRaw, &offsetQ, &q);
 }
 
 void AHRSProcessor::setGyroOffsets(float offX, float offY, float offZ)
@@ -112,10 +121,16 @@ void AHRSProcessor::setGyroOffsets(float offX, float offY, float offZ)
     gyroOffsetZ = offZ;
 }
 
-void AHRSProcessor::setAngleOffsets(float ofsRoll, float ofsPitch, 
-        float ofsYaw)
+void AHRSProcessor::setOffsetQuaternion(const QUATERNION& q)
 {
-    angleOffsetPitch = ofsPitch;
-    angleOffsetRoll = ofsRoll;
-    angleOffsetYaw = ofsYaw;
+    QuaternionConj(&q, &offsetQ);
+}
+
+void AHRSProcessor::convertQ2Angles(const QUATERNION& q, float& roll, 
+        float& pitch, float& yaw)
+{
+    QUATERNION qConj;
+    
+    QuaternionConj(&q, &qConj);
+    Quaternion2Euler(&qConj, &roll, &pitch, &yaw);
 }
