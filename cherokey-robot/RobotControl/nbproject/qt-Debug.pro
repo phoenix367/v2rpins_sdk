@@ -25,4 +25,5 @@ LIBS += -lprotobuf -lzmq -lGLU ../qwtplot3d/dist/Debug/GNU-Linux-x86/libqwtplot3
 CONFIG += link_pkgconfig
 PKGCONFIG += QtGStreamerUi-0.10
 PKGCONFIG += QtGStreamerUtils-0.10
+PKGCONFIG += opencv
 PKGCONFIG += QtGStreamer-0.10

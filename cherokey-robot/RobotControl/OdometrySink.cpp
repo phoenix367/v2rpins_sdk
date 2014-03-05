@@ -6,6 +6,7 @@
  */
 
 #include "OdometrySink.hpp"
+#include <QGst/Buffer>
 
 OdometrySink::OdometrySink() 
 {
@@ -13,4 +14,19 @@ OdometrySink::OdometrySink()
 
 OdometrySink::~OdometrySink() 
 {
+}
+
+void OdometrySink::eos()
+{
+}
+
+QGst::FlowReturn OdometrySink::newBuffer()
+{
+    QGst::BufferPtr buffer = pullBuffer();
+    if (buffer)
+    {
+        
+    }
+    
+    return QGst::FlowOk;
 }

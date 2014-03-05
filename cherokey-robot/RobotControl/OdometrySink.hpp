@@ -8,7 +8,6 @@
 #ifndef ODOMETRYSINK_HPP
 #define	ODOMETRYSINK_HPP
 
-#include <QGst/Object>
 #include <QGst/Utils/ApplicationSink>
 
 class OdometrySink : public QGst::Utils::ApplicationSink
@@ -18,9 +17,10 @@ public:
     virtual ~OdometrySink();
     
 protected:
+    virtual void eos();
+    virtual QGst::FlowReturn newBuffer();
     
 private:
-
 };
 
 #endif	/* ODOMETRYSINK_HPP */

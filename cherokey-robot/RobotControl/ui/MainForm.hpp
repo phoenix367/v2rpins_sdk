@@ -62,7 +62,7 @@ private:
     QGst::Ui::VideoWidget *videoWidget;
     Qwt3D::SurfacePlot* odometryPlot;
     uint64_t disconnectCmdId;
-    OdometrySink odometrySync;
+    OdometrySink odometrySink;
 };
 
 #endif	/* _MAINFORM_HPP */

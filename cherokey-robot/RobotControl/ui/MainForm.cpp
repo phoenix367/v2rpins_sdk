@@ -120,6 +120,8 @@ MainForm::MainForm()
     odometryPlot->setCoordinateStyle(Qwt3D::BOX);
     odometryPlot->updateData();
     odometryPlot->updateGL();
+    
+    odometrySink.enableDrop(true);
 }
 
 MainForm::~MainForm() 
@@ -349,7 +351,9 @@ void MainForm::startVideo()
     {
         pipeDescr = "udpsrc port=3000 ! application/x-rtp, media=video, "
             "payload=96 ! rtph264depay ! ffdec_h264 ! ffmpegcolorspace ! "
-            "videoscale add-borders=true ! ximagesink sync=false";
+            "videoscale add-borders=true ! "
+            "tee name=t ! queue ! appsink name=\"odometry_sink\" t. ! queue ! "
+            "ximagesink sync=false";
     }
     else
     {
@@ -361,6 +365,8 @@ void MainForm::startVideo()
 
     if (m_pipeline)
     {
+        odometrySink.setElement(m_pipeline->getElementByName("odometry_sink"));
+        
         videoWidget->watchPipeline(m_pipeline);
         m_pipeline->setState(QGst::StatePlaying);
     }

@@ -76,6 +76,7 @@
           <Elem>CONFIG += link_pkgconfig</Elem>
           <Elem>PKGCONFIG += QtGStreamerUi-0.10</Elem>
           <Elem>PKGCONFIG += QtGStreamerUtils-0.10</Elem>
+          <Elem>PKGCONFIG += opencv</Elem>
           <Elem>PKGCONFIG += QtGStreamer-0.10</Elem>
         </defs>
       </qt>
