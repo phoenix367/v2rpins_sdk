@@ -11,6 +11,7 @@
 #include "ui_MainForm.h"
 #include "RemoteConnector.hpp"
 #include "../PlatformModel.hpp"
+#include "../OdometrySink.hpp"
 #include "qwt3d_surfaceplot.h"
 #include "qwt3d_function.h"
 #include "qwt3d_plot.h"
@@ -61,6 +62,7 @@ private:
     QGst::Ui::VideoWidget *videoWidget;
     Qwt3D::SurfacePlot* odometryPlot;
     uint64_t disconnectCmdId;
+    OdometrySink odometrySync;
 };
 
 #endif	/* _MAINFORM_HPP */
