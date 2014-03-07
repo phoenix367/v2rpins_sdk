@@ -33,6 +33,22 @@ struct PinsInfo
     pc::GPIO_PIN driveADirectionPin;
     pc::GPIO_PIN driveBDirectionPin;
     pc::GPIO_PIN videoTxPowerPin;
+    pc::PWM_CHANNEL channelA;
+    pc::PWM_CHANNEL channelB;
+};
+
+struct AdcInfo
+{
+    int voltageChannel;
+    int currentChannel;
+};
+
+struct VoltageSensorInfo
+{
+    double voltageFactor;
+    double currentFactor;
+    double currentOffset;
+    uint32_t measurementRate;
 };
 
 enum class AHRSAlgorithm
@@ -63,6 +79,8 @@ public:
     bool isUseMagnetometer();
     boost::numeric::ublas::matrix<float> getSoftIronMatrix();
     PinsInfo getPinsInfo();
+    AdcInfo getAdcInfo();
+    VoltageSensorInfo getVoltageSensorInfo();
     
 private:
     boost::numeric::ublas::matrix<float> parseMatrixFromString(
@@ -87,6 +105,10 @@ private:
     static const std::string PINS_DRIVE_A_DIRECTION_PIN;
     static const std::string PINS_DRIVE_B_DIRECTION_PIN;
     static const std::string PINS_VIDEO_TX_PWR_PIN;
+    static const std::string PINS_PWM_A;
+    static const std::string PINS_PWM_B;
+    static const std::string ADC_VOLTAGE_CHANNEL;
+    static const std::string ADC_CURRENT_CHANNEL;
     
     boost::program_options::options_description desc;
     std::shared_ptr<ConnectionInfo> connectionInfo;
@@ -99,6 +121,8 @@ private:
     bool useMagnetometer;
     boost::numeric::ublas::matrix<float> softIronMatrix;
     PinsInfo pins;
+    AdcInfo adcInfo;
+    VoltageSensorInfo voltageInfo;
 };
 
 #endif	/* CONFIGMANAGER_HPP */

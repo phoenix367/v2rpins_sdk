@@ -18,9 +18,9 @@ namespace pc
     enum class PWM_CHANNEL : int
     {
         PWM_0 = 0, /** Канал PWM 0 */
-        PWM_1, /** Канал PWM 1 */
-        PWM_2, /** Канал PWM 2 */
-        PWM_3, /** Канал PWM 3 */
+        PWM_1 = 1, /** Канал PWM 1 */
+        PWM_2 = 2, /** Канал PWM 2 */
+        PWM_3 = 3, /** Канал PWM 3 */
         PWM_MAX /** Определяет максимальное число каналов */
     };
 
@@ -99,5 +99,6 @@ namespace pc
     };
     
     GPIO_PIN gpioPinFromIndex(int index);
+    PWM_CHANNEL pwmFromIndex(int index);
 }
 #endif	/* PC_GLOBAL_HPP */

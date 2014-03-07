@@ -54,6 +54,14 @@
         <itemPath>tests/GpioIndexTest.hpp</itemPath>
         <itemPath>tests/gpionindex.cpp</itemPath>
       </logicalFolder>
+      <logicalFolder name="f2"
+                     displayName="PWM Index test"
+                     projectFiles="true"
+                     kind="TEST">
+        <itemPath>tests/PwmIndexTest.cpp</itemPath>
+        <itemPath>tests/PwmIndexTest.hpp</itemPath>
+        <itemPath>tests/pwmindex.cpp</itemPath>
+      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Важные файлы"
@@ -89,6 +97,20 @@
         </ccTool>
         <linkerTool>
           <output>${TESTDIR}/TestFiles/f1</output>
+          <linkerLibItems>
+            <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </folder>
+      <folder path="TestFiles/f2">
+        <cTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </cTool>
+        <ccTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f2</output>
           <linkerLibItems>
             <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
           </linkerLibItems>
@@ -167,7 +189,13 @@
       </item>
       <item path="tests/GpioIndexTest.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="tests/PwmIndexTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/PwmIndexTest.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="tests/gpionindex.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/pwmindex.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="2">
@@ -213,110 +241,15 @@
           </linkerLibItems>
         </linkerTool>
       </folder>
-      <item path="include/pincontroller/adc_reader.hpp"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="include/pincontroller/exceptions.hpp"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="include/pincontroller/global.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="include/pincontroller/global.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/pincontroller/gpio_pin.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/pincontroller/pincontroller.hpp"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="include/pincontroller/pwm.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/pincontroller/reference.hpp"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="include/pincontroller/servo_rotator.hpp"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="src/adc_reader.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/details/dev_helper.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/details/dev_helper.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/details/file_helper.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/details/file_helper.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/details/gpio_manager.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/details/gpio_manager.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/details/gpio_pin_impl.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/details/gpio_pin_impl.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/details/hash.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/details/internal_enums.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/details/pwm_factory.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/details/pwm_factory.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/details/pwm_impl.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/details/pwm_impl.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/gpio_pin.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/pwm.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/servo_rotator.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="tests/GpioIndexTest.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="tests/GpioIndexTest.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="tests/gpionindex.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-    </conf>
-    <conf name="Debug_PC" type="2">
-      <toolsSet>
-        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
-        <compilerSet>GNU|GNU</compilerSet>
-        <dependencyChecking>true</dependencyChecking>
-        <rebuildPropChanged>false</rebuildPropChanged>
-      </toolsSet>
-      <compileType>
-        <ccTool>
-          <incDir>
-            <pElem>include</pElem>
-          </incDir>
-          <commandLine>-std=c++0x</commandLine>
-          <warningLevel>3</warningLevel>
-        </ccTool>
-      </compileType>
-      <folder path="TestFiles/f1">
+      <folder path="TestFiles/f2">
         <cTool>
           <commandLine>`cppunit-config --cflags`</commandLine>
         </cTool>
         <ccTool>
-          <incDir>
-            <pElem>include</pElem>
-          </incDir>
           <commandLine>`cppunit-config --cflags`</commandLine>
         </ccTool>
         <linkerTool>
-          <output>${TESTDIR}/TestFiles/f1</output>
+          <output>${TESTDIR}/TestFiles/f2</output>
           <linkerLibItems>
             <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
           </linkerLibItems>
@@ -395,7 +328,142 @@
       </item>
       <item path="tests/GpioIndexTest.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="tests/PwmIndexTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/PwmIndexTest.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="tests/gpionindex.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/pwmindex.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Debug_PC" type="2">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>GNU|GNU</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <incDir>
+            <pElem>include</pElem>
+          </incDir>
+          <commandLine>-std=c++0x</commandLine>
+          <warningLevel>3</warningLevel>
+        </ccTool>
+      </compileType>
+      <folder path="TestFiles/f1">
+        <cTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>include</pElem>
+          </incDir>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f1</output>
+          <linkerLibItems>
+            <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </folder>
+      <folder path="TestFiles/f2">
+        <cTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </cTool>
+        <ccTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f2</output>
+          <linkerLibItems>
+            <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </folder>
+      <item path="include/pincontroller/adc_reader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="include/pincontroller/exceptions.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="include/pincontroller/global.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="include/pincontroller/global.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/pincontroller/gpio_pin.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/pincontroller/pincontroller.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="include/pincontroller/pwm.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/pincontroller/reference.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="include/pincontroller/servo_rotator.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/adc_reader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/details/dev_helper.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/details/dev_helper.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/details/file_helper.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/details/file_helper.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/details/gpio_manager.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/details/gpio_manager.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/details/gpio_pin_impl.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/details/gpio_pin_impl.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/details/hash.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/details/internal_enums.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/details/pwm_factory.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/details/pwm_factory.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/details/pwm_impl.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/details/pwm_impl.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/gpio_pin.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/pwm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/servo_rotator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/GpioIndexTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/GpioIndexTest.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/PwmIndexTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/PwmIndexTest.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/gpionindex.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/pwmindex.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

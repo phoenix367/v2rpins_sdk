@@ -69,4 +69,23 @@ namespace pc
         
         return pin;
     }
+    
+    PWM_CHANNEL pwmFromIndex(int index)
+    {
+        PWM_CHANNEL pwm;
+        
+        switch (index)
+        {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+                pwm = (PWM_CHANNEL) index;
+                break;
+            default:
+                PC_EXCEPTION(IncorrectParamException, "Invalid PWM index");
+        }
+        
+        return pwm;
+    }
 }

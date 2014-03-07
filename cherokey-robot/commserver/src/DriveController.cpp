@@ -18,8 +18,6 @@
 std::unique_ptr<DriveController> DriveController::instance;
 
 DriveController::DriveController()
-: pwmA(new pc::PWM(pc::PWM_CHANNEL::PWM_0))
-, pwmB(new pc::PWM(pc::PWM_CHANNEL::PWM_1))
 {
     auto instance = ConfigManager::getInstance();
     
@@ -37,6 +35,11 @@ DriveController::DriveController()
     gpioDirectionB = std::unique_ptr<pc::GPIOPin>(
             new pc::GPIOPin(pinConfig.driveBDirectionPin, 
                 pc::GPIO_DIRECTION::output));
+    
+    pwmA = std::unique_ptr<pc::PWM>(
+            new pc::PWM(pinConfig.channelA));
+    pwmB = std::unique_ptr<pc::PWM>(
+            new pc::PWM(pinConfig.channelB));
 }
 
 DriveController::~DriveController() 

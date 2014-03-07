@@ -22,6 +22,8 @@ private:
     
 private:
     pc::ADCReader adcReader;
+    int voltageChannel;
+    int currentChannel;
 };
 
 #endif	/* VOLTAGEREADER_HPP */

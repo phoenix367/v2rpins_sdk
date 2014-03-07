@@ -38,6 +38,10 @@ const std::string ConfigManager::PINS_DRIVE_B_DIRECTION_PIN =
     "Pins.DriveBDirectionPin";
 const std::string ConfigManager::PINS_VIDEO_TX_PWR_PIN =
     "Pins.VideoTxPwrPin";
+const std::string ConfigManager::PINS_PWM_A = "Pins.PWM_A";
+const std::string ConfigManager::PINS_PWM_B = "Pins.PWM_B";
+const std::string ConfigManager::ADC_VOLTAGE_CHANNEL = "ADC.VoltageChannel";
+const std::string ConfigManager::ADC_CURRENT_CHANNEL = "ADC.CurrentChannel";
 
 ConfigManager::ConfigManager() 
 : desc("Options")
@@ -76,6 +80,14 @@ ConfigManager::ConfigManager()
             "Drive B group direction pin")
         (PINS_VIDEO_TX_PWR_PIN.c_str(), boost::program_options::value<uint32_t>()->required(),
             "Video transmitter power pin")
+        (PINS_PWM_A.c_str(), boost::program_options::value<uint32_t>()->required(),
+            "PWM channel for A drivers group")
+        (PINS_PWM_B.c_str(), boost::program_options::value<uint32_t>()->required(),
+            "PWM channel for B drivers group")
+        (ADC_VOLTAGE_CHANNEL.c_str(), boost::program_options::value<int32_t>()->required(),
+            "ADC channel for voltage sensor")
+        (ADC_CURRENT_CHANNEL.c_str(), boost::program_options::value<int32_t>()->required(),
+            "ADC channel for current sensor")
         ;
 }
 
@@ -294,6 +306,60 @@ void ConfigManager::loadConfiguration(const std::string& fileName)
             COMM_EXCEPTION(ConfigurationException, 
                     "Pin for video transmitter power isn't specified");
         }
+
+        if (vm.count(PINS_PWM_A))
+        {
+            pins.channelA = pc::pwmFromIndex(
+                    vm[PINS_PWM_A].as<uint32_t>());
+        }
+        else
+        {
+            COMM_EXCEPTION(ConfigurationException, 
+                    "PWM channel isn't specified");
+        }
+
+        if (vm.count(PINS_PWM_B))
+        {
+            pins.channelB = pc::pwmFromIndex(
+                    vm[PINS_PWM_B].as<uint32_t>());
+        }
+        else
+        {
+            COMM_EXCEPTION(ConfigurationException, 
+                    "PWM channel isn't specified");
+        }
+
+        if (vm.count(ADC_VOLTAGE_CHANNEL))
+        {
+            adcInfo.voltageChannel = vm[ADC_VOLTAGE_CHANNEL].as<int32_t>();
+            
+            if (adcInfo.voltageChannel < 0 || adcInfo.voltageChannel > 5)
+            {
+                COMM_EXCEPTION(ConfigurationException, 
+                    "Incorrect ADC channel");
+            }
+        }
+        else
+        {
+            COMM_EXCEPTION(ConfigurationException, 
+                    "ADC channel for voltage sensor isn't specified");
+        }
+
+        if (vm.count(ADC_CURRENT_CHANNEL))
+        {
+            adcInfo.currentChannel = vm[ADC_CURRENT_CHANNEL].as<int32_t>();
+            
+            if (adcInfo.currentChannel < 0 || adcInfo.currentChannel > 5)
+            {
+                COMM_EXCEPTION(ConfigurationException, 
+                    "Incorrect ADC channel");
+            }
+        }
+        else
+        {
+            COMM_EXCEPTION(ConfigurationException, 
+                    "ADC channel for current sensor isn't specified");
+        }
     }
     catch (Exception&)
     {
@@ -415,4 +481,14 @@ boost::numeric::ublas::matrix<float> ConfigManager::parseMatrixFromString(
 PinsInfo ConfigManager::getPinsInfo()
 {
     return pins;
+}
+
+AdcInfo ConfigManager::getAdcInfo()
+{
+    return adcInfo;
+}
+
+VoltageSensorInfo ConfigManager::getVoltageSensorInfo()
+{
+    return voltageInfo;
 }

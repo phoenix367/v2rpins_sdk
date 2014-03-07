@@ -52,7 +52,8 @@ TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 
 # Test Files
 TESTFILES= \
-	${TESTDIR}/TestFiles/f1
+	${TESTDIR}/TestFiles/f1 \
+	${TESTDIR}/TestFiles/f2
 
 # C Compiler Flags
 CFLAGS=
@@ -142,6 +143,10 @@ ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/GpioIndexTest.o ${TESTDIR}/tests/gpion
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.cc}   -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS} `cppunit-config --libs`   
 
+${TESTDIR}/TestFiles/f2: ${TESTDIR}/tests/PwmIndexTest.o ${TESTDIR}/tests/pwmindex.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc}   -o ${TESTDIR}/TestFiles/f2 $^ ${LDLIBSOPTIONS} `cppunit-config --libs`   
+
 
 ${TESTDIR}/tests/GpioIndexTest.o: tests/GpioIndexTest.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
@@ -153,6 +158,18 @@ ${TESTDIR}/tests/gpionindex.o: tests/gpionindex.cpp
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
 	$(COMPILE.cc) -g -Werror -Iinclude -Iinclude -std=c++0x `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/gpionindex.o tests/gpionindex.cpp
+
+
+${TESTDIR}/tests/PwmIndexTest.o: tests/PwmIndexTest.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} $@.d
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/PwmIndexTest.o tests/PwmIndexTest.cpp
+
+
+${TESTDIR}/tests/pwmindex.o: tests/pwmindex.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} $@.d
+	$(COMPILE.cc) -g -Werror -Iinclude -std=c++0x `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/pwmindex.o tests/pwmindex.cpp
 
 
 ${OBJECTDIR}/include/pincontroller/global_nomain.o: ${OBJECTDIR}/include/pincontroller/global.o include/pincontroller/global.cpp 
@@ -303,6 +320,7 @@ ${OBJECTDIR}/src/servo_rotator_nomain.o: ${OBJECTDIR}/src/servo_rotator.o src/se
 	@if [ "${TEST}" = "" ]; \
 	then  \
 	    ${TESTDIR}/TestFiles/f1 || true; \
+	    ${TESTDIR}/TestFiles/f2 || true; \
 	else  \
 	    ./${TEST} || true; \
 	fi

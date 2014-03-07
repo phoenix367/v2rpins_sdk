@@ -15,6 +15,19 @@ namespace cs = cherokey::sensors;
 
 VoltageReader::VoltageReader()
 {
+    auto instance = ConfigManager::getInstance();
+    
+    if (!instance)
+    {
+        COMM_EXCEPTION(NullPointerException, "Configuration manager "
+                "instance is null.");
+    }
+    
+    auto adcInfo = instance->getAdcInfo();
+    
+    voltageChannel = adcInfo.voltageChannel;
+    currentChannel = adcInfo.currentChannel;
+    
     initThread();
 }
 
@@ -47,11 +60,12 @@ void VoltageReader::run()
         pc::ADCReader::ADCValue adcValue;
         adcReader.read(adcValue);
 
-        float voltage = adcValue.adcVoltages[0] * 3.593;
+        float voltage = adcValue.adcVoltages[voltageChannel] * 3.593;
         voltage = (voltage + prevVoltageData) / 2;
         prevVoltageData = voltage;
 
-        float current = -(adcValue.adcVoltages[1] - 2) / (2 * 0.185);
+        float current = -(adcValue.adcVoltages[currentChannel] - 2) / 
+            (2 * 0.185);
         current = (current + prevCurrentData) / 2;
         prevCurrentData = current;
 
