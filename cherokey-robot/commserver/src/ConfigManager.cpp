@@ -42,6 +42,10 @@ const std::string ConfigManager::PINS_PWM_A = "Pins.PWM_A";
 const std::string ConfigManager::PINS_PWM_B = "Pins.PWM_B";
 const std::string ConfigManager::ADC_VOLTAGE_CHANNEL = "ADC.VoltageChannel";
 const std::string ConfigManager::ADC_CURRENT_CHANNEL = "ADC.CurrentChannel";
+const std::string ConfigManager::VOLTAGE_VOLTAGE_SCALE = "VoltageSensor.VoltageScale";
+const std::string ConfigManager::VOLTAGE_CURRENT_SCALE = "VoltageSensor.CurrentScale";
+const std::string ConfigManager::VOLTAGE_CURRENT_OFFSET = "VoltageSensor.CurrentOffset";
+const std::string ConfigManager::VOLTAGE_MEASUREMENT_RATE = "VoltageSensor.MeasurementRate";
 
 ConfigManager::ConfigManager() 
 : desc("Options")
@@ -88,6 +92,14 @@ ConfigManager::ConfigManager()
             "ADC channel for voltage sensor")
         (ADC_CURRENT_CHANNEL.c_str(), boost::program_options::value<int32_t>()->required(),
             "ADC channel for current sensor")
+        (VOLTAGE_VOLTAGE_SCALE.c_str(), boost::program_options::value<double>()->required(),
+            "Voltage sensor scale")
+        (VOLTAGE_CURRENT_SCALE.c_str(), boost::program_options::value<double>()->required(),
+            "Current sensor scale")
+        (VOLTAGE_CURRENT_OFFSET.c_str(), boost::program_options::value<double>()->required(),
+            "Current sensor offset")
+        (VOLTAGE_MEASUREMENT_RATE.c_str(), boost::program_options::value<uint32_t>(),
+            "Sensors measurement rate")
         ;
 }
 
@@ -359,6 +371,55 @@ void ConfigManager::loadConfiguration(const std::string& fileName)
         {
             COMM_EXCEPTION(ConfigurationException, 
                     "ADC channel for current sensor isn't specified");
+        }
+
+        if (vm.count(VOLTAGE_VOLTAGE_SCALE))
+        {
+            voltageInfo.voltageScale = vm[VOLTAGE_VOLTAGE_SCALE].as<double>();
+        }
+        else
+        {
+            COMM_EXCEPTION(ConfigurationException, 
+                    "Scale of voltage sensor isn't specified");
+        }
+
+        if (vm.count(VOLTAGE_CURRENT_SCALE))
+        {
+            voltageInfo.currentScale = vm[VOLTAGE_CURRENT_SCALE].as<double>();
+        }
+        else
+        {
+            COMM_EXCEPTION(ConfigurationException, 
+                    "Scale of current sensor isn't specified");
+        }
+
+        if (vm.count(VOLTAGE_CURRENT_OFFSET))
+        {
+            voltageInfo.currentOffset = vm[VOLTAGE_CURRENT_OFFSET].as<double>();
+        }
+        else
+        {
+            COMM_EXCEPTION(ConfigurationException, 
+                    "Offset of current sensor isn't specified");
+        }
+
+        if (vm.count(VOLTAGE_MEASUREMENT_RATE))
+        {
+            voltageInfo.measurementRate = 
+                    vm[VOLTAGE_MEASUREMENT_RATE].as<uint32_t>();
+            
+            if (voltageInfo.measurementRate < 100)
+            {
+                voltageInfo.measurementRate = 100;
+            }
+            else if (voltageInfo.measurementRate > 5000)
+            {
+                voltageInfo.measurementRate = 5000;
+            }
+        }
+        else
+        {
+            voltageInfo.measurementRate = 250;
         }
     }
     catch (Exception&)

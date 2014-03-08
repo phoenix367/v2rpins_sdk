@@ -10,6 +10,7 @@
 
 #include "pincontroller/adc_reader.hpp"
 #include "SensorReader.hpp"
+#include "ConfigManager.hpp"
 
 class VoltageReader : public SensorReader
 {
@@ -24,6 +25,7 @@ private:
     pc::ADCReader adcReader;
     int voltageChannel;
     int currentChannel;
+    VoltageSensorInfo sensorInfo;
 };
 
 #endif	/* VOLTAGEREADER_HPP */

@@ -27,6 +27,7 @@ VoltageReader::VoltageReader()
     
     voltageChannel = adcInfo.voltageChannel;
     currentChannel = adcInfo.currentChannel;
+    sensorInfo = instance->getVoltageSensorInfo();
     
     initThread();
 }
@@ -52,7 +53,7 @@ void VoltageReader::run()
 
     float prevVoltageData = 0, prevCurrentData = 0;
 
-    auto delayTime = std::chrono::milliseconds(250);
+    auto delayTime = std::chrono::milliseconds(sensorInfo.measurementRate);
     auto t = std::chrono::high_resolution_clock::now();
 
     while (!stopVariable)
@@ -60,12 +61,13 @@ void VoltageReader::run()
         pc::ADCReader::ADCValue adcValue;
         adcReader.read(adcValue);
 
-        float voltage = adcValue.adcVoltages[voltageChannel] * 3.593;
+        float voltage = adcValue.adcVoltages[voltageChannel] * 
+            sensorInfo.voltageScale;
         voltage = (voltage + prevVoltageData) / 2;
         prevVoltageData = voltage;
 
-        float current = -(adcValue.adcVoltages[currentChannel] - 2) / 
-            (2 * 0.185);
+        float current = (adcValue.adcVoltages[currentChannel] - 
+            sensorInfo.currentOffset) / sensorInfo.currentScale;
         current = (current + prevCurrentData) / 2;
         prevCurrentData = current;
 

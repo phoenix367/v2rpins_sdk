@@ -45,8 +45,8 @@ struct AdcInfo
 
 struct VoltageSensorInfo
 {
-    double voltageFactor;
-    double currentFactor;
+    double voltageScale;
+    double currentScale;
     double currentOffset;
     uint32_t measurementRate;
 };
@@ -109,6 +109,10 @@ private:
     static const std::string PINS_PWM_B;
     static const std::string ADC_VOLTAGE_CHANNEL;
     static const std::string ADC_CURRENT_CHANNEL;
+    static const std::string VOLTAGE_VOLTAGE_SCALE;
+    static const std::string VOLTAGE_CURRENT_SCALE;
+    static const std::string VOLTAGE_CURRENT_OFFSET;
+    static const std::string VOLTAGE_MEASUREMENT_RATE;
     
     boost::program_options::options_description desc;
     std::shared_ptr<ConnectionInfo> connectionInfo;
