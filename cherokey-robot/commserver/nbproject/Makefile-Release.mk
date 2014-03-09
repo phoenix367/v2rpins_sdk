@@ -39,11 +39,13 @@ OBJECTFILES= \
 	${OBJECTDIR}/messages/sensors.pb.o \
 	${OBJECTDIR}/src/AHRSProcessor.o \
 	${OBJECTDIR}/src/AHRSStrategy.o \
+	${OBJECTDIR}/src/CommandSender.o \
 	${OBJECTDIR}/src/ConfigManager.o \
 	${OBJECTDIR}/src/ConnectionListener.o \
 	${OBJECTDIR}/src/DriveController.o \
 	${OBJECTDIR}/src/GPSReader.o \
 	${OBJECTDIR}/src/IMUReader.o \
+	${OBJECTDIR}/src/IndicatorController.o \
 	${OBJECTDIR}/src/SensorReader.o \
 	${OBJECTDIR}/src/SensorsController.o \
 	${OBJECTDIR}/src/VideoController.o \
@@ -102,6 +104,11 @@ ${OBJECTDIR}/src/AHRSStrategy.o: src/AHRSStrategy.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O3 -D_GLIBCXX_USE_NANOSLEEP -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -I../madgwik_ahrs/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/AHRSStrategy.o src/AHRSStrategy.cpp
 
+${OBJECTDIR}/src/CommandSender.o: src/CommandSender.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -O3 -D_GLIBCXX_USE_NANOSLEEP -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -I../madgwik_ahrs/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/CommandSender.o src/CommandSender.cpp
+
 ${OBJECTDIR}/src/ConfigManager.o: src/ConfigManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
@@ -126,6 +133,11 @@ ${OBJECTDIR}/src/IMUReader.o: src/IMUReader.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -O3 -D_GLIBCXX_USE_NANOSLEEP -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -I../madgwik_ahrs/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/IMUReader.o src/IMUReader.cpp
+
+${OBJECTDIR}/src/IndicatorController.o: src/IndicatorController.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -O3 -D_GLIBCXX_USE_NANOSLEEP -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -I../madgwik_ahrs/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/IndicatorController.o src/IndicatorController.cpp
 
 ${OBJECTDIR}/src/SensorReader.o: src/SensorReader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src

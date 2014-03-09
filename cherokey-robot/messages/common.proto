@@ -53,11 +53,16 @@ message ShowVideo
     optional uint32 receiver_address = 3;
 }
 
+message CalibrationState
+{
+    required SwitchState state = 1;
+}
+
 message CommandMessage 
 {
     enum Type { 
         PING = 1; MOVE = 2; RUN_DRIVE = 3; SENSORS_INFO = 4; 
-        SHOW_VIDEO = 5;
+        SHOW_VIDEO = 5; CALIBRATION_STATE = 6;
     }
 
     // Identifies which field is filled in.
@@ -71,6 +76,7 @@ message CommandMessage
     optional RunDriveGroup run_drive = 5;
     optional SendSensorsInfo sensors_send_state = 6;
     optional ShowVideo show_video = 7;
+    optional CalibrationState calibration_state = 8;
 }
 
 message CommandReply {

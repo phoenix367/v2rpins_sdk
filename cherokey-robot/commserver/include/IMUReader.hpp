@@ -9,6 +9,7 @@
 #define	IMUREADER_HPP
 
 #include "SensorReader.hpp"
+#include "CommandSender.hpp"
 
 namespace cherokey
 {
@@ -33,7 +34,7 @@ struct IMUSensorsData
     float rawGyroZ;
 };
 
-class IMUReader : public SensorReader
+class IMUReader : public SensorReader, public CommandSender
 {
 private:
     
@@ -65,6 +66,7 @@ private:
     void initSensors();
     void readSensors(IMUSensorsData& data, GyroState& gyroState,
             bool calibration);
+    void showCalibration(bool bShow);
     
 private:
     int file;

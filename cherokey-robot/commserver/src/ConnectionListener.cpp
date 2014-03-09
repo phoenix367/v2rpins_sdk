@@ -11,10 +11,14 @@
 #include "VideoController.hpp"
 #include "common.pb.h"
 #include "SensorsController.hpp"
+#include "IndicatorController.hpp"
 
 namespace cc = cherokey::common;
 
 extern zmq::context_t gContext;
+
+const std::string ConnectionListener::INTERNAL_COMMAND_ADDR =
+    "inproc://commands";
 
 ConnectionListener::ConnectionListener(
     std::shared_ptr<ConnectionInfo>& infoPtr) 
@@ -40,23 +44,23 @@ void ConnectionListener::run()
     stream << "tcp://" << connectionParams->ipAddress.to_string() << ":" <<
             connectionParams->port;
 
-    zmq::socket_t socket(gContext, ZMQ_REP);
+    zmq::socket_t socketCmd(gContext, ZMQ_REP), 
+            socketInt(gContext, ZMQ_PULL);
     
     std::cout << stream.str() << std::endl;
     
-    socket.bind(stream.str().c_str());
+    socketCmd.bind(stream.str().c_str());
+    socketInt.bind(INTERNAL_COMMAND_ADDR.c_str());
     
     while (true)
     {
         zmq::message_t message;
         
+        zmq::pollitem_t items [] = { { socketCmd, 0, ZMQ_POLLIN, 0 },
+            { socketInt, 0, ZMQ_POLLIN, 0 } };
         try
         {
-            if (socket.recv(&message))
-            {
-                stopWatchdogTimer();
-                startWatchDogTimer();
-            }
+            zmq::poll(items, 2, 1000);
         }
         catch (zmq::error_t& e)
         {
@@ -69,34 +73,72 @@ void ConnectionListener::run()
                 throw;
             }
         }
-        
-        cc::CommandMessage commandMsg;
-        if (!commandMsg.ParseFromArray(message.data(), message.size()))
+
+        if (items[0].revents & ZMQ_POLLIN) 
         {
-            std::cout << "Invalid message" << std::endl;
-        }
-        else
-        {
-            switch (commandMsg.type())
+            if (socketCmd.recv(&message))
             {
-                case cc::CommandMessage::PING:
-                    processPing(socket, commandMsg);
-                    break;
-                case cc::CommandMessage::MOVE:
-                    processMove(socket, commandMsg);
-                    break;
-                case cc::CommandMessage::SHOW_VIDEO:
-                    processVideo(socket, commandMsg);
-                    break;
-                case cc::CommandMessage::SENSORS_INFO:
-                    processSensrosInfo(socket, commandMsg);
-                    break;
-                default:
-                    std::cout << "Received unknown message with type " <<
-                          commandMsg.type() << std::endl;  
+                stopWatchdogTimer();
+                startWatchDogTimer();
+            }
+        
+            cc::CommandMessage commandMsg;
+            if (!commandMsg.ParseFromArray(message.data(), message.size()))
+            {
+                std::cout << "Invalid command message" << std::endl;
+            }
+            else
+            {
+                switch (commandMsg.type())
+                {
+                    case cc::CommandMessage::PING:
+                        processPing(socketCmd, commandMsg);
+                        break;
+                    case cc::CommandMessage::MOVE:
+                        processMove(socketCmd, commandMsg);
+                        break;
+                    case cc::CommandMessage::SHOW_VIDEO:
+                        processVideo(socketCmd, commandMsg);
+                        break;
+                    case cc::CommandMessage::SENSORS_INFO:
+                        processSensrosInfo(socketCmd, commandMsg);
+                        break;
+                    default:
+                        std::cout << "Received unknown message with type " <<
+                              commandMsg.type() << std::endl;  
+                }
+            }
+        }
+        
+        if (items[1].revents & ZMQ_POLLIN) 
+        {
+            if (socketInt.recv(&message))
+            {
+                cc::CommandMessage commandMsg;
+                if (!commandMsg.ParseFromArray(message.data(), 
+                        message.size()))
+                {
+                    std::cout << "Invalid internal message" << std::endl;
+                }
+                else
+                {
+                    switch (commandMsg.type())
+                    {
+                        case cc::CommandMessage::CALIBRATION_STATE:
+                            processCalibration(commandMsg);
+                            break;
+                        default:
+                            std::cout << 
+                                  "Received unknown internal message with type " <<
+                                  commandMsg.type() << std::endl;  
+                    }
+                }
             }
         }
     }
+    
+    socketCmd.close();
+    socketInt.close();
 }
 
 void ConnectionListener::processPing(zmq::socket_t& socket, 
@@ -288,6 +330,28 @@ void ConnectionListener::processSensrosInfo(zmq::socket_t& socket,
     catch (std::exception& e)
     {
         sendNack(e.what(), cookie, socket);
+    }
+}
+
+void ConnectionListener::processCalibration(
+        cherokey::common::CommandMessage& msg)
+{
+    try
+    {
+        auto instance = IndicatorController::getInstance();
+        
+        if (!instance)
+        {
+            COMM_EXCEPTION(NullPointerException,
+                    "Indicator controller instance is null");
+        }
+        
+        auto stateMsg = msg.mutable_calibration_state();
+        instance->showCalibrationState(stateMsg->state() == cc::ON);
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "Exception occured: " << e.what() << std::endl;
     }
 }
 

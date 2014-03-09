@@ -11,6 +11,8 @@
 #include "madgwik_ahrs.h"
 #include "ConfigManager.hpp"
 #include "AHRSProcessor.hpp"
+#include "ConnectionListener.hpp"
+#include "common.pb.h"
 
 #include <linux/i2c-dev.h>
 #include <linux/swab.h>
@@ -30,10 +32,12 @@
 #define BMA180_I2C_ADDR             0x40
 
 namespace cs = cherokey::sensors;
+namespace cm = cherokey::common;
 
 #define WRITE_SENSORS_DATA          0
 
 IMUReader::IMUReader() 
+: CommandSender(ConnectionListener::INTERNAL_COMMAND_ADDR)
 {
     if ((file = open(I2CDEV, O_RDWR)) < 0) 
     {
@@ -81,6 +85,8 @@ void IMUReader::run()
     
     float pitch, roll, yaw;
     QUATERNION offsetQ;
+    
+    showCalibration(true);
     
     auto delayTime = std::chrono::milliseconds(10);
     auto t = std::chrono::high_resolution_clock::now();
@@ -147,6 +153,7 @@ void IMUReader::run()
             ahrsProcessor.setGyroOffsets(gyroState.offsetX, gyroState.offsetY,
                     gyroState.offsetZ);
             ahrsProcessor.setOffsetQuaternion(offsetQ);
+            showCalibration(false);
         }
     }
 
@@ -260,4 +267,17 @@ void IMUReader::readSensors(IMUSensorsData& data, GyroState& gyroState,
             gyroState.offsetZ += z;
         }
     }
+}
+
+void IMUReader::showCalibration(bool bShow)
+{
+    cm::CommandMessage msg;
+    
+    msg.set_cookie(0);
+    msg.set_type(cm::CommandMessage::CALIBRATION_STATE);
+    auto stateMsg = msg.mutable_calibration_state();
+    
+    stateMsg->set_state((bShow) ? cm::ON : cm::OFF);
+    
+    sendMessage(msg);
 }

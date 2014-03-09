@@ -24,6 +24,8 @@ namespace cherokey
 class ConnectionListener 
 {
 public:
+    static const std::string INTERNAL_COMMAND_ADDR;
+public:
     ConnectionListener(std::shared_ptr<ConnectionInfo>& infoPtr);
     virtual ~ConnectionListener();
     
@@ -42,6 +44,8 @@ private:
     void processVideo(zmq::socket_t& socket, 
             cherokey::common::CommandMessage& msg);
     void processSensrosInfo(zmq::socket_t& socket, 
+            cherokey::common::CommandMessage& msg);
+    void processCalibration(
             cherokey::common::CommandMessage& msg);
     
     void startWatchDogTimer();
