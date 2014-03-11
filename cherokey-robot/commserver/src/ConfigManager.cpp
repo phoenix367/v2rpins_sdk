@@ -25,6 +25,7 @@ const std::string ConfigManager::SENSORS_ADDRESS_KEY = "Sensors.IPAddress";
 const std::string ConfigManager::SENSORS_PORT_KEY = "Sensors.Port";
 const std::string ConfigManager::GPS_SERIAL_DEVICE = "GPS.SerialDevice";
 const std::string ConfigManager::GPS_SERIAL_BAUDRATE = "GPS.Baudrate";
+const std::string ConfigManager::GPS_SERIAL_TIMEOUT = "GPS.SerialTimeout";
 const std::string ConfigManager::IMU_COMPASS_X_OFFSET = "IMU.V_x";
 const std::string ConfigManager::IMU_COMPASS_Y_OFFSET = "IMU.V_y";
 const std::string ConfigManager::IMU_COMPASS_Z_OFFSET = "IMU.V_z";
@@ -38,6 +39,8 @@ const std::string ConfigManager::PINS_DRIVE_B_DIRECTION_PIN =
     "Pins.DriveBDirectionPin";
 const std::string ConfigManager::PINS_VIDEO_TX_PWR_PIN =
     "Pins.VideoTxPwrPin";
+const std::string ConfigManager::PINS_CALIB_IND_PIN =
+    "Pins.CalibrationIndicatorPin";
 const std::string ConfigManager::PINS_PWM_A = "Pins.PWM_A";
 const std::string ConfigManager::PINS_PWM_B = "Pins.PWM_B";
 const std::string ConfigManager::ADC_VOLTAGE_CHANNEL = "ADC.VoltageChannel";
@@ -64,6 +67,8 @@ ConfigManager::ConfigManager()
             "Serial device to connect with GPS receiver")
         (GPS_SERIAL_BAUDRATE.c_str(), boost::program_options::value<uint32_t>(),
             "Desired buadrate of serial device")
+        (GPS_SERIAL_TIMEOUT.c_str(), boost::program_options::value<uint32_t>(),
+            "Maximal timeout to read from serial device")
         (IMU_COMPASS_X_OFFSET.c_str(), boost::program_options::value<float>(),
             "Offset of compass X axis")
         (IMU_COMPASS_Y_OFFSET.c_str(), boost::program_options::value<float>(),
@@ -84,6 +89,8 @@ ConfigManager::ConfigManager()
             "Drive B group direction pin")
         (PINS_VIDEO_TX_PWR_PIN.c_str(), boost::program_options::value<uint32_t>()->required(),
             "Video transmitter power pin")
+        (PINS_CALIB_IND_PIN.c_str(), boost::program_options::value<uint32_t>()->required(),
+            "Calibration indicator pin")
         (PINS_PWM_A.c_str(), boost::program_options::value<uint32_t>()->required(),
             "PWM channel for A drivers group")
         (PINS_PWM_B.c_str(), boost::program_options::value<uint32_t>()->required(),
@@ -195,6 +202,15 @@ void ConfigManager::loadConfiguration(const std::string& fileName)
                     "GPS serial device baudrate is not specified.");
         }
         
+        if (vm.count(GPS_SERIAL_TIMEOUT))
+        {
+            gpsSerialTimeout = vm[GPS_SERIAL_TIMEOUT].as<uint32_t>();
+        }
+        else
+        {
+            gpsSerialTimeout = 3;
+        }
+
         if (vm.count(IMU_COMPASS_X_OFFSET))
         {
             compassOffsets.V_x = vm[IMU_COMPASS_X_OFFSET].as<float>();
@@ -317,6 +333,17 @@ void ConfigManager::loadConfiguration(const std::string& fileName)
         {
             COMM_EXCEPTION(ConfigurationException, 
                     "Pin for video transmitter power isn't specified");
+        }
+
+        if (vm.count(PINS_CALIB_IND_PIN))
+        {
+            pins.calibIndPin = pc::gpioPinFromIndex(
+                    vm[PINS_CALIB_IND_PIN].as<uint32_t>());
+        }
+        else
+        {
+            COMM_EXCEPTION(ConfigurationException, 
+                    "Calibration indicator pin isn't specified");
         }
 
         if (vm.count(PINS_PWM_A))
@@ -552,4 +579,9 @@ AdcInfo ConfigManager::getAdcInfo()
 VoltageSensorInfo ConfigManager::getVoltageSensorInfo()
 {
     return voltageInfo;
+}
+
+uint32_t ConfigManager::getGPSSerialTimeout()
+{
+    return gpsSerialTimeout;
 }

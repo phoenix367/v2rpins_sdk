@@ -28,7 +28,8 @@ GPSReader::GPSReader()
     SerialOptions options;
     options.setDevice(instance->getGPSDevice());
     options.setBaudrate(instance->getGPSDeviceBaudrate());
-    options.setTimeout(boost::posix_time::seconds(3));
+    options.setTimeout(boost::posix_time::seconds(
+        instance->getGPSSerialTimeout()));
     
     serialStreamPtr = std::shared_ptr<SerialStream>(
             new SerialStream(options));
@@ -59,11 +60,17 @@ void GPSReader::run()
     auto values = sensorMessage.mutable_sensor_values();
     auto latData = values->Add();
     auto lonData = values->Add();
+    auto velData = values->Add();
+    auto dirData = values->Add();
     
     latData->set_associated_name("latitude");
     latData->set_data_type(cs::REAL);
     lonData->set_associated_name("longitude");
     lonData->set_data_type(cs::REAL);
+    velData->set_associated_name("velocity");
+    velData->set_data_type(cs::REAL);
+    dirData->set_associated_name("direction");
+    dirData->set_data_type(cs::REAL);
 
     while (!stopVariable)
     {
@@ -85,6 +92,8 @@ void GPSReader::run()
             
             latData->set_real_value(degLat);
             lonData->set_real_value(degLon);
+            velData->set_real_value(info.speed);
+            dirData->set_real_value(info.direction);
 
             int messageSize = sensorMessage.ByteSize();
             std::vector<int8_t> outArray(messageSize);

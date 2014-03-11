@@ -33,6 +33,7 @@ struct PinsInfo
     pc::GPIO_PIN driveADirectionPin;
     pc::GPIO_PIN driveBDirectionPin;
     pc::GPIO_PIN videoTxPowerPin;
+    pc::GPIO_PIN calibIndPin;
     pc::PWM_CHANNEL channelA;
     pc::PWM_CHANNEL channelB;
 };
@@ -81,6 +82,7 @@ public:
     PinsInfo getPinsInfo();
     AdcInfo getAdcInfo();
     VoltageSensorInfo getVoltageSensorInfo();
+    uint32_t getGPSSerialTimeout();
     
 private:
     boost::numeric::ublas::matrix<float> parseMatrixFromString(
@@ -95,6 +97,7 @@ private:
     static const std::string SENSORS_PORT_KEY;
     static const std::string GPS_SERIAL_DEVICE;
     static const std::string GPS_SERIAL_BAUDRATE;
+    static const std::string GPS_SERIAL_TIMEOUT;
     static const std::string IMU_COMPASS_X_OFFSET;
     static const std::string IMU_COMPASS_Y_OFFSET;
     static const std::string IMU_COMPASS_Z_OFFSET;
@@ -105,6 +108,7 @@ private:
     static const std::string PINS_DRIVE_A_DIRECTION_PIN;
     static const std::string PINS_DRIVE_B_DIRECTION_PIN;
     static const std::string PINS_VIDEO_TX_PWR_PIN;
+    static const std::string PINS_CALIB_IND_PIN;
     static const std::string PINS_PWM_A;
     static const std::string PINS_PWM_B;
     static const std::string ADC_VOLTAGE_CHANNEL;
@@ -127,6 +131,7 @@ private:
     PinsInfo pins;
     AdcInfo adcInfo;
     VoltageSensorInfo voltageInfo;
+    uint32_t gpsSerialTimeout;
 };
 
 #endif	/* CONFIGMANAGER_HPP */

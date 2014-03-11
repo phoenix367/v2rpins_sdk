@@ -6,13 +6,25 @@
  */
 
 #include "IndicatorController.hpp"
+#include "ConfigManager.hpp"
+#include "Exceptions.hpp"
 
 std::unique_ptr<IndicatorController> IndicatorController::instance;
 
 IndicatorController::IndicatorController() 
 {
+    auto instance = ConfigManager::getInstance();
+    
+    if (!instance)
+    {
+        COMM_EXCEPTION(NullPointerException, "Pointer to instance of "
+                "configuration manager is null.");
+    }
+
+    auto pins = instance->getPinsInfo();
+    
     calibrationIndPin = std::unique_ptr<pc::GPIOPin>(
-            new pc::GPIOPin(pc::GPIO_PIN::gpio32, 
+            new pc::GPIOPin(pins.calibIndPin, 
                 pc::GPIO_DIRECTION::output));
 }
 
