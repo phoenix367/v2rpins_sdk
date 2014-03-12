@@ -13,6 +13,7 @@
 #include "AHRSProcessor.hpp"
 #include "ConnectionListener.hpp"
 #include "common.pb.h"
+#include "decls.hpp"
 
 #include <linux/i2c-dev.h>
 #include <linux/swab.h>
@@ -59,8 +60,8 @@ void IMUReader::run()
     
     cs::SensorData sensorMessage;
 
-    sensorMessage.set_sensor_id(2);
-    sensorMessage.set_sensor_desc("IMU");
+    sensorMessage.set_sensor_id((int) SensorIds::IMU_sensor);
+    sensorMessage.set_sensor_desc(IMU_SENSOR_NAME);
     auto values = sensorMessage.mutable_sensor_values();
 
     auto gyroData = values->Add();

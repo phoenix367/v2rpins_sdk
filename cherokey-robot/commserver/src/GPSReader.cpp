@@ -9,6 +9,7 @@
 #include "ConfigManager.hpp"
 #include "sensors.pb.h"
 #include "SensorsController.hpp"
+#include "decls.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -55,21 +56,21 @@ void GPSReader::run()
     
     cs::SensorData sensorMessage;
 
-    sensorMessage.set_sensor_id(1);
-    sensorMessage.set_sensor_desc("GPS");
+    sensorMessage.set_sensor_id((int) SensorIds::GPS_sensor);
+    sensorMessage.set_sensor_desc(GPS_SENSOR_NAME);
     auto values = sensorMessage.mutable_sensor_values();
     auto latData = values->Add();
     auto lonData = values->Add();
     auto velData = values->Add();
     auto dirData = values->Add();
     
-    latData->set_associated_name("latitude");
+    latData->set_associated_name(GPS_PARAM_LATITUDE);
     latData->set_data_type(cs::REAL);
-    lonData->set_associated_name("longitude");
+    lonData->set_associated_name(GPS_PARAM_LONGITUDE);
     lonData->set_data_type(cs::REAL);
-    velData->set_associated_name("velocity");
+    velData->set_associated_name(GPS_PARAM_VELOCITY);
     velData->set_data_type(cs::REAL);
-    dirData->set_associated_name("direction");
+    dirData->set_associated_name(GPS_PARAM_DIRECTION);
     dirData->set_data_type(cs::REAL);
 
     while (!stopVariable)

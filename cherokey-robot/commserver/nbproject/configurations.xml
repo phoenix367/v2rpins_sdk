@@ -21,6 +21,7 @@
       <itemPath>include/SensorsController.hpp</itemPath>
       <itemPath>include/VideoController.hpp</itemPath>
       <itemPath>include/VoltageReader.hpp</itemPath>
+      <itemPath>include/decls.hpp</itemPath>
       <itemPath>include/serialstream.h</itemPath>
     </logicalFolder>
     <logicalFolder name="messages" displayName="messages" projectFiles="true">
@@ -163,6 +164,8 @@
       <item path="include/VideoController.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/VoltageReader.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/decls.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/serialstream.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -325,6 +328,8 @@
       <item path="include/VideoController.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/VoltageReader.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/decls.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/serialstream.h" ex="false" tool="3" flavor2="0">
       </item>

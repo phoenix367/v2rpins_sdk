@@ -10,6 +10,7 @@
 #include "sensors.pb.h"
 #include "GPSReader.hpp"
 #include "SensorsController.hpp"
+#include "decls.hpp"
 
 namespace cs = cherokey::sensors;
 
@@ -40,15 +41,15 @@ void VoltageReader::run()
 {
     cs::SensorData sensorMessage;
 
-    sensorMessage.set_sensor_id(0);
-    sensorMessage.set_sensor_desc("voltage_current");
+    sensorMessage.set_sensor_id((int) SensorIds::Voltage_sensor);
+    sensorMessage.set_sensor_desc(VOLTAGE_SENSOR_NAME);
     auto values = sensorMessage.mutable_sensor_values();
     auto voltageData = values->Add();
     auto currentData = values->Add();
 
-    voltageData->set_associated_name("voltage");
+    voltageData->set_associated_name(VOLTAGE_PARAM_VOLTAGE);
     voltageData->set_data_type(cs::REAL);
-    currentData->set_associated_name("current");
+    currentData->set_associated_name(VOLTAGE_PARAM_CURRENT);
     currentData->set_data_type(cs::REAL);
 
     float prevVoltageData = 0, prevCurrentData = 0;
