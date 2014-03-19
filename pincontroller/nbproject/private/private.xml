@@ -5,4 +5,18 @@
         <activeConfIndexElem>2</activeConfIndexElem>
     </data>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/pincontroller/src/gpio_pin.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/pincontroller/include/pincontroller/global.hpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/pincontroller/include/pincontroller/global.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/pincontroller/include/pincontroller/exceptions.hpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/pincontroller/tests/GpioIndexTest.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/pincontroller/tests/GpioIndexTest.hpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/pincontroller/src/details/hash.hpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/pincontroller/tests/gpionindex.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/pincontroller/tests/PwmIndexTest.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/pincontroller/tests/pwmindex.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/pincontroller/tests/PwmIndexTest.hpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/pincontroller/src/details/pwm_factory.cpp</file>
+    </open-files>
 </project-private>

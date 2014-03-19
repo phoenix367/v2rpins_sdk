@@ -30,3 +30,5 @@ pincontroller/build/
 /cherokey-robot/qwtplot3d/moc/
 /cherokey-robot/filters/build/
 /cherokey-robot/filters/dist/
+/cherokey-robot/mono_slam/build/
+/cherokey-robot/mono_slam/dist/

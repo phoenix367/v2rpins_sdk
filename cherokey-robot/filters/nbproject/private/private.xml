@@ -5,4 +5,8 @@
         <activeConfIndexElem>0</activeConfIndexElem>
     </data>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/filters/include/kalman_filter.hpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/filters/src/kalman_filter.cpp</file>
+    </open-files>
 </project-private>
