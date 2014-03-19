@@ -8,9 +8,11 @@
 #ifndef SLAM_FUNCTIONS_HPP
 #define	SLAM_FUNCTIONS_HPP
 
+#include "declares.hpp"
+
 namespace mslam
 {
-    
+    void randomMatrix6D(int nPointsRand, RealMatrix& rndMat);
 }
 
 #endif	/* SLAM_FUNCTIONS_HPP */

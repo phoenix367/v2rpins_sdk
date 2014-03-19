@@ -9,6 +9,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Файлы заголовков"
                    projectFiles="true">
+      <itemPath>include/mono_slam/declares.hpp</itemPath>
       <itemPath>include/mono_slam/mono_slam.hpp</itemPath>
       <itemPath>include/mono_slam/slam_functions.hpp</itemPath>
     </logicalFolder>
@@ -39,6 +40,8 @@
       </toolsSet>
       <compileType>
         <ccTool>
+          <standard>8</standard>
+          <commandlineTool>g++</commandlineTool>
           <incDir>
             <pElem>include</pElem>
           </incDir>
@@ -46,6 +49,8 @@
         <archiverTool>
         </archiverTool>
       </compileType>
+      <item path="include/mono_slam/declares.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/mono_slam/mono_slam.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/mono_slam/slam_functions.hpp"
@@ -79,6 +84,8 @@
         <archiverTool>
         </archiverTool>
       </compileType>
+      <item path="include/mono_slam/declares.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/mono_slam/mono_slam.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/mono_slam/slam_functions.hpp"
