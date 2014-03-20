@@ -46,6 +46,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/GPSReader.o \
 	${OBJECTDIR}/src/IMUReader.o \
 	${OBJECTDIR}/src/IndicatorController.o \
+	${OBJECTDIR}/src/PIDController.o \
 	${OBJECTDIR}/src/SensorReader.o \
 	${OBJECTDIR}/src/SensorsController.o \
 	${OBJECTDIR}/src/VideoController.o \
@@ -136,6 +137,11 @@ ${OBJECTDIR}/src/IndicatorController.o: src/IndicatorController.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/IndicatorController.o src/IndicatorController.cpp
+
+${OBJECTDIR}/src/PIDController.o: src/PIDController.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -g -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/PIDController.o src/PIDController.cpp
 
 ${OBJECTDIR}/src/SensorReader.o: src/SensorReader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
