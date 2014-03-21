@@ -5,4 +5,10 @@
         <activeConfIndexElem>0</activeConfIndexElem>
     </data>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/mono_slam/include/mono_slam/slam_functions.hpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/mono_slam/src/slam_functions.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/mono_slam/include/mono_slam/mono_slam.hpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/mono_slam/include/mono_slam/declares.hpp</file>
+    </open-files>
 </project-private>

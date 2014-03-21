@@ -45,6 +45,8 @@ IMUReader::IMUReader()
         COMM_EXCEPTION(InternalError, "Can't open I2C device");
     }
     
+    currentAngles = { 0, 0, 0 };
+    
     initThread();
 }
 
@@ -114,6 +116,8 @@ void IMUReader::run()
         if (!calibration)
         {
             ahrsProcessor.updateState(sensorsData, roll, pitch, yaw);
+
+            putCurrentAngles(roll, pitch, yaw);
         }
         else
         {
@@ -123,7 +127,7 @@ void IMUReader::run()
             tmpData.rawAccelY = sensorsData.rawAccelY;
             tmpData.rawAccelZ = sensorsData.rawAccelZ;
             
-            ahrsProcessor.updateState(tmpData, offsetQ);
+            ahrsProcessor.updateState(tmpData, offsetQ);            
         }
         
         gyroCoords->set_x(roll);
@@ -281,4 +285,19 @@ void IMUReader::showCalibration(bool bShow)
     stateMsg->set_state((bShow) ? cm::ON : cm::OFF);
     
     sendMessage(msg);
+}
+
+EulerAngles IMUReader::getCurrentAngles()
+{
+    std::lock_guard<std::mutex> l(angleMutex);
+    return currentAngles;
+}
+
+void IMUReader::putCurrentAngles(float roll, float pitch, float yaw)
+{
+    std::lock_guard<std::mutex> l(angleMutex);
+    
+    currentAngles.roll = roll;
+    currentAngles.pitch = pitch;
+    currentAngles.yaw = yaw;
 }

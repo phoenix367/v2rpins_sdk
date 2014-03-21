@@ -11,6 +11,8 @@
 #include "SensorReader.hpp"
 #include "CommandSender.hpp"
 
+#include <mutex>
+
 namespace cherokey
 {
     namespace sensors
@@ -32,6 +34,13 @@ struct IMUSensorsData
     float rawGyroX;
     float rawGyroY;
     float rawGyroZ;
+};
+
+struct EulerAngles
+{
+    float roll;
+    float pitch;
+    float yaw;
 };
 
 class IMUReader : public SensorReader, public CommandSender
@@ -56,6 +65,8 @@ public:
     IMUReader();
     virtual ~IMUReader();
     
+    EulerAngles getCurrentAngles();
+    
 protected:
     virtual void run();
     
@@ -67,9 +78,12 @@ private:
     void readSensors(IMUSensorsData& data, GyroState& gyroState,
             bool calibration);
     void showCalibration(bool bShow);
+    void putCurrentAngles(float roll, float pitch, float yaw);
     
 private:
     int file;
+    EulerAngles currentAngles;
+    std::mutex angleMutex;
 };
 
 #endif	/* IMUREADER_HPP */

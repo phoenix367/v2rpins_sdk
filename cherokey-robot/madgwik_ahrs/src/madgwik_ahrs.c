@@ -583,6 +583,31 @@ bool QuaternionRotate(const COORD_3D* coord_in, const QUATERNION* q,
     return true;
 }
 
+bool Euler2Quaternion(float phi, float theta, float psi,
+        QUATERNION* q)
+{
+    if (!q)
+    {
+        return false;
+    }
+    
+    float c1 = cos(phi / 2);
+    float s1 = sin(phi / 2);
+    float c2 = cos(theta / 2);
+    float s2 = sin(theta / 2);
+    float c3 = cos(psi / 2);
+    float s3 = sin(psi / 2);
+    float c1c2 = c1 * c2;
+    float s1s2 = s1 * s2;
+    
+    q->q0 = c1c2 * c3 - s1s2 * s3;
+  	q->q1 = c1c2 * s3 + s1s2 * c3;
+	q->q2 = s1 * c2 * c3 + c1 * s2 * s3;
+	q->q3 = c1 * s2 * c3 - s1 * c2 * s3;
+    
+    return true;
+}
+
 //====================================================================================================
 // END OF CODE
 //====================================================================================================

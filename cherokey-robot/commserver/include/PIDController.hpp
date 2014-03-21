@@ -12,6 +12,7 @@
 #include <thread>
 
 #include "CommandSender.hpp"
+#include "IMUReader.hpp"
 
 class PIDController : public CommandSender
 {
@@ -26,6 +27,8 @@ public:
     void startController();
     void stopController();
     
+    void setIMUReader(IMUReader* pReader);
+    
 private:
     void run();
     
@@ -34,6 +37,7 @@ private:
     
     std::atomic<bool> stopVar;
     std::unique_ptr<std::thread> controllerThread;
+    IMUReader *imuReader;
 };
 
 #endif	/* PIDCONTROLLER_HPP */

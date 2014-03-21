@@ -10,6 +10,7 @@
 #include "GPSReader.hpp"
 #include "VoltageReader.hpp"
 #include "IMUReader.hpp"
+#include "PIDController.hpp"
 
 #define MAX_QUEUE_LENGTH                100
 
@@ -91,9 +92,19 @@ void SensorsController::stopPublisher()
 
 void SensorsController::processSensorMessages(zmq::socket_t& pubSocket)
 {
+    auto pidInstance = PIDController::getInstance();
+    
+    if (!pidInstance)
+    {
+        COMM_EXCEPTION(NullPointerException, "PID controller instance "
+                "is null");
+    }
+    
     GPSReader gpsReader;
     VoltageReader voltageReader;
     IMUReader imuReader;
+    
+    pidInstance->setIMUReader(&imuReader);
 
     while (!stopVariable)
     {

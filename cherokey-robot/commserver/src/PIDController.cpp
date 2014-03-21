@@ -9,12 +9,18 @@
 
 #include "PIDController.hpp"
 #include "ConnectionListener.hpp"
+#include "Exceptions.hpp"
+
+#include "madgwik_ahrs.h"
+
+#include <thread>
 
 std::unique_ptr<PIDController> PIDController::instance;
 
 PIDController::PIDController() 
 : CommandSender(ConnectionListener::INTERNAL_COMMAND_ADDR)
 , stopVar(true)
+, imuReader(nullptr)
 {
 }
 
@@ -34,9 +40,23 @@ PIDController* PIDController::getInstance()
 
 void PIDController::run()
 {
+    if (!imuReader)
+    {
+        return;
+    }
+    
+    auto delayTime = std::chrono::milliseconds(100);
+    auto t = std::chrono::high_resolution_clock::now();
+
     while (!stopVar)
     {
+        auto angles = imuReader->getCurrentAngles();
         
+        QUATERNION qIMU;
+        Euler2Quaternion(0, 0, angles.yaw * M_PI / 180, &qIMU);
+
+        std::this_thread::sleep_until(t + delayTime);
+        t += delayTime;
     }
 }
 
@@ -58,5 +78,16 @@ void PIDController::stopController()
     if (controllerThread)
     {
         controllerThread->join();
+        imuReader = nullptr;
     }
+}
+
+void PIDController::setIMUReader(IMUReader* pReader)
+{
+    if (!pReader)
+    {
+        COMM_EXCEPTION(NullPointerException, "IMU reader pointer is null");
+    }
+    
+    imuReader = pReader;
 }

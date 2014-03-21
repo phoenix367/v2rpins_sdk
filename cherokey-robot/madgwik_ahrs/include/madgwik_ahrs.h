@@ -79,6 +79,8 @@ void MahonyAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay,
 
 bool Quaternion2Euler(const QUATERNION* q, float *phi, float* theta,
         float* psi);
+bool Euler2Quaternion(float phi, float theta, float psi,
+        QUATERNION* q);
 bool QuaternionConj(const QUATERNION* q_in, QUATERNION* q_out);
 bool QuaternionProd(const QUATERNION* q_a, const QUATERNION* q_b,
         QUATERNION* q_out);
