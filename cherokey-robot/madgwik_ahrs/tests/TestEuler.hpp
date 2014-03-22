@@ -14,7 +14,8 @@ class TestEuler : public CPPUNIT_NS::TestFixture {
     CPPUNIT_TEST_SUITE(TestEuler);
 
     CPPUNIT_TEST(testQuaternion2Euler);
-    CPPUNIT_TEST(testNullPtr);
+    CPPUNIT_TEST(testQuaternion2EulerNullPtr);
+    CPPUNIT_TEST(testEuler2Quaternion);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -26,7 +27,8 @@ public:
 
 private:
     void testQuaternion2Euler();
-    void testNullPtr();
+    void testQuaternion2EulerNullPtr();
+    void testEuler2Quaternion();
 };
 
 #endif	/* TESTEULER_HPP */

@@ -86,6 +86,7 @@ bool QuaternionProd(const QUATERNION* q_a, const QUATERNION* q_b,
         QUATERNION* q_out);
 bool QuaternionRotate(const COORD_3D* coord_in, const QUATERNION* q,
         COORD_3D* coord_out);
+bool QuaternionNormalize(const QUATERNION* qin, QUATERNION* qout);
 
 #ifdef	__cplusplus
 }

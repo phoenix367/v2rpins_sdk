@@ -279,19 +279,42 @@ float invSqrt(float x)
 	return y;
 }
 
+bool QuaternionNormalize(const QUATERNION* qin, QUATERNION* qout)
+{
+    float recipNorm;
+    
+    if (!qin || !qout)
+    {
+        return false;
+    }
+
+	recipNorm = invSqrt(qin->q0 * qin->q0 + qin->q1 * qin->q1 + 
+            qin->q2 * qin->q2 + qin->q3 * qin->q3);
+    qout->q0 = qin->q0 * recipNorm;
+    qout->q1 = qin->q1 * recipNorm;
+    qout->q2 = qin->q2 * recipNorm;
+    qout->q3 = qin->q3 * recipNorm;
+
+    return true;
+}
+
 bool Quaternion2Euler(const QUATERNION* q, float *phi, float* theta,
         float* psi)
 {
+    QUATERNION qin;
+    
     if (!q)
     {
         return false;
     }
-    
-    float R_1_1 = 2.0f * q->q0 * q->q0 - 1.0f + 2.0f * q->q1 * q->q1;
-    float R_2_1 = 2.0f * (q->q1 * q->q2 - q->q0 * q->q3);
-    float R_3_1 = 2.0f * (q->q1 * q->q3 + q->q0 * q->q2);
-    float R_3_2 = 2.0f * (q->q2 * q->q3 - q->q0 * q->q1);
-    float R_3_3 = 2.0f * q->q0 * q->q0 - 1.0f + 2.0f * q->q3 * q->q3;
+
+    QuaternionNormalize(q, &qin);
+
+    float R_1_1 = 2.0f * qin.q0 * qin.q0 - 1.0f + 2.0f * qin.q1 * qin.q1;
+    float R_2_1 = 2.0f * (qin.q1 * qin.q2 - qin.q0 * qin.q3);
+    float R_3_1 = 2.0f * (qin.q1 * qin.q3 + qin.q0 * qin.q2);
+    float R_3_2 = 2.0f * (qin.q2 * qin.q3 - qin.q0 * qin.q1);
+    float R_3_3 = 2.0f * qin.q0 * qin.q0 - 1.0f + 2.0f * qin.q3 * qin.q3;
 
     if (phi)
     {
@@ -597,13 +620,11 @@ bool Euler2Quaternion(float phi, float theta, float psi,
     float s2 = sin(theta / 2);
     float c3 = cos(psi / 2);
     float s3 = sin(psi / 2);
-    float c1c2 = c1 * c2;
-    float s1s2 = s1 * s2;
-    
-    q->q0 = c1c2 * c3 - s1s2 * s3;
-  	q->q1 = c1c2 * s3 + s1s2 * c3;
-	q->q2 = s1 * c2 * c3 + c1 * s2 * s3;
-	q->q3 = c1 * s2 * c3 - s1 * c2 * s3;
+
+    q->q0 =  c1 * c2 * c3 + s1 * s2 * s3;
+  	q->q1 =  c1 * s2 * s3 - s1 * c2 * c3;
+	q->q2 = -c1 * s2 * c3 - s1 * c2 * s3;
+	q->q3 =  s1 * s2 * c3 - c1 * c2 * s3;
     
     return true;
 }

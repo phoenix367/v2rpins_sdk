@@ -127,6 +127,9 @@ void ConnectionListener::run()
                         case cc::CommandMessage::CALIBRATION_STATE:
                             processCalibration(commandMsg);
                             break;
+                        case cc::CommandMessage::MOVE:
+                            processMoveInternal(commandMsg);
+                            break;
                         default:
                             std::cout << 
                                   "Received unknown internal message with type " <<
@@ -348,6 +351,25 @@ void ConnectionListener::processCalibration(
         
         auto stateMsg = msg.mutable_calibration_state();
         instance->showCalibrationState(stateMsg->state() == cc::ON);
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "Exception occured: " << e.what() << std::endl;
+    }
+}
+
+void ConnectionListener::processMoveInternal(
+        cherokey::common::CommandMessage& msg)
+{
+    try
+    {
+        auto moveAction = msg.move_action();
+        
+        auto groupA = moveAction.run_group_a();
+        runDriveGroup(groupA, DriveController::DriveGroup::GROUP_A);
+        
+        auto groupB = moveAction.run_group_b();
+        runDriveGroup(groupB, DriveController::DriveGroup::GROUP_B);
     }
     catch (std::exception& e)
     {

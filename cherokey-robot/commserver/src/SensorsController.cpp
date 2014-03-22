@@ -105,6 +105,8 @@ void SensorsController::processSensorMessages(zmq::socket_t& pubSocket)
     IMUReader imuReader;
     
     pidInstance->setIMUReader(&imuReader);
+    
+    //pidInstance->startController();
 
     while (!stopVariable)
     {
@@ -119,6 +121,8 @@ void SensorsController::processSensorMessages(zmq::socket_t& pubSocket)
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
     }
+    
+    //pidInstance->stopController();
 }
 
 void SensorsController::putMessage(const std::vector<int8_t>& msg)

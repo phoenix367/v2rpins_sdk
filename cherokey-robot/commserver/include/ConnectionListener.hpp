@@ -47,6 +47,8 @@ private:
             cherokey::common::CommandMessage& msg);
     void processCalibration(
             cherokey::common::CommandMessage& msg);
+    void processMoveInternal(
+            cherokey::common::CommandMessage& msg);
     
     void startWatchDogTimer();
     void stopWatchdogTimer();

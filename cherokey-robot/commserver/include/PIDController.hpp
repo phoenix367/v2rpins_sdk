@@ -31,6 +31,10 @@ public:
     
 private:
     void run();
+    void stopRotation();
+    void doRotation(float angle, float& leftFactor, float& rightFactor,
+            int& rotDirection);
+    void doRotation(float leftFactor, float rightFactor, int rotDirection);
     
 private:
     static std::unique_ptr<PIDController> instance;
