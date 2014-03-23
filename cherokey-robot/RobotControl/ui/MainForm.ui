@@ -457,6 +457,19 @@
     </attribute>
    </widget>
   </widget>
+  <widget class="QPushButton" name="cmdCommands">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>510</y>
+     <width>98</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Commands...</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

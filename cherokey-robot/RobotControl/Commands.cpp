@@ -365,3 +365,38 @@ CommandType SendSensorsInfo::getCommandType()
 {
     return sendSensorsType;
 }
+
+RotateCommand::RotateCommand(float angle)
+: rotateAngle(angle)
+{
+    
+}
+
+RotateCommand::~RotateCommand()
+{
+    
+}
+
+bool RotateCommand::doCommand(zmq::socket_t& socket)
+{
+    cc::CommandMessage commandMessage;
+    commandMessage.set_type(cc::CommandMessage::ROTATION);
+    commandMessage.set_cookie(0);
+    cc::RotationCommand* rotationCmd = 
+            commandMessage.mutable_rotation_command();
+    rotationCmd->set_rotation_angle(rotateAngle);
+
+    if (!serializeMessage(commandMessage, socket))
+    {
+        return false;
+    }
+
+    bool replyResult = handleReplyAck(socket);
+
+    return replyResult;
+}
+
+CommandType RotateCommand::getCommandType()
+{
+    return rotateCommandType;
+}

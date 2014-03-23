@@ -17,6 +17,7 @@
       <itemPath>include/GPSReader.hpp</itemPath>
       <itemPath>include/IMUReader.hpp</itemPath>
       <itemPath>include/IndicatorController.hpp</itemPath>
+      <itemPath>include/PIDCommands.hpp</itemPath>
       <itemPath>include/PIDController.hpp</itemPath>
       <itemPath>include/SensorReader.hpp</itemPath>
       <itemPath>include/SensorsController.hpp</itemPath>
@@ -49,6 +50,7 @@
       <itemPath>src/GPSReader.cpp</itemPath>
       <itemPath>src/IMUReader.cpp</itemPath>
       <itemPath>src/IndicatorController.cpp</itemPath>
+      <itemPath>src/PIDCommands.cpp</itemPath>
       <itemPath>src/PIDController.cpp</itemPath>
       <itemPath>src/SensorReader.cpp</itemPath>
       <itemPath>src/SensorsController.cpp</itemPath>
@@ -159,6 +161,8 @@
       </item>
       <item path="include/IndicatorController.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/PIDCommands.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/PIDController.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/SensorReader.hpp" ex="false" tool="3" flavor2="0">
@@ -198,6 +202,8 @@
       <item path="src/IMUReader.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/IndicatorController.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/PIDCommands.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/PIDController.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -327,6 +333,8 @@
       </item>
       <item path="include/IndicatorController.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/PIDCommands.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/PIDController.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/SensorReader.hpp" ex="false" tool="3" flavor2="0">
@@ -369,6 +377,8 @@
       <item path="src/IMUReader.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/IndicatorController.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/PIDCommands.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/PIDController.cpp" ex="false" tool="1" flavor2="0">
       </item>

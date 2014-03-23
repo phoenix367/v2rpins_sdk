@@ -53,41 +53,51 @@ void PIDController::run()
     
     QUATERNION qTarget;
     Euler2Quaternion(0, 0, 15 * M_PI / 180, &qTarget);
-    bool commandDone = false;
-    float rotLeftFactor = INFINITY, rotRightFactor = INFINITY;
-    int rotDirection = 0;
 
     while (!stopVar)
     {
-        if (!commandDone)
+        auto cPtr = getCommand();
+        
+        if (cPtr)
         {
-            auto angles = imuReader->getCurrentAngles();
+            float rotLeftFactor = INFINITY, rotRightFactor = INFINITY;
+            int rotDirection = 0;
+            bool commandDone = false;
 
-            QUATERNION qIMU, qIMUConj, qRot;
-            Euler2Quaternion(0, 0, angles.yaw * M_PI / 180, &qIMU);
-            QuaternionConj(&qIMU, &qIMUConj);
-            QuaternionProd(&qTarget, &qIMUConj, &qRot);
-
-            float rollRot, pitchRot, yawRot;
-            Quaternion2Euler(&qRot, &rollRot, &pitchRot, &yawRot);
-
-            yawRot *= 180 / M_PI;
-
-            if (fabs(yawRot) < 5)
+            while (!commandDone && !stopVar)
             {
-                commandDone = true;
-                stopRotation();
-            }
-            else
-            {
-                doRotation(yawRot, rotLeftFactor, rotRightFactor,
-                        rotDirection);
+                auto angles = imuReader->getCurrentAngles();
+
+                QUATERNION qIMU, qIMUConj, qRot;
+                Euler2Quaternion(0, 0, angles.yaw * M_PI / 180, &qIMU);
+                QuaternionConj(&qIMU, &qIMUConj);
+                QuaternionProd(&qTarget, &qIMUConj, &qRot);
+
+                float rollRot, pitchRot, yawRot;
+                Quaternion2Euler(&qRot, &rollRot, &pitchRot, &yawRot);
+
+                yawRot *= 180 / M_PI;
+
+                if (fabs(yawRot) < 2)
+                {
+                    commandDone = true;
+                    stopRotation();
+                }
+                else
+                {
+                    doRotation(yawRot, rotLeftFactor, rotRightFactor,
+                            rotDirection);
+                }
+
+                std::this_thread::sleep_until(t + delayTime);
+                t += delayTime;
             }
         }
-        //std::cout << rollRot << " " << pitchRot << " " << yawRot << std::endl;
-
-        std::this_thread::sleep_until(t + delayTime);
-        t += delayTime;
+        else
+        {
+            std::this_thread::sleep_until(t + delayTime);
+            t += delayTime;
+        }
     }
 }
 
@@ -101,16 +111,26 @@ void PIDController::startController()
     stopVar = false;
     controllerThread = std::unique_ptr<std::thread>(new std::thread(
             std::bind(&PIDController::run, this)));
+    
+    std::cout << "PID controller started" << std::endl;
 }
 
 void PIDController::stopController()
-{
-    stopVar = true;
+{    
+    std::cout << "Try to stop PID controller" << std::endl;
     
-    if (controllerThread)
+    if (!stopVar)
     {
-        controllerThread->join();
-        imuReader = nullptr;
+        stopVar = true;
+
+        if (controllerThread)
+        {
+            controllerThread->join();
+            controllerThread.reset();
+            imuReader = nullptr;
+
+            std::cout << "PID controller stoped" << std::endl;
+        }
     }
 }
 
@@ -151,17 +171,17 @@ void PIDController::doRotation(float angle, float& leftFactor,
     int tmpDirection;
     float absAngle = fabs(angle);
     
-    if (absAngle > 20.0f)
+    if (absAngle > 40.0f)
     {
         tmpLeft = tmpRight = 1.0f;
     }
-    else if (absAngle <= 20.0f && absAngle > 10.0f)
+    else if (absAngle <= 40.0f && absAngle > 20.0f)
     {
         tmpLeft = tmpRight = 0.8f;
     }
     else
     {
-        tmpLeft = tmpRight = 0.7f;
+        tmpLeft = tmpRight = 0.6f;
     }
 
     if (angle > 0)
@@ -222,4 +242,26 @@ void PIDController::doRotation(float leftFactor, float rightFactor,
     groupB->set_power(rightFactor);
     
     sendMessage(commandMessage);
+}
+
+void PIDController::putRotation(float angle)
+{
+    std::lock_guard<std::mutex> l(queueMutex);
+    std::shared_ptr<IPIDCommand> c = std::make_shared<IPIDCommand>();
+    
+    commandsQueue.push(c);
+}
+
+std::shared_ptr<IPIDCommand> PIDController::getCommand()
+{
+    std::lock_guard<std::mutex> l(queueMutex);
+    if (commandsQueue.empty())
+    {
+        return std::shared_ptr<IPIDCommand>();
+    }
+    
+    std::shared_ptr<IPIDCommand> c = commandsQueue.front();
+    commandsQueue.pop();
+    
+    return c;
 }

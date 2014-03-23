@@ -24,7 +24,8 @@ enum CommandType
     pingCommandType,
     moveCommandType,
     showVideoType,
-    sendSensorsType
+    sendSensorsType,
+    rotateCommandType
 };
 
 class SocketCommand
@@ -156,6 +157,19 @@ public:
     
 private:
     bool sendState;
+};
+
+class RotateCommand : public SocketCommand
+{
+public:
+    RotateCommand(float angle);
+    virtual ~RotateCommand();
+    
+    virtual bool doCommand(zmq::socket_t& socket);
+    virtual CommandType getCommandType();
+    
+private:
+    bool rotateAngle;
 };
 
 #endif	/* COMMANDS_HPP */

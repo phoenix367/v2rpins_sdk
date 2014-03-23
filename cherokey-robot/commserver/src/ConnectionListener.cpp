@@ -12,6 +12,7 @@
 #include "common.pb.h"
 #include "SensorsController.hpp"
 #include "IndicatorController.hpp"
+#include "PIDController.hpp"
 
 namespace cc = cherokey::common;
 
@@ -102,6 +103,9 @@ void ConnectionListener::run()
                         break;
                     case cc::CommandMessage::SENSORS_INFO:
                         processSensrosInfo(socketCmd, commandMsg);
+                        break;
+                    case cc::CommandMessage::ROTATION:
+                        processRotation(socketCmd, commandMsg);
                         break;
                     default:
                         std::cout << "Received unknown message with type " <<
@@ -350,7 +354,18 @@ void ConnectionListener::processCalibration(
         }
         
         auto stateMsg = msg.mutable_calibration_state();
-        instance->showCalibrationState(stateMsg->state() == cc::ON);
+        bool calibrationPhase = (stateMsg->state() == cc::ON);
+        instance->showCalibrationState(calibrationPhase);
+        
+        if (!calibrationPhase)
+        {
+            auto pidInstance = PIDController::getInstance();
+            
+            if (pidInstance)
+            {
+                pidInstance->startController();
+            }
+        }
     }
     catch (std::exception& e)
     {
@@ -423,6 +438,13 @@ void ConnectionListener::onTimer(int sig)
         
         videoInstance->compositeVideo(false);
 
+        auto pidInstance = PIDController::getInstance();
+
+        if (pidInstance)
+        {
+            pidInstance->stopController();
+        }
+
         auto driveInstance = DriveController::getInstance();
 
         if (!driveInstance)
@@ -432,5 +454,31 @@ void ConnectionListener::onTimer(int sig)
         }
         
         driveInstance->stopDrives();
+    }
+}
+
+void ConnectionListener::processRotation(zmq::socket_t& socket, 
+        const cherokey::common::CommandMessage& msg)
+{
+    auto cookie = msg.cookie();
+
+    try
+    {
+        auto rotationAction = msg.rotation_command();
+        float angle = rotationAction.rotation_angle();
+        
+        auto instance = PIDController::getInstance();
+        if (!instance)
+        {
+            COMM_EXCEPTION(NullPointerException, "PID controller instance "
+                    "is null");
+        }
+        
+        instance->putRotation(angle);
+        sendAck(cookie, socket);
+    }
+    catch (std::exception& e)
+    {
+        sendNack(e.what(), cookie, socket);
     }
 }

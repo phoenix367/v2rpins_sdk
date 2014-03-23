@@ -46,6 +46,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/GPSReader.o \
 	${OBJECTDIR}/src/IMUReader.o \
 	${OBJECTDIR}/src/IndicatorController.o \
+	${OBJECTDIR}/src/PIDCommands.o \
 	${OBJECTDIR}/src/PIDController.o \
 	${OBJECTDIR}/src/SensorReader.o \
 	${OBJECTDIR}/src/SensorsController.o \
@@ -139,6 +140,11 @@ ${OBJECTDIR}/src/IndicatorController.o: src/IndicatorController.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -O3 -D_GLIBCXX_USE_NANOSLEEP -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -I../madgwik_ahrs/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/IndicatorController.o src/IndicatorController.cpp
+
+${OBJECTDIR}/src/PIDCommands.o: src/PIDCommands.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -O3 -D_GLIBCXX_USE_NANOSLEEP -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -I../madgwik_ahrs/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/PIDCommands.o src/PIDCommands.cpp
 
 ${OBJECTDIR}/src/PIDController.o: src/PIDController.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src

@@ -58,6 +58,8 @@ MainForm::MainForm()
             SLOT(onRotateLeftReleased()));
     connect(widget.btnShowComposite, SIGNAL(clicked()),
             SLOT(onShowVideoComposite()));
+    connect(widget.cmdCommands, SIGNAL(clicked()),
+            SLOT(onCommands()));
     
     connectorPtr = new RemoteConnector(this);
     connect(connectorPtr, SIGNAL(ConversationTerminated(const QString&)),
@@ -400,4 +402,11 @@ void MainForm::prepareDisconnect()
         new SendSensorsInfo(false));
     disconnectCmdId = sendCommand->getCommandIndex();
     connectorPtr->handleCommand(sendCommand);
+}
+
+void MainForm::onCommands()
+{
+    QSharedPointer<SocketCommand> rotateCommand(
+        new RotateCommand(20));
+    connectorPtr->handleCommand(rotateCommand);
 }

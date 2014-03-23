@@ -49,6 +49,8 @@ private:
             cherokey::common::CommandMessage& msg);
     void processMoveInternal(
             cherokey::common::CommandMessage& msg);
+    void processRotation(zmq::socket_t& socket, 
+            const cherokey::common::CommandMessage& msg);
     
     void startWatchDogTimer();
     void stopWatchdogTimer();

@@ -43,6 +43,9 @@
       <itemPath>ui/MainForm.cpp</itemPath>
       <itemPath>ui/MainForm.hpp</itemPath>
       <itemPath>ui/MainForm.ui</itemPath>
+      <itemPath>ui/ProgramForm.cpp</itemPath>
+      <itemPath>ui/ProgramForm.hpp</itemPath>
+      <itemPath>ui/ProgramForm.ui</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -178,6 +181,12 @@
       </item>
       <item path="ui/MainForm.ui" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="ui/ProgramForm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ui/ProgramForm.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ui/ProgramForm.ui" ex="false" tool="3" flavor2="0">
+      </item>
     </conf>
     <conf name="Release" type="4">
       <toolsSet>
@@ -257,6 +266,12 @@
       <item path="ui/MainForm.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ui/MainForm.ui" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ui/ProgramForm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ui/ProgramForm.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ui/ProgramForm.ui" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

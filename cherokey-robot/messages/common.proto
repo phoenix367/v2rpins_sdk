@@ -58,11 +58,16 @@ message CalibrationState
     required SwitchState state = 1;
 }
 
+message RotationCommand
+{
+    required float rotation_angle = 1;
+}
+
 message CommandMessage 
 {
     enum Type { 
         PING = 1; MOVE = 2; RUN_DRIVE = 3; SENSORS_INFO = 4; 
-        SHOW_VIDEO = 5; CALIBRATION_STATE = 6;
+        SHOW_VIDEO = 5; CALIBRATION_STATE = 6; ROTATION = 7;
     }
 
     // Identifies which field is filled in.
@@ -77,6 +82,7 @@ message CommandMessage
     optional SendSensorsInfo sensors_send_state = 6;
     optional ShowVideo show_video = 7;
     optional CalibrationState calibration_state = 8;
+    optional RotationCommand rotation_command = 9;
 }
 
 message CommandReply {

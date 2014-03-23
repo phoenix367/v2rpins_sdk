@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'MainForm.ui'
 **
-** Created: Thu Mar 6 00:55:58 2014
+** Created: Sun Mar 23 23:46:38 2014
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -66,6 +66,7 @@ public:
     QTabWidget *tabWidget;
     QWidget *tabVideo;
     QWidget *tabOdometry;
+    QPushButton *cmdCommands;
 
     void setupUi(QDialog *MainForm)
     {
@@ -188,6 +189,9 @@ public:
         tabOdometry = new QWidget();
         tabOdometry->setObjectName(QString::fromUtf8("tabOdometry"));
         tabWidget->addTab(tabOdometry, QString());
+        cmdCommands = new QPushButton(MainForm);
+        cmdCommands->setObjectName(QString::fromUtf8("cmdCommands"));
+        cmdCommands->setGeometry(QRect(20, 510, 98, 27));
 
         retranslateUi(MainForm);
 
@@ -225,6 +229,7 @@ public:
         rbtRadio->setText(QApplication::translate("MainForm", "Analog Video via RC", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tabVideo), QApplication::translate("MainForm", "Platform video", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tabOdometry), QApplication::translate("MainForm", "Odometry", 0, QApplication::UnicodeUTF8));
+        cmdCommands->setText(QApplication::translate("MainForm", "Commands...", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
