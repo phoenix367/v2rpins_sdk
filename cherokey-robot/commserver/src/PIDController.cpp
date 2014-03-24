@@ -11,7 +11,6 @@
 #include "ConnectionListener.hpp"
 #include "Exceptions.hpp"
 
-#include "madgwik_ahrs.h"
 #include "common.pb.h"
 
 #include <thread>
@@ -48,55 +47,52 @@ void PIDController::run()
         return;
     }
     
-    auto delayTime = std::chrono::milliseconds(100);
+    auto commandDelay = std::chrono::milliseconds(100);
+    auto pidDelay = std::chrono::milliseconds(50);
     auto t = std::chrono::high_resolution_clock::now();
     
-    QUATERNION qTarget;
-    Euler2Quaternion(0, 0, 15 * M_PI / 180, &qTarget);
-
     while (!stopVar)
     {
         auto cPtr = getCommand();
         
         if (cPtr)
         {
-            float rotLeftFactor = INFINITY, rotRightFactor = INFINITY;
-            int rotDirection = 0;
+            std::unique_ptr<CommandImpl> command;
+            
+            switch (cPtr->getCommandType())
+            {
+                case CommandType::rotating:
+                    {
+                        auto cmd = cPtr->commandInstance<RotateCommand>();
+                        float angle = cmd->getRotationAngle();
+
+                        std::cout << 
+                                "Start executing rotation command, angle:" <<
+                                angle << std::endl;
+                        
+                        command = std::unique_ptr<CommandImpl>(
+                                new RotationImpl(angle));
+                    }
+                    break;
+                default:
+                    std::cout << "Can't handle unknown PID command";
+                    continue;
+            }
+
             bool commandDone = false;
 
             while (!commandDone && !stopVar)
             {
-                auto angles = imuReader->getCurrentAngles();
-
-                QUATERNION qIMU, qIMUConj, qRot;
-                Euler2Quaternion(0, 0, angles.yaw * M_PI / 180, &qIMU);
-                QuaternionConj(&qIMU, &qIMUConj);
-                QuaternionProd(&qTarget, &qIMUConj, &qRot);
-
-                float rollRot, pitchRot, yawRot;
-                Quaternion2Euler(&qRot, &rollRot, &pitchRot, &yawRot);
-
-                yawRot *= 180 / M_PI;
-
-                if (fabs(yawRot) < 2)
-                {
-                    commandDone = true;
-                    stopRotation();
-                }
-                else
-                {
-                    doRotation(yawRot, rotLeftFactor, rotRightFactor,
-                            rotDirection);
-                }
-
-                std::this_thread::sleep_until(t + delayTime);
-                t += delayTime;
+                commandDone = command->doCommand(this);
+                
+                std::this_thread::sleep_until(t + pidDelay);
+                t += pidDelay;
             }
         }
         else
         {
-            std::this_thread::sleep_until(t + delayTime);
-            t += delayTime;
+            std::this_thread::sleep_until(t + commandDelay);
+            t += commandDelay;
         }
     }
 }
@@ -247,7 +243,8 @@ void PIDController::doRotation(float leftFactor, float rightFactor,
 void PIDController::putRotation(float angle)
 {
     std::lock_guard<std::mutex> l(queueMutex);
-    std::shared_ptr<IPIDCommand> c = std::make_shared<IPIDCommand>();
+    std::shared_ptr<IPIDCommand> c = std::shared_ptr<IPIDCommand>(
+            new RotateCommand(angle));
     
     commandsQueue.push(c);
 }
@@ -264,4 +261,46 @@ std::shared_ptr<IPIDCommand> PIDController::getCommand()
     commandsQueue.pop();
     
     return c;
+}
+
+PIDController::RotationImpl::RotationImpl(float angle)
+: rotLeftFactor(INFINITY)
+, rotRightFactor(INFINITY)
+, rotDirection(0)
+{
+    Euler2Quaternion(0, 0, angle * M_PI / 180, &targetQ);
+}
+
+PIDController::RotationImpl::~RotationImpl()
+{
+    
+}
+
+bool PIDController::RotationImpl::doCommand(PIDController *owner)
+{
+    bool result = false;
+    auto angles = owner->imuReader->getCurrentAngles();
+
+    QUATERNION qIMU, qIMUConj, qRot;
+    Euler2Quaternion(0, 0, angles.yaw * M_PI / 180, &qIMU);
+    QuaternionConj(&qIMU, &qIMUConj);
+    QuaternionProd(&targetQ, &qIMUConj, &qRot);
+
+    float rollRot, pitchRot, yawRot;
+    Quaternion2Euler(&qRot, &rollRot, &pitchRot, &yawRot);
+
+    yawRot *= 180 / M_PI;
+
+    if (fabs(yawRot) < 2)
+    {
+        result = true;
+        owner->stopRotation();
+    }
+    else
+    {
+        owner->doRotation(yawRot, rotLeftFactor, rotRightFactor,
+                rotDirection);
+    }
+    
+    return result;
 }

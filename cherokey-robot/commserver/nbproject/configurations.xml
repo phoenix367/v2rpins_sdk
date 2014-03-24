@@ -93,7 +93,11 @@
             <pElem>messages</pElem>
             <pElem>../../pincontroller/include</pElem>
             <pElem>../nmea/include</pElem>
+            <pElem>../madgwik_ahrs/include</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>_GLIBCXX_USE_NANOSLEEP</Elem>
+          </preprocessorList>
         </ccTool>
         <linkerTool>
           <linkerAddLib>
@@ -132,6 +136,18 @@
               </makeArtifact>
             </linkerLibProjectItem>
             <linkerLibLibItem>rt</linkerLibLibItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../madgwik_ahrs"
+                            CT="3"
+                            CN="Debug"
+                            AC="false"
+                            BL="true"
+                            WD="../madgwik_ahrs"
+                            BC="${MAKE}  -f Makefile CONF=Debug"
+                            CC="${MAKE}  -f Makefile CONF=Debug clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libmadgwik_ahrs.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>

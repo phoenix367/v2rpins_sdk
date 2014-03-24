@@ -16,11 +16,36 @@
 #include "CommandSender.hpp"
 #include "IMUReader.hpp"
 #include "PIDCommands.hpp"
+#include "madgwik_ahrs.h"
 
 class PIDController : public CommandSender
 {
 private:
     PIDController();
+    
+    class CommandImpl
+    {
+    public:
+        CommandImpl() {}
+        virtual ~CommandImpl() {}
+        
+        virtual bool doCommand(PIDController *owner) = 0;
+    };
+    
+    class RotationImpl : public CommandImpl
+    {
+    public:
+        RotationImpl(float angle);
+        virtual ~RotationImpl();
+        
+        virtual bool doCommand(PIDController *owner);
+        
+    private:
+        QUATERNION targetQ;
+        float rotLeftFactor;
+        float rotRightFactor;
+        int rotDirection;
+    };
     
 public:
     virtual ~PIDController();

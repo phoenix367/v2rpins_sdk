@@ -169,7 +169,7 @@ public:
     virtual CommandType getCommandType();
     
 private:
-    bool rotateAngle;
+    float rotateAngle;
 };
 
 #endif	/* COMMANDS_HPP */
