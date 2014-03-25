@@ -74,6 +74,7 @@ message CommandMessage
     required Type type = 1;
 
     required int64 cookie = 2;
+    optional int64 command_index = 10;
 
     // One of the following will be filled in.
     optional Ping ping = 3;

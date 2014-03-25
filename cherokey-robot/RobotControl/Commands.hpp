@@ -45,6 +45,7 @@ protected:
     bool serializeMessage(
             const cherokey::common::CommandMessage& commandMessage,
             zmq::socket_t& socket);
+    void preInitCommand(cherokey::common::CommandMessage& commandMessage);
     bool handleReplyAck(zmq::socket_t& socket);
     
 private:

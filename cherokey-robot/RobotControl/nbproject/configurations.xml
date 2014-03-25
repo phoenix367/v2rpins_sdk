@@ -18,6 +18,7 @@
       <itemPath>messages/common.pb.cc</itemPath>
       <itemPath>messages/common.pb.h</itemPath>
       <itemPath>../messages/common.proto</itemPath>
+      <itemPath>../messages/notifications.proto</itemPath>
       <itemPath>messages/sensors.pb.cc</itemPath>
       <itemPath>messages/sensors.pb.h</itemPath>
       <itemPath>../messages/sensors.proto</itemPath>
@@ -129,6 +130,8 @@
       </compileType>
       <item path="../messages/common.proto" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../messages/notifications.proto" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../messages/sensors.proto" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Commands.cpp" ex="false" tool="1" flavor2="0">
@@ -214,6 +217,8 @@
         </asmTool>
       </compileType>
       <item path="../messages/common.proto" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../messages/notifications.proto" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../messages/sensors.proto" ex="false" tool="3" flavor2="0">
       </item>

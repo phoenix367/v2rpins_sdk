@@ -25,6 +25,8 @@ class ConnectionListener
 {
 public:
     static const std::string INTERNAL_COMMAND_ADDR;
+    static const std::string INTERNAL_NOTIFY_ADDR;
+
 public:
     ConnectionListener(std::shared_ptr<ConnectionInfo>& infoPtr);
     virtual ~ConnectionListener();
@@ -43,7 +45,7 @@ private:
             DriveController::DriveGroup groupType);
     void processVideo(zmq::socket_t& socket, 
             cherokey::common::CommandMessage& msg);
-    void processSensrosInfo(zmq::socket_t& socket, 
+    void processSensorsInfo(zmq::socket_t& socket, 
             cherokey::common::CommandMessage& msg);
     void processCalibration(
             cherokey::common::CommandMessage& msg);
@@ -54,6 +56,8 @@ private:
     
     void startWatchDogTimer();
     void stopWatchdogTimer();
+    void connectNotificator(const ConnectionInfo& info);
+    void disconnectNotificator();
     
 public:
     void onTimer(int sig);
@@ -61,6 +65,7 @@ public:
 private:
     std::shared_ptr<ConnectionInfo> connectionParams;
     timer_t watchDogTimer;
+    zmq::socket_t notificationSocket;
 };
 
 #endif	/* CONNECTIONLISTENER_HPP */

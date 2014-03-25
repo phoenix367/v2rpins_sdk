@@ -36,6 +36,12 @@ void SensorsConnector::run()
                 connectionInfo.sensorsPort;
         socketPtr->connect(stream.str().c_str());
         
+        stream.str(std::string());
+        stream << "tcp://" << "0.0.0.0:" <<
+                connectionInfo.sensorsPort + 1;
+        
+        socketNotifyPtr->bind(stream.str().c_str());
+        
         while (true)
         {
             zmq::message_t msg;
@@ -123,6 +129,8 @@ void SensorsConnector::startSubscriber(const ConnectionInfo& info)
 {
     socketPtr = QSharedPointer<zmq::socket_t>(
             new zmq::socket_t(gContext, ZMQ_SUB));
+    socketNotifyPtr = QSharedPointer<zmq::socket_t>(
+            new zmq::socket_t(gContext, ZMQ_PULL));
     socketPtr->setsockopt(ZMQ_SUBSCRIBE, NULL, 0);
 
     int lingerValue = 0;
@@ -135,5 +143,6 @@ void SensorsConnector::startSubscriber(const ConnectionInfo& info)
 void SensorsConnector::stopSubscriber()
 {
     socketPtr->close();
+    socketNotifyPtr->close();
     wait();
 }

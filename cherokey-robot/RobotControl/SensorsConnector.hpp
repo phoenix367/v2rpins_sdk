@@ -42,6 +42,7 @@ protected:
 private:
     volatile bool started;
     QSharedPointer<zmq::socket_t> socketPtr;
+    QSharedPointer<zmq::socket_t> socketNotifyPtr;
     ConnectionInfo connectionInfo;
 };
 

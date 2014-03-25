@@ -1,0 +1,34 @@
+package cherokey.notifications;
+
+message CalibrationState
+{
+    enum State {
+        CALIBRATION_BEGIN = 1; CALIBRATION_DONE = 2; CALIBRATION_FAIL = 3;
+    }
+    
+    required State state = 1;
+}
+
+message CmdExecutionResult
+{
+    enum Result {
+        SUCCESS = 1; FAIL = 2;
+    }
+
+    required int64 command_index = 1;
+    required Result execution_result = 2;
+    optional string reason = 3;
+}
+
+message NotificationMessage 
+{
+    enum Type { 
+        CALIBRATION_STATE = 1; CMD_EXECUTION = 2; EQUIP_FAILURE = 3;
+    }
+
+    // Identifies which field is filled in.
+    required Type type = 1;
+
+    optional CalibrationState calibration_state = 2;
+    optional CmdExecutionResult cmd_execution_result = 3;
+}

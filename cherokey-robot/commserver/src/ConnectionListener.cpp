@@ -14,15 +14,20 @@
 #include "IndicatorController.hpp"
 #include "PIDController.hpp"
 
+#include <sstream>
+
 namespace cc = cherokey::common;
 
 extern zmq::context_t gContext;
 
 const std::string ConnectionListener::INTERNAL_COMMAND_ADDR =
     "inproc://commands";
+const std::string ConnectionListener::INTERNAL_NOTIFY_ADDR =
+    "inproc://notifications";
 
 ConnectionListener::ConnectionListener(
     std::shared_ptr<ConnectionInfo>& infoPtr) 
+: notificationSocket(gContext, ZMQ_PUSH) 
 {
     if (infoPtr == nullptr)
     {
@@ -46,22 +51,27 @@ void ConnectionListener::run()
             connectionParams->port;
 
     zmq::socket_t socketCmd(gContext, ZMQ_REP), 
-            socketInt(gContext, ZMQ_PULL);
+            socketInt(gContext, ZMQ_PULL),
+            socketNotify(gContext, ZMQ_PULL);
     
     std::cout << stream.str() << std::endl;
     
     socketCmd.bind(stream.str().c_str());
     socketInt.bind(INTERNAL_COMMAND_ADDR.c_str());
+    socketNotify.bind(INTERNAL_NOTIFY_ADDR.c_str());
     
     while (true)
     {
         zmq::message_t message;
         
         zmq::pollitem_t items [] = { { socketCmd, 0, ZMQ_POLLIN, 0 },
-            { socketInt, 0, ZMQ_POLLIN, 0 } };
+            { socketInt, 0, ZMQ_POLLIN, 0 },
+            { socketNotify, 0, ZMQ_POLLIN, 0 }
+        };
+        
         try
         {
-            zmq::poll(items, 2, 1000);
+            zmq::poll(items, 3, 1000);
         }
         catch (zmq::error_t& e)
         {
@@ -102,7 +112,7 @@ void ConnectionListener::run()
                         processVideo(socketCmd, commandMsg);
                         break;
                     case cc::CommandMessage::SENSORS_INFO:
-                        processSensrosInfo(socketCmd, commandMsg);
+                        processSensorsInfo(socketCmd, commandMsg);
                         break;
                     case cc::CommandMessage::ROTATION:
                         processRotation(socketCmd, commandMsg);
@@ -142,10 +152,19 @@ void ConnectionListener::run()
                 }
             }
         }
+
+        if (items[2].revents & ZMQ_POLLIN) 
+        {
+            if (socketNotify.recv(&message) && notificationSocket.connected())
+            {
+                notificationSocket.send(message);
+            }
+        }
     }
     
     socketCmd.close();
     socketInt.close();
+    socketNotify.close();
 }
 
 void ConnectionListener::processPing(zmq::socket_t& socket, 
@@ -291,7 +310,7 @@ void ConnectionListener::processVideo(zmq::socket_t& socket,
     }
 }
 
-void ConnectionListener::processSensrosInfo(zmq::socket_t& socket, 
+void ConnectionListener::processSensorsInfo(zmq::socket_t& socket, 
             cherokey::common::CommandMessage& msg)
 {
     auto cookie = msg.cookie();
@@ -326,9 +345,11 @@ void ConnectionListener::processSensrosInfo(zmq::socket_t& socket,
         {
             case cc::ON:
                 sensorsInstance->startPublisher(*connectionInfo);
+                connectNotificator(*connectionInfo);
                 break;
             case cc::OFF:
                 sensorsInstance->stopPublisher();
+                disconnectNotificator();
                 break;
         }
         
@@ -420,6 +441,8 @@ void ConnectionListener::onTimer(int sig)
 {
     if (sig == SIGALRM)
     {
+        disconnectNotificator();
+        
         auto sensorsInstance = SensorsController::getInstance();
         if (!sensorsInstance)
         {
@@ -480,5 +503,24 @@ void ConnectionListener::processRotation(zmq::socket_t& socket,
     catch (std::exception& e)
     {
         sendNack(e.what(), cookie, socket);
+    }
+}
+
+void ConnectionListener::connectNotificator(const ConnectionInfo& info)
+{
+    disconnectNotificator();
+    
+    std::ostringstream stream;
+    
+    stream << "tcp://" << info.ipAddress.to_string() << ":" <<
+            info.port + 1;
+    notificationSocket.connect(stream.str().c_str());
+}
+
+void ConnectionListener::disconnectNotificator()
+{
+    if (notificationSocket.connected())
+    {
+        notificationSocket.close();
     }
 }

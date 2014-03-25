@@ -57,6 +57,7 @@ build-proto:
 	${MKDIR} -p ./messages
 	protoc --cpp_out=./messages --proto_path=${CND_BASEDIR}/../messages ${CND_BASEDIR}/../messages/common.proto
 	protoc --cpp_out=./messages --proto_path=${CND_BASEDIR}/../messages ${CND_BASEDIR}/../messages/sensors.proto
+	protoc --cpp_out=./messages --proto_path=${CND_BASEDIR}/../messages ${CND_BASEDIR}/../messages/notifications.proto
 
 .build-pre: build-proto
 

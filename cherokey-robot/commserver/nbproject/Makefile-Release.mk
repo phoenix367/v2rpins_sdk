@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/messages/common.pb.o \
+	${OBJECTDIR}/messages/notifications.pb.o \
 	${OBJECTDIR}/messages/sensors.pb.o \
 	${OBJECTDIR}/src/AHRSProcessor.o \
 	${OBJECTDIR}/src/AHRSStrategy.o \
@@ -90,6 +91,11 @@ ${OBJECTDIR}/messages/common.pb.o: messages/common.pb.cc
 	${MKDIR} -p ${OBJECTDIR}/messages
 	${RM} $@.d
 	$(COMPILE.cc) -O3 -D_GLIBCXX_USE_NANOSLEEP -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -I../madgwik_ahrs/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/messages/common.pb.o messages/common.pb.cc
+
+${OBJECTDIR}/messages/notifications.pb.o: messages/notifications.pb.cc 
+	${MKDIR} -p ${OBJECTDIR}/messages
+	${RM} $@.d
+	$(COMPILE.cc) -O3 -D_GLIBCXX_USE_NANOSLEEP -I../../3pty/include -I../../3pty/include/zeromq -Iinclude -Imessages -I../../pincontroller/include -I../nmea/include -I../madgwik_ahrs/include -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/messages/notifications.pb.o messages/notifications.pb.cc
 
 ${OBJECTDIR}/messages/sensors.pb.o: messages/sensors.pb.cc 
 	${MKDIR} -p ${OBJECTDIR}/messages

@@ -39,6 +39,12 @@ bool SocketCommand::serializeMessage(const cc::CommandMessage& commandMessage,
     return true;
 }
 
+void SocketCommand::preInitCommand(cc::CommandMessage& commandMessage)
+{
+    commandMessage.set_cookie(0);
+    commandMessage.set_command_index(getCommandIndex());
+}
+
 bool SocketCommand::handleReplyAck(zmq::socket_t& socket)
 {
     zmq::message_t reply;
@@ -105,7 +111,8 @@ bool PingCommand::commandHandler(zmq::socket_t& socket)
 {
     cc::CommandMessage commandMessage;
     commandMessage.set_type(cc::CommandMessage::PING);
-    commandMessage.set_cookie(0);
+    preInitCommand(commandMessage);
+
     cc::Ping* pingMsg = commandMessage.mutable_ping();
     pingMsg->set_seq_no(seqno);
 
@@ -173,7 +180,7 @@ bool MoveCommand::doCommand(zmq::socket_t& socket)
 {
     cc::CommandMessage commandMessage;
     commandMessage.set_type(cc::CommandMessage::MOVE);
-    commandMessage.set_cookie(0);
+    preInitCommand(commandMessage);
     
     cc::MoveAction *moveCmd = commandMessage.mutable_move_action();
     cc::RunDriveGroup *groupA = moveCmd->mutable_run_group_a();
@@ -279,7 +286,7 @@ bool ShowVideoComposite::doCommand(zmq::socket_t& socket)
 {
     cc::CommandMessage commandMessage;
     commandMessage.set_type(cc::CommandMessage::SHOW_VIDEO);
-    commandMessage.set_cookie(0);
+    preInitCommand(commandMessage);
     cc::ShowVideo* videoMsg = 
             commandMessage.mutable_show_video();
     videoMsg->set_show_state((showState) ? cc::ON : cc::OFF);
@@ -346,7 +353,7 @@ bool SendSensorsInfo::doCommand(zmq::socket_t& socket)
 {
     cc::CommandMessage commandMessage;
     commandMessage.set_type(cc::CommandMessage::SENSORS_INFO);
-    commandMessage.set_cookie(0);
+    preInitCommand(commandMessage);
     cc::SendSensorsInfo* sensorsMsg = 
             commandMessage.mutable_sensors_send_state();
     sensorsMsg->set_send_state((sendState) ? cc::ON : cc::OFF);
@@ -381,7 +388,7 @@ bool RotateCommand::doCommand(zmq::socket_t& socket)
 {
     cc::CommandMessage commandMessage;
     commandMessage.set_type(cc::CommandMessage::ROTATION);
-    commandMessage.set_cookie(0);
+    preInitCommand(commandMessage);
     cc::RotationCommand* rotationCmd = 
             commandMessage.mutable_rotation_command();
     rotationCmd->set_rotation_angle(rotateAngle);
