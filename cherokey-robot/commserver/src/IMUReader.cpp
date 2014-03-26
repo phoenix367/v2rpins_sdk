@@ -38,7 +38,6 @@ namespace cm = cherokey::common;
 #define WRITE_SENSORS_DATA          0
 
 IMUReader::IMUReader() 
-: CommandSender(ConnectionListener::INTERNAL_COMMAND_ADDR)
 {
     if ((file = open(I2CDEV, O_RDWR)) < 0) 
     {

@@ -9,6 +9,7 @@
                    projectFiles="true">
       <itemPath>include/AHRSProcessor.hpp</itemPath>
       <itemPath>include/AHRSStrategy.hpp</itemPath>
+      <itemPath>include/AbstractSender.hpp</itemPath>
       <itemPath>include/CommandSender.hpp</itemPath>
       <itemPath>include/ConfigManager.hpp</itemPath>
       <itemPath>include/ConnectionListener.hpp</itemPath>
@@ -165,6 +166,8 @@
       <item path="include/AHRSProcessor.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/AHRSStrategy.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/AbstractSender.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/CommandSender.hpp" ex="false" tool="3" flavor2="0">
       </item>
@@ -343,6 +346,8 @@
       <item path="include/AHRSProcessor.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/AHRSStrategy.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/AbstractSender.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/CommandSender.hpp" ex="false" tool="3" flavor2="0">
       </item>

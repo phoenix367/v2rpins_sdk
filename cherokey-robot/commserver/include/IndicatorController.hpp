@@ -10,8 +10,9 @@
 
 #include <memory>
 #include "pincontroller/pincontroller.hpp"
+#include "CommandSender.hpp"
 
-class IndicatorController
+class IndicatorController : public NotifySender
 {
 private:
     IndicatorController();

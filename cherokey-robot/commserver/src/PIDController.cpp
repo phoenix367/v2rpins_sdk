@@ -20,8 +20,7 @@ namespace cc = cherokey::common;
 std::unique_ptr<PIDController> PIDController::instance;
 
 PIDController::PIDController() 
-: CommandSender(ConnectionListener::INTERNAL_COMMAND_ADDR)
-, stopVar(true)
+: stopVar(true)
 , imuReader(nullptr)
 {
 }
@@ -157,7 +156,7 @@ void PIDController::stopRotation()
     groupB->set_direction(cc::RunDriveGroup::FORWARD);    
     groupB->set_power(0);
     
-    sendMessage(commandMessage);
+    AbstractSender<cc::CommandMessage>::sendMessage(commandMessage);
 }
 
 void PIDController::doRotation(float angle, float& leftFactor, 
@@ -237,7 +236,7 @@ void PIDController::doRotation(float leftFactor, float rightFactor,
     
     groupB->set_power(rightFactor);
     
-    sendMessage(commandMessage);
+    AbstractSender<cc::CommandMessage>::sendMessage(commandMessage);
 }
 
 void PIDController::putRotation(float angle)

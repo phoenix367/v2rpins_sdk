@@ -18,7 +18,7 @@
 #include "PIDCommands.hpp"
 #include "madgwik_ahrs.h"
 
-class PIDController : public CommandSender
+class PIDController : public CommandSender, public NotifySender
 {
 private:
     PIDController();

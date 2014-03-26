@@ -10,25 +10,34 @@
 
 #include <zmq.hpp>
 
+#include "AbstractSender.hpp"
+
 namespace cherokey
 {
     namespace common
     {
         class CommandMessage;
     }
+    
+    namespace notifications
+    {
+        class NotificationMessage;
+    }
 }
 
-class CommandSender 
+class CommandSender : public AbstractSender<cherokey::common::CommandMessage>
 {
 public:
-    CommandSender(const std::string& connectAddr);
+    CommandSender();
     virtual ~CommandSender();
-    
-protected:
-    void sendMessage(const cherokey::common::CommandMessage& msg);
-    
-private:
-    zmq::socket_t socket;
+};
+
+class NotifySender : public AbstractSender<
+        cherokey::notifications::NotificationMessage>
+{
+public:
+    NotifySender();
+    virtual ~NotifySender();
 };
 
 #endif	/* COMMANDSENDER_HPP */
