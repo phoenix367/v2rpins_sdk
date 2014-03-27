@@ -4,6 +4,7 @@
 namespace pc
 {
     std::unique_ptr<GPIOManager> GPIOManager::instance;
+    std::mutex GPIOManager::dataMutex;
     
     const std::unordered_map<GPIO_PIN, Contact> GPIOManager::gpioMap =
     {
@@ -163,6 +164,8 @@ namespace pc
     
     GPIOManager* GPIOManager::getInstance()
     {
+        std::lock_guard<std::mutex> l(dataMutex);
+        
         if (!instance)
         {
             instance = std::unique_ptr<GPIOManager>(new GPIOManager());
@@ -173,6 +176,8 @@ namespace pc
 
     void GPIOManager::aquire(Contact c)
     {
+        std::lock_guard<std::mutex> l(dataMutex);
+        
         try
         {
             if (contacts.at(c) == ContactState::notAvailable ||
@@ -191,6 +196,8 @@ namespace pc
     
     void GPIOManager::release(Contact c)
     {
+        std::lock_guard<std::mutex> l(dataMutex);
+        
         try
         {
             if (contacts.at(c) == ContactState::notAvailable)

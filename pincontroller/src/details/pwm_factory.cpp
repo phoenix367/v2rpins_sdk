@@ -7,6 +7,7 @@
 namespace pc
 {
     std::unique_ptr<PWMFactory> PWMFactory::instance;
+    std::mutex PWMFactory::dataMutex;
     
     const std::unordered_map<PWM_CHANNEL, Contact> PWMFactory::contactMap =
     {
@@ -28,6 +29,8 @@ namespace pc
     
     PWMFactory* PWMFactory::getInstance()
     {
+        std::lock_guard<std::mutex> l(dataMutex);
+        
         if (!instance)
         {
             instance = std::unique_ptr<PWMFactory>(new PWMFactory());
@@ -38,6 +41,8 @@ namespace pc
     
     std::shared_ptr<PWMImpl> PWMFactory::createPWM(PWM_CHANNEL po)
     {
+        std::lock_guard<std::mutex> l(dataMutex);
+        
         if (pwmMap.find(po) != pwmMap.end())
         {
             PC_EXCEPTION(PinLockedException, "Selected PWM pin already "
@@ -76,6 +81,8 @@ namespace pc
     
     void PWMFactory::releasePWM(PWM_CHANNEL po)
     {
+        std::lock_guard<std::mutex> l(dataMutex);
+        
         auto gpioInstance = GPIOManager::getInstance();
         if (!gpioInstance)
         {

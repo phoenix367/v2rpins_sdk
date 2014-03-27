@@ -10,6 +10,7 @@
 
 #include <unordered_map>
 #include <memory>
+#include <mutex>
 
 #include "hash.hpp"
 #include "gpio_pin_impl.hpp"
@@ -39,6 +40,7 @@ namespace pc
         
         static const std::unordered_map<GPIO_PIN, Contact> gpioMap;
         static std::unique_ptr<GPIOManager> instance;
+        static std::mutex dataMutex;
     };
 }
 
