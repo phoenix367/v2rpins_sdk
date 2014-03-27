@@ -27,7 +27,7 @@ const std::string ConnectionListener::INTERNAL_NOTIFY_ADDR =
 
 ConnectionListener::ConnectionListener(
     std::shared_ptr<ConnectionInfo>& infoPtr) 
-: notificationSocket(gContext, ZMQ_PUSH) 
+: notificatorConnected(false)
 {
     if (infoPtr == nullptr)
     {
@@ -53,7 +53,7 @@ void ConnectionListener::run()
     zmq::socket_t socketCmd(gContext, ZMQ_REP), 
             socketInt(gContext, ZMQ_PULL),
             socketNotify(gContext, ZMQ_PULL);
-    
+
     std::cout << stream.str() << std::endl;
     
     socketCmd.bind(stream.str().c_str());
@@ -117,6 +117,9 @@ void ConnectionListener::run()
                     case cc::CommandMessage::ROTATION:
                         processRotation(socketCmd, commandMsg);
                         break;
+                    case cc::CommandMessage::NOTIFICATION_STATE:
+                        processNotificationState(socketCmd, commandMsg);
+                        break;
                     default:
                         std::cout << "Received unknown message with type " <<
                               commandMsg.type() << std::endl;  
@@ -155,9 +158,10 @@ void ConnectionListener::run()
 
         if (items[2].revents & ZMQ_POLLIN) 
         {
-            if (socketNotify.recv(&message) && notificationSocket.connected())
+            std::cout << "Send notification message" << std::endl;
+            if (socketNotify.recv(&message) && notificatorConnected)
             {
-                notificationSocket.send(message);
+                notificationSocket->send(message);
             }
         }
     }
@@ -345,11 +349,9 @@ void ConnectionListener::processSensorsInfo(zmq::socket_t& socket,
         {
             case cc::ON:
                 sensorsInstance->startPublisher(*connectionInfo);
-                connectNotificator(*connectionInfo);
                 break;
             case cc::OFF:
                 sensorsInstance->stopPublisher();
-                disconnectNotificator();
                 break;
         }
         
@@ -513,14 +515,55 @@ void ConnectionListener::connectNotificator(const ConnectionInfo& info)
     std::ostringstream stream;
     
     stream << "tcp://" << info.ipAddress.to_string() << ":" <<
-            info.port + 1;
-    notificationSocket.connect(stream.str().c_str());
+            info.port;
+    std::cout << "Connect notification socket to " << stream.str() <<
+            std::endl;
+    notificationSocket = std::unique_ptr<zmq::socket_t>(
+            new zmq::socket_t(gContext, ZMQ_PUSH));
+    notificationSocket->connect(stream.str().c_str());
+    notificatorConnected = true;
 }
 
 void ConnectionListener::disconnectNotificator()
 {
-    if (notificationSocket.connected())
+    if (notificatorConnected)
     {
-        notificationSocket.close();
+        std::cout << "Disconnect notification socket" << std::endl;
+        notificationSocket->close();
+        notificatorConnected = false;
+    }
+}
+
+void ConnectionListener::processNotificationState(zmq::socket_t& socket, 
+        const cherokey::common::CommandMessage& msg)
+{
+    auto cookie = msg.cookie();
+
+    try
+    {
+        auto notifyAction = msg.notification_state();
+        auto state = notifyAction.send_state();
+        
+        switch (state)
+        {
+            case cc::OFF:
+                disconnectNotificator();
+                break;
+            case cc::ON:
+                {
+                    ConnectionInfo info;
+                    info.ipAddress = boost::asio::ip::address_v4(
+                            notifyAction.receiver_address());
+                    info.port = notifyAction.receiver_port();
+                    connectNotificator(info);
+                }
+                break;
+        }
+        
+        sendAck(cookie, socket);
+    }
+    catch (std::exception& e)
+    {
+        sendNack(e.what(), cookie, socket);
     }
 }

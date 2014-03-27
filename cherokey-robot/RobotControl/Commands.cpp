@@ -1,7 +1,9 @@
 #include "Commands.hpp"
+#include "Globals.hpp"
 #include "messages/common.pb.h"
 
-#include<QNetworkInterface>
+#include <QNetworkInterface>
+#include <iostream>
 
 namespace cc = cherokey::common;
 
@@ -67,6 +69,8 @@ bool SocketCommand::handleReplyAck(zmq::socket_t& socket)
 
         if (cmdReply.type() != cc::CommandReply::ACK)
         {
+            std::cout << "Received nack reply with reason: " <<
+                    cmdReply.nack().reason() << std::endl;
             return false;
         }
     }
@@ -311,28 +315,6 @@ bool ShowVideoComposite::doCommand(zmq::socket_t& socket)
     return replyResult;
 }
 
-quint32 ShowVideoComposite::getHostAddress()
-{
-    QList<QNetworkInterface> list = QNetworkInterface::allInterfaces();
-    
-    for (int i = 0; i < list.size(); ++i) 
-    {
-        QNetworkInterface inter = list.at(i);
-        QNetworkInterface::InterfaceFlags flags = inter.flags();
-        if ((flags & QNetworkInterface::IsUp) &&
-            !(flags & QNetworkInterface::IsLoopBack))
-        {
-            QList<QNetworkAddressEntry> addresses = inter.addressEntries();
-            if (!addresses.empty())
-            {
-                return addresses.at(0).ip().toIPv4Address();
-            }
-        }
-    }
-    
-    return 0;
-}
-
 CommandType ShowVideoComposite::getCommandType()
 {
     return showVideoType;
@@ -406,4 +388,45 @@ bool RotateCommand::doCommand(zmq::socket_t& socket)
 CommandType RotateCommand::getCommandType()
 {
     return rotateCommandType;
+}
+
+EnableNotifications::EnableNotifications(bool enable)
+: enableState(enable)
+{
+    
+}
+
+EnableNotifications::~EnableNotifications()
+{
+    
+}
+
+bool EnableNotifications::doCommand(zmq::socket_t& socket)
+{
+    cc::CommandMessage commandMessage;
+    commandMessage.set_type(cc::CommandMessage::NOTIFICATION_STATE);
+    preInitCommand(commandMessage);
+    cc::NotificationState* notifyMsg = 
+            commandMessage.mutable_notification_state();
+    notifyMsg->set_send_state((enableState) ? cc::ON : cc::OFF);
+    
+    if (enableState)
+    {
+        notifyMsg->set_receiver_address(getHostAddress());
+        notifyMsg->set_receiver_port(1236);
+    }
+
+    if (!serializeMessage(commandMessage, socket))
+    {
+        return false;
+    }
+
+    bool replyResult = handleReplyAck(socket);
+
+    return replyResult;
+}
+
+CommandType EnableNotifications::getCommandType()
+{
+    return notificationsCommandType;
 }

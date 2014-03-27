@@ -46,6 +46,13 @@ message SendSensorsInfo
     required SwitchState send_state = 1;
 }
 
+message NotificationState
+{
+    required SwitchState send_state = 1;
+    optional uint32 receiver_address = 2;
+    optional uint32 receiver_port = 3;
+}
+
 message ShowVideo
 {
     required SwitchState show_state = 1;
@@ -68,6 +75,7 @@ message CommandMessage
     enum Type { 
         PING = 1; MOVE = 2; RUN_DRIVE = 3; SENSORS_INFO = 4; 
         SHOW_VIDEO = 5; CALIBRATION_STATE = 6; ROTATION = 7;
+        NOTIFICATION_STATE = 8;
     }
 
     // Identifies which field is filled in.
@@ -84,6 +92,7 @@ message CommandMessage
     optional ShowVideo show_video = 7;
     optional CalibrationState calibration_state = 8;
     optional RotationCommand rotation_command = 9;
+    optional NotificationState notification_state = 11;
 }
 
 message CommandReply {

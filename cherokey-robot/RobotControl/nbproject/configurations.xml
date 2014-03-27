@@ -31,6 +31,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>Commands.cpp</itemPath>
+      <itemPath>Globals.cpp</itemPath>
       <itemPath>GraphPlot.cpp</itemPath>
       <itemPath>IP4Validator.cpp</itemPath>
       <itemPath>OdometrySink.cpp</itemPath>
@@ -138,6 +139,8 @@
       </item>
       <item path="Commands.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Globals.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="Globals.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="GraphPlot.cpp" ex="false" tool="1" flavor2="0">
@@ -225,6 +228,8 @@
       <item path="Commands.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Commands.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Globals.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Globals.hpp" ex="false" tool="3" flavor2="0">
       </item>

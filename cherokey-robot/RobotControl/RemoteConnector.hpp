@@ -37,6 +37,7 @@ public:
 private:
     Q_SLOT void onPingTimeout();
     Q_SLOT void onPingFail();
+    Q_SLOT void onSensorsReady();
     
 protected:
     virtual void run();

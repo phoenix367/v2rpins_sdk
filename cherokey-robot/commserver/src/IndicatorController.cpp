@@ -54,6 +54,8 @@ void IndicatorController::showCalibrationState(bool bState)
         calibrationIndPin->setLogicalLevel((bState) ? 
                 pc::GPIO_LOGIC_LEVEL::high : pc::GPIO_LOGIC_LEVEL::low);
         
+        std::cout << "IndicatorController: Notify other about indication "
+                "change" << std::endl;
         cn::NotificationMessage msg;
         msg.set_type(cn::NotificationMessage::CALIBRATION_STATE);
         auto notifyMsg = msg.mutable_calibration_state();

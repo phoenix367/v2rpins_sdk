@@ -7,12 +7,15 @@
 
 #include "SensorsConnector.hpp"
 #include "messages/sensors.pb.h"
+#include "messages/notifications.pb.h"
 #include "RemoteConnector.hpp"
+#include "Globals.hpp"
 
 #include <iostream>
 #include <sstream>
 
 namespace cs = cherokey::sensors;
+namespace cn = cherokey::notifications;
 
 extern zmq::context_t gContext;
 
@@ -36,18 +39,30 @@ void SensorsConnector::run()
                 connectionInfo.sensorsPort;
         socketPtr->connect(stream.str().c_str());
         
+        quint32 hostIp = getHostAddress();
+        
         stream.str(std::string());
-        stream << "tcp://" << "0.0.0.0:" <<
+        stream << "tcp://" << 
+                ((hostIp >> 24) & 0xFF) << "." <<
+                ((hostIp >> 16) & 0xFF) << "." <<
+                ((hostIp >> 8) & 0xFF) << "." <<
+                (hostIp & 0xFF) << ":" <<
                 connectionInfo.sensorsPort + 1;
         
         socketNotifyPtr->bind(stream.str().c_str());
+        
+        std::cout << "Open notifications listener on " << stream.str() <<
+                std::endl;
+
+        emit ready();
         
         while (true)
         {
             zmq::message_t msg;
 
-            zmq::pollitem_t items[] = { { *socketPtr, 0, ZMQ_POLLIN, 0 } };
-            zmq::poll(items, 1, 1000);
+            zmq::pollitem_t items[] = { { *socketPtr, 0, ZMQ_POLLIN, 0 },
+                { *socketNotifyPtr, 0, ZMQ_POLLIN, 0 } };
+            zmq::poll(items, 2, 1000);
 
             if (items[0].revents & ZMQ_POLLIN) 
             {
@@ -115,6 +130,14 @@ void SensorsConnector::run()
                         }
                     }
                 }
+            }
+            
+            if (items[1].revents & ZMQ_POLLIN) 
+            {
+                if (socketNotifyPtr->recv(&msg))
+                {
+                    std::cout << "Notification message received" << std::endl;
+                }                
             }
         }
     }

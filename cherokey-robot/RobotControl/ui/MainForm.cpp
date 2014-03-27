@@ -150,6 +150,10 @@ void MainForm::onConnect()
         widget.frmMove->setEnabled(true);
         widget.btnShowComposite->setEnabled(true);
 
+        QSharedPointer<SocketCommand> notifyCommand(
+            new EnableNotifications(true));
+        connectorPtr->handleCommand(notifyCommand);
+
         QSharedPointer<SocketCommand> sendCommand(
             new SendSensorsInfo(true));
         connectorPtr->handleCommand(sendCommand);
@@ -386,7 +390,8 @@ void MainForm::stopVideo()
 
 void MainForm::onCommandSuccess(int commandType, quint64 commandIndex)
 {
-    if (commandType == sendSensorsType && commandIndex == disconnectCmdId)
+    if (commandType == notificationsCommandType && 
+            commandIndex == disconnectCmdId)
     {
         doDisconnect();
     }
@@ -400,8 +405,12 @@ void MainForm::prepareDisconnect()
 
     QSharedPointer<SocketCommand> sendCommand(
         new SendSensorsInfo(false));
-    disconnectCmdId = sendCommand->getCommandIndex();
     connectorPtr->handleCommand(sendCommand);
+
+    QSharedPointer<SocketCommand> notifyCommand(
+        new EnableNotifications(false));
+    disconnectCmdId = notifyCommand->getCommandIndex();
+    connectorPtr->handleCommand(notifyCommand);
 }
 
 void MainForm::onCommands()

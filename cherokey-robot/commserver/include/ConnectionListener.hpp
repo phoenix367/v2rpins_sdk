@@ -53,6 +53,8 @@ private:
             cherokey::common::CommandMessage& msg);
     void processRotation(zmq::socket_t& socket, 
             const cherokey::common::CommandMessage& msg);
+    void processNotificationState(zmq::socket_t& socket, 
+            const cherokey::common::CommandMessage& msg);
     
     void startWatchDogTimer();
     void stopWatchdogTimer();
@@ -65,7 +67,8 @@ public:
 private:
     std::shared_ptr<ConnectionInfo> connectionParams;
     timer_t watchDogTimer;
-    zmq::socket_t notificationSocket;
+    std::unique_ptr<zmq::socket_t> notificationSocket;
+    bool notificatorConnected;
 };
 
 #endif	/* CONNECTIONLISTENER_HPP */

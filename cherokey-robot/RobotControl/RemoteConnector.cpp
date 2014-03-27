@@ -67,7 +67,10 @@ void RemoteConnector::run()
                     {
                         if (!commandItem->doCommand(*socketPtr))
                         {
-                            std::cout << "Failed to handle command" << 
+                            std::cout << "Failed to handle command, type " << 
+                                    commandItem->getCommandType() <<
+                                    ", sequence no " <<
+                                    commandItem->getCommandIndex() <<
                                     std::endl;
                         }
                         else
@@ -116,7 +119,9 @@ void RemoteConnector::connectToServer(const ConnectionInfo& info)
     connect(sensorsConnector.data(), SIGNAL(GPSData(GPSInfo)),
             parent(), SLOT(onGPSData(GPSInfo)));    
     connect(sensorsConnector.data(), SIGNAL(ModelRotation(float, float, float)),
-            parent(), SLOT(onModelRotation(float, float, float)));    
+            parent(), SLOT(onModelRotation(float, float, float)));
+    connect(sensorsConnector.data(), SIGNAL(ready()), 
+            SLOT(onSensorsReady()));
     
     int lingerValue = 0;
     socketPtr->setsockopt(ZMQ_LINGER, &lingerValue, sizeof(int));
@@ -125,8 +130,12 @@ void RemoteConnector::connectToServer(const ConnectionInfo& info)
     pingSeqno = 0;
     commandQueue.clear();
     
-    start();
     sensorsConnector->startSubscriber(connectionInfo);
+}
+
+void RemoteConnector::onSensorsReady()
+{
+    start();
 }
 
 void RemoteConnector::disconnectFromServer()

@@ -25,7 +25,8 @@ enum CommandType
     moveCommandType,
     showVideoType,
     sendSensorsType,
-    rotateCommandType
+    rotateCommandType,
+    notificationsCommandType
 };
 
 class SocketCommand
@@ -140,9 +141,6 @@ public:
     virtual CommandType getCommandType();
     
 private:
-    quint32 getHostAddress();
-    
-private:
     bool showState;
     VideoType videoType;
 };
@@ -171,6 +169,19 @@ public:
     
 private:
     float rotateAngle;
+};
+
+class EnableNotifications : public SocketCommand
+{
+public:
+    EnableNotifications(bool enable);
+    virtual ~EnableNotifications();
+    
+    virtual bool doCommand(zmq::socket_t& socket);
+    virtual CommandType getCommandType();
+    
+private:
+    bool enableState;
 };
 
 #endif	/* COMMANDS_HPP */

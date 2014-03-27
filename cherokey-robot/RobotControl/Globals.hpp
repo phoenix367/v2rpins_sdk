@@ -17,4 +17,6 @@ struct ConnectionInfo
     int sensorsPort;
 };
 
+quint32 getHostAddress();
+
 #endif	/* GLOBALS_HPP */
