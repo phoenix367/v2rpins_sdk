@@ -9,6 +9,7 @@
 #define	_PROGRAMFORM_HPP
 
 #include "ui_ProgramForm.h"
+#include "../CommandGrammare.hpp"
 
 class ProgramForm : public QDialog 
 {
