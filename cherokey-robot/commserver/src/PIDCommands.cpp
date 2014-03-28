@@ -1,6 +1,7 @@
 #include "PIDCommands.hpp"
 
-IPIDCommand::IPIDCommand()
+IPIDCommand::IPIDCommand(uint64_t id)
+: commandId(id)
 {
     
 }
@@ -10,11 +11,18 @@ IPIDCommand::~IPIDCommand()
     
 }
 
-RotateCommand::RotateCommand(float angle)
-: rotationAngle(angle)
+uint64_t IPIDCommand::getCommandId()
+{
+    return commandId;
+}
+
+RotateCommand::RotateCommand(uint64_t id, float angle)
+: IPIDCommand(id)
+, rotationAngle(angle)
 {
     
 }
+
 RotateCommand::~RotateCommand()
 {
     

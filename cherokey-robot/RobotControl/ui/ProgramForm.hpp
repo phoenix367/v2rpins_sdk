@@ -13,9 +13,13 @@
 class ProgramForm : public QDialog 
 {
     Q_OBJECT
+    
 public:
     ProgramForm();
     virtual ~ProgramForm();
+    
+    Q_SLOT void onClose();
+    Q_SLOT void onRun();
     
 private:
     Ui::ProgramForm widget;

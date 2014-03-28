@@ -282,55 +282,58 @@ bool MainForm::eventFilter(QObject *object, QEvent *event)
 {
     Q_UNUSED(object);
 
-    if (event->type() == QEvent::KeyPress)
+    if (this->hasFocus())
     {
-        QKeyEvent *ke = static_cast<QKeyEvent *>(event);
-        if (!ke->isAutoRepeat())
+        if (event->type() == QEvent::KeyPress)
         {
-            switch (ke->key())
+            QKeyEvent *ke = static_cast<QKeyEvent *>(event);
+            if (!ke->isAutoRepeat())
             {
-                case Qt::Key_W:
-                    widget.btnForward->setFocus();
-                    onMoveForwardPressed();
-                    return true;
-                case Qt::Key_S:
-                    widget.btnBackward->setFocus();
-                    onMoveBackwardPressed();
-                    return true;
-                case Qt::Key_D:
-                    widget.btnRotateRight->setFocus();
-                    onRotateRightPressed();
-                    return true;
-                case Qt::Key_A:
-                    widget.btnRotateLeft->setFocus();
-                    onRotateLeftPressed();
-                    return true;
+                switch (ke->key())
+                {
+                    case Qt::Key_W:
+                        widget.btnForward->setFocus();
+                        onMoveForwardPressed();
+                        return true;
+                    case Qt::Key_S:
+                        widget.btnBackward->setFocus();
+                        onMoveBackwardPressed();
+                        return true;
+                    case Qt::Key_D:
+                        widget.btnRotateRight->setFocus();
+                        onRotateRightPressed();
+                        return true;
+                    case Qt::Key_A:
+                        widget.btnRotateLeft->setFocus();
+                        onRotateLeftPressed();
+                        return true;
+                }
             }
         }
-    }
-    else if (event->type() == QEvent::KeyRelease)
-    {
-        QKeyEvent *ke = static_cast<QKeyEvent *>(event);
-        if (!ke->isAutoRepeat())
+        else if (event->type() == QEvent::KeyRelease)
         {
-            switch (ke->key())
+            QKeyEvent *ke = static_cast<QKeyEvent *>(event);
+            if (!ke->isAutoRepeat())
             {
-                case Qt::Key_W:
-                    widget.btnForward->clearFocus();
-                    onMoveForwardReleased();
-                    return true;
-                case Qt::Key_S:
-                    widget.btnBackward->clearFocus();
-                    onMoveBackwardReleased();
-                    return true;
-                case Qt::Key_D:
-                    widget.btnRotateRight->clearFocus();
-                    onRotateRightReleased();
-                    return true;
-                case Qt::Key_A:
-                    widget.btnRotateLeft->clearFocus();
-                    onRotateLeftReleased();
-                    return true;
+                switch (ke->key())
+                {
+                    case Qt::Key_W:
+                        widget.btnForward->clearFocus();
+                        onMoveForwardReleased();
+                        return true;
+                    case Qt::Key_S:
+                        widget.btnBackward->clearFocus();
+                        onMoveBackwardReleased();
+                        return true;
+                    case Qt::Key_D:
+                        widget.btnRotateRight->clearFocus();
+                        onRotateRightReleased();
+                        return true;
+                    case Qt::Key_A:
+                        widget.btnRotateLeft->clearFocus();
+                        onRotateLeftReleased();
+                        return true;
+                }
             }
         }
     }
@@ -415,7 +418,5 @@ void MainForm::prepareDisconnect()
 
 void MainForm::onCommands()
 {
-    QSharedPointer<SocketCommand> rotateCommand(
-        new RotateCommand(20));
-    connectorPtr->handleCommand(rotateCommand);
+    programWidget.show();
 }

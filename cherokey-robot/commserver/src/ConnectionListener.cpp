@@ -54,6 +54,9 @@ void ConnectionListener::run()
             socketInt(gContext, ZMQ_PULL),
             socketNotify(gContext, ZMQ_PULL);
 
+    notificationSocket = std::unique_ptr<zmq::socket_t>(
+            new zmq::socket_t(gContext, ZMQ_PUSH));
+
     std::cout << stream.str() << std::endl;
     
     socketCmd.bind(stream.str().c_str());
@@ -499,7 +502,7 @@ void ConnectionListener::processRotation(zmq::socket_t& socket,
                     "is null");
         }
         
-        instance->putRotation(angle);
+        instance->putRotation(msg.command_index(), angle);
         sendAck(cookie, socket);
     }
     catch (std::exception& e)
@@ -518,8 +521,6 @@ void ConnectionListener::connectNotificator(const ConnectionInfo& info)
             info.port;
     std::cout << "Connect notification socket to " << stream.str() <<
             std::endl;
-    notificationSocket = std::unique_ptr<zmq::socket_t>(
-            new zmq::socket_t(gContext, ZMQ_PUSH));
     notificationSocket->connect(stream.str().c_str());
     notificatorConnected = true;
 }
@@ -529,7 +530,6 @@ void ConnectionListener::disconnectNotificator()
     if (notificatorConnected)
     {
         std::cout << "Disconnect notification socket" << std::endl;
-        notificationSocket->close();
         notificatorConnected = false;
     }
 }

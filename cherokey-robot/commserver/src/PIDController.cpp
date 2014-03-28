@@ -12,10 +12,12 @@
 #include "Exceptions.hpp"
 
 #include "common.pb.h"
+#include "notifications.pb.h"
 
 #include <thread>
 
 namespace cc = cherokey::common;
+namespace cn = cherokey::notifications;
 
 std::unique_ptr<PIDController> PIDController::instance;
 
@@ -86,6 +88,25 @@ void PIDController::run()
                 
                 std::this_thread::sleep_until(t + pidDelay);
                 t += pidDelay;
+            }
+            
+            if (!stopVar)
+            {
+                cn::NotificationMessage msg;
+                msg.set_type(cn::NotificationMessage::CMD_EXECUTION);
+                auto cmdEx = msg.mutable_cmd_execution_result();
+                cmdEx->set_command_index(cPtr->getCommandId());
+                cmdEx->set_execution_result((commandDone) ?
+                    cn::CmdExecutionResult::SUCCESS :
+                    cn::CmdExecutionResult::FAIL);
+
+                if (!commandDone)
+                {
+                    cmdEx->set_reason("Failed to execute command");
+                }
+                
+                AbstractSender<cn::NotificationMessage>::sendMessage(
+                    msg);
             }
         }
         else
@@ -239,11 +260,11 @@ void PIDController::doRotation(float leftFactor, float rightFactor,
     AbstractSender<cc::CommandMessage>::sendMessage(commandMessage);
 }
 
-void PIDController::putRotation(float angle)
+void PIDController::putRotation(uint64_t cmdId, float angle)
 {
     std::lock_guard<std::mutex> l(queueMutex);
     std::shared_ptr<IPIDCommand> c = std::shared_ptr<IPIDCommand>(
-            new RotateCommand(angle));
+            new RotateCommand(cmdId, angle));
     
     commandsQueue.push(c);
 }

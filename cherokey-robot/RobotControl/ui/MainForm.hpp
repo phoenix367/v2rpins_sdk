@@ -12,6 +12,7 @@
 #include "RemoteConnector.hpp"
 #include "../PlatformModel.hpp"
 #include "../OdometrySink.hpp"
+#include "ProgramForm.hpp"
 #include "qwt3d_surfaceplot.h"
 #include "qwt3d_function.h"
 #include "qwt3d_plot.h"
@@ -64,6 +65,7 @@ private:
     Qwt3D::SurfacePlot* odometryPlot;
     uint64_t disconnectCmdId;
     OdometrySink odometrySink;
+    ProgramForm programWidget;
 };
 
 #endif	/* _MAINFORM_HPP */

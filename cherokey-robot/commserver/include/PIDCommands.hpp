@@ -20,7 +20,7 @@ enum class CommandType
 class IPIDCommand
 {
 public:
-    IPIDCommand();
+    IPIDCommand(uint64_t id);
     virtual ~IPIDCommand();
     
     virtual CommandType getCommandType() = 0;
@@ -31,12 +31,17 @@ public:
                 "Type of convertion should be derived from IPIDCommand");
         return (T*) this;
     }
+    
+    uint64_t getCommandId();
+    
+private:
+    uint64_t commandId;
 };
 
 class RotateCommand : public IPIDCommand
 {
 public:
-    RotateCommand(float angle);
+    RotateCommand(uint64_t id, float angle);
     virtual ~RotateCommand();
     
     virtual CommandType getCommandType();

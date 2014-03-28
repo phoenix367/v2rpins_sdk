@@ -56,7 +56,7 @@ public:
     void stopController();
     
     void setIMUReader(IMUReader* pReader);
-    void putRotation(float angle);
+    void putRotation(uint64_t cmdId, float angle);
     
 private:
     void run();

@@ -10,8 +10,21 @@
 ProgramForm::ProgramForm() 
 {
     widget.setupUi(this);
+    
+    connect(widget.btnClose, SIGNAL(clicked()), SLOT(onClose()));
+    connect(widget.btnRun, SIGNAL(clicked()), SLOT(onRun()));
 }
 
 ProgramForm::~ProgramForm() 
 {
+}
+
+void ProgramForm::onClose()
+{
+    hide();
+}
+
+void ProgramForm::onRun()
+{
+    
 }
