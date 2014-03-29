@@ -6,8 +6,13 @@
  */
 
 #include "ProgramForm.hpp"
+#include "../CommandGrammar.hpp"
 
-ProgramForm::ProgramForm() 
+#include <sstream>
+
+ProgramForm::ProgramForm(RemoteConnector *p) 
+: connectorPtr(p)
+, currentCmdId(-1)
 {
     widget.setupUi(this);
     
@@ -26,5 +31,58 @@ void ProgramForm::onClose()
 
 void ProgramForm::onRun()
 {
+    cmdList = std::queue<QSharedPointer<SocketCommand> >();
     
+    QString text = widget.textEdit->toPlainText();
+    
+    std::string str = text.toStdString();
+    std::istringstream stream(str);
+    
+    while (!stream.eof())
+    {
+        std::string line;
+        QSharedPointer<SocketCommand> cmd;
+
+        std::getline(stream, line);
+        
+        if (!line.empty())
+        {
+            if (parseCommandStr(line, cmd))
+            {
+                cmdList.push(cmd);
+            }
+        }
+    }
+    
+    if (!cmdList.empty())
+    {
+        start();
+    }
+}
+
+void ProgramForm::start()
+{
+    QSharedPointer<SocketCommand> cmd = cmdList.front();
+    if (connectorPtr)
+    {
+        currentCmdId = cmd->getCommandIndex();
+        connectorPtr->handleCommand(cmd);
+    }
+    
+    cmdList.pop();
+}
+
+void ProgramForm::onCmdResult(quint64 cmdId, bool r)
+{
+    if (cmdId == currentCmdId && r && !cmdList.empty())
+    {
+        QSharedPointer<SocketCommand> cmd = cmdList.front();
+        if (connectorPtr)
+        {
+            currentCmdId = cmd->getCommandIndex();
+            connectorPtr->handleCommand(cmd);
+        }
+
+        cmdList.pop();
+    }
 }

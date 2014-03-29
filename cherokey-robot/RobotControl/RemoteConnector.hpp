@@ -18,6 +18,8 @@
 #include "Commands.hpp"
 #include "SensorsConnector.hpp"
 
+class ProgramForm;
+
 class RemoteConnector : public QThread
 {
     Q_OBJECT
@@ -26,7 +28,8 @@ public:
     RemoteConnector(QObject *parent = NULL);
     virtual ~RemoteConnector();
     
-    void connectToServer(const ConnectionInfo& info);
+    void connectToServer(const ConnectionInfo& info,
+        ProgramForm* pf);
     void disconnectFromServer();
     void handleCommand(QSharedPointer<SocketCommand>& commandPtr);
     

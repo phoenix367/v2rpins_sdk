@@ -7,6 +7,7 @@
 
 #include "RemoteConnector.hpp"
 #include "common.pb.h"
+#include "ui/ProgramForm.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -102,7 +103,8 @@ void RemoteConnector::run()
     failTimer.stop();
 }
 
-void RemoteConnector::connectToServer(const ConnectionInfo& info)
+void RemoteConnector::connectToServer(const ConnectionInfo& info,
+        ProgramForm* pf)
 {
     if (started)
     {
@@ -122,6 +124,8 @@ void RemoteConnector::connectToServer(const ConnectionInfo& info)
             parent(), SLOT(onModelRotation(float, float, float)));
     connect(sensorsConnector.data(), SIGNAL(ready()), 
             SLOT(onSensorsReady()));
+    connect(sensorsConnector.data(), SIGNAL(cmdResult(quint64, bool)), 
+            pf, SLOT(onCmdResult(quint64, bool)));
     
     int lingerValue = 0;
     socketPtr->setsockopt(ZMQ_LINGER, &lingerValue, sizeof(int));

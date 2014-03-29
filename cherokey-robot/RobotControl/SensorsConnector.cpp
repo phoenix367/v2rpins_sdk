@@ -137,6 +137,24 @@ void SensorsConnector::run()
                 if (socketNotifyPtr->recv(&msg))
                 {
                     std::cout << "Notification message received" << std::endl;
+                    
+                    cn::NotificationMessage notifyMsg;
+                    notifyMsg.ParseFromArray(msg.data(), msg.size());
+                    
+                    switch (notifyMsg.type())
+                    {
+                        case cn::NotificationMessage::CMD_EXECUTION:
+                            {
+                                cn::CmdExecutionResult res =
+                                        notifyMsg.cmd_execution_result();
+                                emit cmdResult(res.command_index(),
+                                        res.execution_result() ==
+                                        cn::CmdExecutionResult::SUCCESS);
+                            }
+                            break;
+                        default:
+                            std::cout << "Unhandled command" << std::endl;
+                    }
                 }                
             }
         }

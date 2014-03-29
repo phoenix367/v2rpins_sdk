@@ -9,21 +9,31 @@
 #define	_PROGRAMFORM_HPP
 
 #include "ui_ProgramForm.h"
-#include "../CommandGrammare.hpp"
+#include "../CommandGrammar.hpp"
+#include "../RemoteConnector.hpp"
+
+#include <queue>
 
 class ProgramForm : public QDialog 
 {
     Q_OBJECT
     
 public:
-    ProgramForm();
+    ProgramForm(RemoteConnector *p);
     virtual ~ProgramForm();
     
     Q_SLOT void onClose();
     Q_SLOT void onRun();
+    Q_SLOT void onCmdResult(quint64, bool);
+    
+private:
+    void start();
     
 private:
     Ui::ProgramForm widget;
+    RemoteConnector *connectorPtr;
+    std::queue<QSharedPointer<SocketCommand> > cmdList;
+    quint64 currentCmdId;
 };
 
 #endif	/* _PROGRAMFORM_HPP */

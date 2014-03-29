@@ -65,7 +65,7 @@ private:
     Qwt3D::SurfacePlot* odometryPlot;
     uint64_t disconnectCmdId;
     OdometrySink odometrySink;
-    ProgramForm programWidget;
+    ProgramForm *programWidget;
 };
 
 #endif	/* _MAINFORM_HPP */

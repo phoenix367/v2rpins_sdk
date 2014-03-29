@@ -4,7 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>CommandGrammare.hpp</itemPath>
+      <itemPath>CommandGrammar.hpp</itemPath>
       <itemPath>Commands.hpp</itemPath>
       <itemPath>Globals.hpp</itemPath>
       <itemPath>GraphPlot.hpp</itemPath>
@@ -19,6 +19,8 @@
       <itemPath>messages/common.pb.cc</itemPath>
       <itemPath>messages/common.pb.h</itemPath>
       <itemPath>../messages/common.proto</itemPath>
+      <itemPath>messages/notifications.pb.cc</itemPath>
+      <itemPath>messages/notifications.pb.h</itemPath>
       <itemPath>../messages/notifications.proto</itemPath>
       <itemPath>messages/sensors.pb.cc</itemPath>
       <itemPath>messages/sensors.pb.h</itemPath>
@@ -31,7 +33,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>CommandGrammare.cpp</itemPath>
+      <itemPath>CommandGrammar.cpp</itemPath>
       <itemPath>Commands.cpp</itemPath>
       <itemPath>Globals.cpp</itemPath>
       <itemPath>GraphPlot.cpp</itemPath>
@@ -137,9 +139,9 @@
       </item>
       <item path="../messages/sensors.proto" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CommandGrammare.cpp" ex="false" tool="1" flavor2="0">
+      <item path="CommandGrammar.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="CommandGrammare.hpp" ex="false" tool="3" flavor2="0">
+      <item path="CommandGrammar.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Commands.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -182,6 +184,10 @@
       <item path="messages/common.pb.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="messages/common.pb.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="messages/notifications.pb.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="messages/notifications.pb.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="messages/sensors.pb.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -231,9 +237,9 @@
       </item>
       <item path="../messages/sensors.proto" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CommandGrammare.cpp" ex="false" tool="1" flavor2="0">
+      <item path="CommandGrammar.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="CommandGrammare.hpp" ex="false" tool="3" flavor2="0">
+      <item path="CommandGrammar.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Commands.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -276,6 +282,10 @@
       <item path="messages/common.pb.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="messages/common.pb.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="messages/notifications.pb.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="messages/notifications.pb.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="messages/sensors.pb.cc" ex="false" tool="1" flavor2="0">
       </item>

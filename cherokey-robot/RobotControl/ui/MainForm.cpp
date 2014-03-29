@@ -67,6 +67,8 @@ MainForm::MainForm()
     connect(connectorPtr, SIGNAL(CommandSuccess(int, quint64)),
             SLOT(onCommandSuccess(int, quint64)));
     
+    programWidget = new ProgramForm(connectorPtr);
+    
     widget.frmMove->setEnabled(false);
     widget.btnShowComposite->setEnabled(false);
     
@@ -143,7 +145,7 @@ void MainForm::onConnect()
         info.commandPort = widget.txtCommandPort->text().toInt();
         info.sensorsPort = widget.txtSensorsPort->text().toInt();
         
-        connectorPtr->connectToServer(info);
+        connectorPtr->connectToServer(info, programWidget);
         connected = true;
         widget.btnConnect->setText("Disconnect...");
         
@@ -418,5 +420,5 @@ void MainForm::prepareDisconnect()
 
 void MainForm::onCommands()
 {
-    programWidget.show();
+    programWidget->show();
 }
