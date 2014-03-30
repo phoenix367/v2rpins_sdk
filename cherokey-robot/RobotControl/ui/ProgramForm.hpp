@@ -27,7 +27,7 @@ public:
     Q_SLOT void onCmdResult(quint64, bool);
     
 private:
-    void start();
+    void nextCommand();
     
 private:
     Ui::ProgramForm widget;

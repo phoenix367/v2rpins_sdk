@@ -23,22 +23,38 @@ class PIDController : public CommandSender, public NotifySender
 private:
     PIDController();
     
+    enum CommandState
+    {
+        inProgress,
+        sucess,
+        fail
+    };
+
     class CommandImpl
     {
     public:
-        CommandImpl() {}
+        typedef std::chrono::high_resolution_clock::time_point tp;
+        
+        CommandImpl(const tp& t)
+        : baseTime(t)
+        {}
+        
         virtual ~CommandImpl() {}
         
-        virtual bool doCommand(PIDController *owner) = 0;
+        virtual CommandState doCommand(const tp& t,
+                PIDController *owner) = 0;
+    
+    protected:
+        tp baseTime;
     };
     
     class RotationImpl : public CommandImpl
     {
     public:
-        RotationImpl(float angle);
+        RotationImpl(const tp& t, float angle);
         virtual ~RotationImpl();
         
-        virtual bool doCommand(PIDController *owner);
+        virtual CommandState doCommand(const tp& t, PIDController *owner);
         
     private:
         QUATERNION targetQ;
@@ -46,7 +62,7 @@ private:
         float rotRightFactor;
         int rotDirection;
     };
-    
+        
 public:
     virtual ~PIDController();
     

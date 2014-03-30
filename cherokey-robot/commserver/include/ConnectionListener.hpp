@@ -10,6 +10,7 @@
 
 #include "ConfigManager.hpp"
 #include "DriveController.hpp"
+#include "NotificationHelper.hpp"
 #include <zmq.hpp>
 
 namespace cherokey
@@ -67,8 +68,7 @@ public:
 private:
     std::shared_ptr<ConnectionInfo> connectionParams;
     timer_t watchDogTimer;
-    std::unique_ptr<zmq::socket_t> notificationSocket;
-    bool notificatorConnected;
+    NotificationHelper notifyHelper;
 };
 
 #endif	/* CONNECTIONLISTENER_HPP */

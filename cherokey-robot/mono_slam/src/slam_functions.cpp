@@ -4,7 +4,7 @@ namespace mslam
 {
     void randomMatrix6D(int nPointsRand, RealMatrix& rndMat)
     {
-        auto rng = cv::theRNG();
+        cv::RNG rng = cv::theRNG();
         RealMatrix X(1, nPointsRand);
         RealMatrix Y(1, nPointsRand);
         RealMatrix Z(1, nPointsRand);

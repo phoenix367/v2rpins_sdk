@@ -33,7 +33,8 @@ void ProgramForm::onRun()
 {
     cmdList = std::queue<QSharedPointer<SocketCommand> >();
     
-    QString text = widget.textEdit->toPlainText();
+    widget.txtLog->clear();
+    QString text = widget.txtProgram->toPlainText();
     
     std::string str = text.toStdString();
     std::istringstream stream(str);
@@ -54,35 +55,38 @@ void ProgramForm::onRun()
         }
     }
     
+    nextCommand();
+}
+
+void ProgramForm::nextCommand()
+{
     if (!cmdList.empty())
-    {
-        start();
-    }
-}
-
-void ProgramForm::start()
-{
-    QSharedPointer<SocketCommand> cmd = cmdList.front();
-    if (connectorPtr)
-    {
-        currentCmdId = cmd->getCommandIndex();
-        connectorPtr->handleCommand(cmd);
-    }
-    
-    cmdList.pop();
-}
-
-void ProgramForm::onCmdResult(quint64 cmdId, bool r)
-{
-    if (cmdId == currentCmdId && r && !cmdList.empty())
     {
         QSharedPointer<SocketCommand> cmd = cmdList.front();
         if (connectorPtr)
         {
             currentCmdId = cmd->getCommandIndex();
             connectorPtr->handleCommand(cmd);
+            
+            QString logText = widget.txtLog->toPlainText();
+            logText += "Execute command type: " + 
+                    QString::number(cmd->getCommandType()) + ", index: " +
+                    QString::number(cmd->getCommandIndex()) + "...";
+            widget.txtLog->setText(logText);
         }
 
         cmdList.pop();
+    }
+}
+
+void ProgramForm::onCmdResult(quint64 cmdId, bool r)
+{
+    QString logText = widget.txtLog->toPlainText();
+    logText += (r) ? "OK\n" : "FAIL\n";
+    widget.txtLog->setText(logText);
+
+    if (cmdId == currentCmdId && r && !cmdList.empty())
+    {
+        nextCommand();
     }
 }

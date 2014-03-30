@@ -27,7 +27,6 @@ const std::string ConnectionListener::INTERNAL_NOTIFY_ADDR =
 
 ConnectionListener::ConnectionListener(
     std::shared_ptr<ConnectionInfo>& infoPtr) 
-: notificatorConnected(false)
 {
     if (infoPtr == nullptr)
     {
@@ -53,9 +52,6 @@ void ConnectionListener::run()
     zmq::socket_t socketCmd(gContext, ZMQ_REP), 
             socketInt(gContext, ZMQ_PULL),
             socketNotify(gContext, ZMQ_PULL);
-
-    notificationSocket = std::unique_ptr<zmq::socket_t>(
-            new zmq::socket_t(gContext, ZMQ_PUSH));
 
     std::cout << stream.str() << std::endl;
     
@@ -162,9 +158,9 @@ void ConnectionListener::run()
         if (items[2].revents & ZMQ_POLLIN) 
         {
             std::cout << "Send notification message" << std::endl;
-            if (socketNotify.recv(&message) && notificatorConnected)
+            if (socketNotify.recv(&message) && notifyHelper.isConnected())
             {
-                notificationSocket->send(message);
+                notifyHelper.sendMessage(message);
             }
         }
     }
@@ -521,16 +517,15 @@ void ConnectionListener::connectNotificator(const ConnectionInfo& info)
             info.port;
     std::cout << "Connect notification socket to " << stream.str() <<
             std::endl;
-    notificationSocket->connect(stream.str().c_str());
-    notificatorConnected = true;
+    notifyHelper.connect(stream.str());
 }
 
 void ConnectionListener::disconnectNotificator()
 {
-    if (notificatorConnected)
+    if (notifyHelper.isConnected())
     {
         std::cout << "Disconnect notification socket" << std::endl;
-        notificatorConnected = false;
+        notifyHelper.disconnect();
     }
 }
 

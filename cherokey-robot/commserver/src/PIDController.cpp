@@ -72,7 +72,7 @@ void PIDController::run()
                                 angle << std::endl;
                         
                         command = std::unique_ptr<CommandImpl>(
-                                new RotationImpl(angle));
+                                new RotationImpl(t, angle));
                     }
                     break;
                 default:
@@ -80,11 +80,11 @@ void PIDController::run()
                     continue;
             }
 
-            bool commandDone = false;
+            CommandState commandState = inProgress;
 
-            while (!commandDone && !stopVar)
+            while (commandState == inProgress && !stopVar)
             {
-                commandDone = command->doCommand(this);
+                commandState = command->doCommand(t, this);
                 
                 std::this_thread::sleep_until(t + pidDelay);
                 t += pidDelay;
@@ -96,11 +96,11 @@ void PIDController::run()
                 msg.set_type(cn::NotificationMessage::CMD_EXECUTION);
                 auto cmdEx = msg.mutable_cmd_execution_result();
                 cmdEx->set_command_index(cPtr->getCommandId());
-                cmdEx->set_execution_result((commandDone) ?
+                cmdEx->set_execution_result((commandState == sucess) ?
                     cn::CmdExecutionResult::SUCCESS :
                     cn::CmdExecutionResult::FAIL);
 
-                if (!commandDone)
+                if (commandState == fail)
                 {
                     cmdEx->set_reason("Failed to execute command");
                 }
@@ -283,8 +283,10 @@ std::shared_ptr<IPIDCommand> PIDController::getCommand()
     return c;
 }
 
-PIDController::RotationImpl::RotationImpl(float angle)
-: rotLeftFactor(INFINITY)
+PIDController::RotationImpl::RotationImpl(const tp& t,
+        float angle)
+: CommandImpl(t)
+, rotLeftFactor(INFINITY)
 , rotRightFactor(INFINITY)
 , rotDirection(0)
 {
@@ -296,30 +298,47 @@ PIDController::RotationImpl::~RotationImpl()
     
 }
 
-bool PIDController::RotationImpl::doCommand(PIDController *owner)
+PIDController::CommandState PIDController::RotationImpl::doCommand(
+        const tp& t, PIDController *owner)
 {
-    bool result = false;
-    auto angles = owner->imuReader->getCurrentAngles();
+    CommandState result = inProgress;
+    std::chrono::seconds commandDuration =
+        std::chrono::duration_cast<std::chrono::seconds>(t - baseTime);
 
-    QUATERNION qIMU, qIMUConj, qRot;
-    Euler2Quaternion(0, 0, angles.yaw * M_PI / 180, &qIMU);
-    QuaternionConj(&qIMU, &qIMUConj);
-    QuaternionProd(&targetQ, &qIMUConj, &qRot);
-
-    float rollRot, pitchRot, yawRot;
-    Quaternion2Euler(&qRot, &rollRot, &pitchRot, &yawRot);
-
-    yawRot *= 180 / M_PI;
-
-    if (fabs(yawRot) < 2)
+    try
     {
-        result = true;
-        owner->stopRotation();
+        if (commandDuration.count() > 10)
+        {
+            COMM_EXCEPTION(InternalError, "Execution is too long");
+        }
+
+        auto angles = owner->imuReader->getCurrentAngles();
+
+        QUATERNION qIMU, qIMUConj, qRot;
+        Euler2Quaternion(0, 0, angles.yaw * M_PI / 180, &qIMU);
+        QuaternionConj(&qIMU, &qIMUConj);
+        QuaternionProd(&targetQ, &qIMUConj, &qRot);
+
+        float rollRot, pitchRot, yawRot;
+        Quaternion2Euler(&qRot, &rollRot, &pitchRot, &yawRot);
+
+        yawRot *= 180 / M_PI;
+
+        if (fabs(yawRot) < 2)
+        {
+            result = sucess;
+            owner->stopRotation();
+        }
+        else
+        {
+            owner->doRotation(yawRot, rotLeftFactor, rotRightFactor,
+                    rotDirection);
+        }
     }
-    else
+    catch (Exception&)
     {
-        owner->doRotation(yawRot, rotLeftFactor, rotRightFactor,
-                rotDirection);
+        result = fail;
+        owner->stopRotation();
     }
     
     return result;
