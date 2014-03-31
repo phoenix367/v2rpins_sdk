@@ -61,6 +61,10 @@ private:
         float rotLeftFactor;
         float rotRightFactor;
         int rotDirection;
+        
+        float previousError;
+        float integral;
+        int stopCriteria;
     };
         
 public:

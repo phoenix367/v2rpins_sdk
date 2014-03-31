@@ -49,6 +49,11 @@ const std::string ConfigManager::VOLTAGE_VOLTAGE_SCALE = "VoltageSensor.VoltageS
 const std::string ConfigManager::VOLTAGE_CURRENT_SCALE = "VoltageSensor.CurrentScale";
 const std::string ConfigManager::VOLTAGE_CURRENT_OFFSET = "VoltageSensor.CurrentOffset";
 const std::string ConfigManager::VOLTAGE_MEASUREMENT_RATE = "VoltageSensor.MeasurementRate";
+const std::string ConfigManager::ROTATION_PID_KE = "RotationPID.Ke";
+const std::string ConfigManager::ROTATION_PID_KI = "RotationPID.Ki";
+const std::string ConfigManager::ROTATION_PID_KD = "RotationPID.Kd";
+const std::string ConfigManager::ROTATION_PID_TIMEOUT = "RotationPID.Timeout";
+const std::string ConfigManager::ROTATION_PID_PRECESION = "RotationPID.Precession";
 
 ConfigManager::ConfigManager() 
 : desc("Options")
@@ -584,4 +589,9 @@ VoltageSensorInfo ConfigManager::getVoltageSensorInfo()
 uint32_t ConfigManager::getGPSSerialTimeout()
 {
     return gpsSerialTimeout;
+}
+
+RotationPIDConstants ConfigManager::getRotationPIDInfo()
+{
+    return rotationPID;
 }

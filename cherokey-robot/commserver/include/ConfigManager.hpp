@@ -52,6 +52,13 @@ struct VoltageSensorInfo
     uint32_t measurementRate;
 };
 
+struct RotationPIDConstants
+{
+    float Ke;
+    float Kp;
+    float Kd;
+};
+
 enum class AHRSAlgorithm
 {
     Madgwick,
@@ -83,6 +90,7 @@ public:
     AdcInfo getAdcInfo();
     VoltageSensorInfo getVoltageSensorInfo();
     uint32_t getGPSSerialTimeout();
+    RotationPIDConstants getRotationPIDInfo();
     
 private:
     boost::numeric::ublas::matrix<float> parseMatrixFromString(
@@ -117,6 +125,11 @@ private:
     static const std::string VOLTAGE_CURRENT_SCALE;
     static const std::string VOLTAGE_CURRENT_OFFSET;
     static const std::string VOLTAGE_MEASUREMENT_RATE;
+    static const std::string ROTATION_PID_KE;
+    static const std::string ROTATION_PID_KI;
+    static const std::string ROTATION_PID_KD;
+    static const std::string ROTATION_PID_TIMEOUT;
+    static const std::string ROTATION_PID_PRECESION;
     
     boost::program_options::options_description desc;
     std::shared_ptr<ConnectionInfo> connectionInfo;
@@ -132,6 +145,7 @@ private:
     AdcInfo adcInfo;
     VoltageSensorInfo voltageInfo;
     uint32_t gpsSerialTimeout;
+    RotationPIDConstants rotationPID;
 };
 
 #endif	/* CONFIGMANAGER_HPP */

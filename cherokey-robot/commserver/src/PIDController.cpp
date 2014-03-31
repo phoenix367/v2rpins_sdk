@@ -289,6 +289,9 @@ PIDController::RotationImpl::RotationImpl(const tp& t,
 , rotLeftFactor(INFINITY)
 , rotRightFactor(INFINITY)
 , rotDirection(0)
+, previousError(0)
+, integral(0)
+, stopCriteria(0)
 {
     Euler2Quaternion(0, 0, angle * M_PI / 180, &targetQ);
 }
@@ -322,16 +325,69 @@ PIDController::CommandState PIDController::RotationImpl::doCommand(
         float rollRot, pitchRot, yawRot;
         Quaternion2Euler(&qRot, &rollRot, &pitchRot, &yawRot);
 
-        yawRot *= 180 / M_PI;
+        float error = yawRot * 180 / M_PI;
+        
+        float Kp = 5e-2;
+        float Ki = 5e-2;
+        float Kd = 9e-3;
 
-        if (fabs(yawRot) < 2)
+        integral = integral + error * 0.05f;
+        
+        if (fabs(Ki * integral) > 1.0f)
         {
-            result = sucess;
-            owner->stopRotation();
+            if (std::signbit(integral))
+            {
+                integral = -1.0f / Ki;
+            }
+            else
+            {
+                integral = 1.0f / Ki;
+            }
+        }
+        
+        float derivative = (error - previousError) / 0.05;
+        float output = Kp * error + Ki * integral + Kd * derivative;
+        
+        if (std::signbit(output))
+        {
+            rotDirection = -1;
         }
         else
         {
-            owner->doRotation(yawRot, rotLeftFactor, rotRightFactor,
+            rotDirection = 1;
+        }
+        
+        if (fabs(output) > 1.0f)
+        {            
+            if (std::signbit(output))
+            {
+                output = -1.0f;
+            }
+            else
+            {
+                output = 1.0f;
+            }
+        }
+        
+        std::cout << output << " " << error << std::endl;
+        
+        rotLeftFactor = rotRightFactor = fabs(output);
+        
+        previousError = error;
+        
+        if (fabs(error) < 1.0f)
+        {
+            stopCriteria++;
+            
+            if (stopCriteria >= 5)
+            {
+                result = sucess;
+                owner->stopRotation();
+            }
+        }
+        else
+        {
+            owner->doRotation(rotLeftFactor, rotRightFactor,
                     rotDirection);
         }
     }
