@@ -53,7 +53,7 @@ const std::string ConfigManager::ROTATION_PID_KE = "RotationPID.Ke";
 const std::string ConfigManager::ROTATION_PID_KI = "RotationPID.Ki";
 const std::string ConfigManager::ROTATION_PID_KD = "RotationPID.Kd";
 const std::string ConfigManager::ROTATION_PID_TIMEOUT = "RotationPID.Timeout";
-const std::string ConfigManager::ROTATION_PID_PRECESION = "RotationPID.Precession";
+const std::string ConfigManager::ROTATION_PID_PRECESSION = "RotationPID.Precession";
 
 ConfigManager::ConfigManager() 
 : desc("Options")
@@ -112,6 +112,16 @@ ConfigManager::ConfigManager()
             "Current sensor offset")
         (VOLTAGE_MEASUREMENT_RATE.c_str(), boost::program_options::value<uint32_t>(),
             "Sensors measurement rate")
+        (ROTATION_PID_KE.c_str(), boost::program_options::value<float>()->required(),
+            "Error PID constant")
+        (ROTATION_PID_KI.c_str(), boost::program_options::value<float>()->required(),
+            "Integral PID constant")
+        (ROTATION_PID_KD.c_str(), boost::program_options::value<float>()->required(),
+            "Differential PID constant")
+        (ROTATION_PID_TIMEOUT.c_str(), boost::program_options::value<uint32_t>(),
+            "Rotation command execution timeout, s.")
+        (ROTATION_PID_PRECESSION.c_str(), boost::program_options::value<float>(),
+            "Rotation precession")
         ;
 }
 
@@ -452,6 +462,65 @@ void ConfigManager::loadConfiguration(const std::string& fileName)
         else
         {
             voltageInfo.measurementRate = 250;
+        }
+
+        if (vm.count(ROTATION_PID_KE))
+        {
+            rotationPID.Ke = 
+                    vm[ROTATION_PID_KE].as<float>();
+        }
+        else
+        {
+            COMM_EXCEPTION(ConfigurationException, 
+                    "Ke constant isn't specified");
+        }
+
+        if (vm.count(ROTATION_PID_KD))
+        {
+            rotationPID.Kd = 
+                    vm[ROTATION_PID_KD].as<float>();
+        }
+        else
+        {
+            COMM_EXCEPTION(ConfigurationException, 
+                    "Kd constant isn't specified");
+        }
+
+        if (vm.count(ROTATION_PID_KI))
+        {
+            rotationPID.Ki = 
+                    vm[ROTATION_PID_KI].as<float>();
+        }
+        else
+        {
+            COMM_EXCEPTION(ConfigurationException, 
+                    "Ki constant isn't specified");
+        }
+
+        if (vm.count(ROTATION_PID_TIMEOUT))
+        {
+            rotationPID.rotationTimeout = 
+                    vm[ROTATION_PID_TIMEOUT].as<uint32_t>();
+        }
+        else
+        {
+            rotationPID.rotationTimeout = 10;
+        }
+
+        if (vm.count(ROTATION_PID_PRECESSION))
+        {
+            rotationPID.rotationPrecession = 
+                    vm[ROTATION_PID_PRECESSION].as<float>();
+            
+            if (rotationPID.rotationPrecession <= 0.0f)
+            {
+                COMM_EXCEPTION(ConfigurationException, 
+                        "Rotation precession should be greater than zero");
+            }
+        }
+        else
+        {
+            rotationPID.rotationPrecession = 1.0f;
         }
     }
     catch (Exception&)

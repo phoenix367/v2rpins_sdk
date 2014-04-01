@@ -17,6 +17,7 @@
 #include "IMUReader.hpp"
 #include "PIDCommands.hpp"
 #include "madgwik_ahrs.h"
+#include "ConfigManager.hpp"
 
 class PIDController : public CommandSender, public NotifySender
 {
@@ -65,6 +66,8 @@ private:
         float previousError;
         float integral;
         int stopCriteria;
+        
+        RotationPIDConstants pidConstants;
     };
         
 public:

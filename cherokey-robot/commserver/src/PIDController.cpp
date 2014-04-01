@@ -293,6 +293,15 @@ PIDController::RotationImpl::RotationImpl(const tp& t,
 , integral(0)
 , stopCriteria(0)
 {
+    auto instance = ConfigManager::getInstance();
+    
+    if (!instance)
+    {
+        COMM_EXCEPTION(NullPointerException, "Configuration manager instance "
+                "is null");
+    }
+    
+    pidConstants = instance->getRotationPIDInfo();
     Euler2Quaternion(0, 0, angle * M_PI / 180, &targetQ);
 }
 
@@ -307,10 +316,13 @@ PIDController::CommandState PIDController::RotationImpl::doCommand(
     CommandState result = inProgress;
     std::chrono::seconds commandDuration =
         std::chrono::duration_cast<std::chrono::seconds>(t - baseTime);
+    float Kp = pidConstants.Ke;
+    float Ki = pidConstants.Ki;
+    float Kd = pidConstants.Kd;
 
     try
     {
-        if (commandDuration.count() > 10)
+        if (commandDuration.count() > pidConstants.rotationTimeout)
         {
             COMM_EXCEPTION(InternalError, "Execution is too long");
         }
@@ -327,10 +339,6 @@ PIDController::CommandState PIDController::RotationImpl::doCommand(
 
         float error = yawRot * 180 / M_PI;
         
-        float Kp = 5e-2;
-        float Ki = 5e-2;
-        float Kd = 9e-3;
-
         integral = integral + error * 0.05f;
         
         if (fabs(Ki * integral) > 1.0f)
@@ -375,7 +383,7 @@ PIDController::CommandState PIDController::RotationImpl::doCommand(
         
         previousError = error;
         
-        if (fabs(error) < 1.0f)
+        if (fabs(error) < pidConstants.rotationPrecession)
         {
             stopCriteria++;
             

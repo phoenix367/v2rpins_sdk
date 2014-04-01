@@ -55,8 +55,10 @@ struct VoltageSensorInfo
 struct RotationPIDConstants
 {
     float Ke;
-    float Kp;
+    float Ki;
     float Kd;
+    uint32_t rotationTimeout;
+    float rotationPrecession;
 };
 
 enum class AHRSAlgorithm
@@ -129,7 +131,7 @@ private:
     static const std::string ROTATION_PID_KI;
     static const std::string ROTATION_PID_KD;
     static const std::string ROTATION_PID_TIMEOUT;
-    static const std::string ROTATION_PID_PRECESION;
+    static const std::string ROTATION_PID_PRECESSION;
     
     boost::program_options::options_description desc;
     std::shared_ptr<ConnectionInfo> connectionInfo;
