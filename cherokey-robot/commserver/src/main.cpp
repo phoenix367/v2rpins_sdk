@@ -11,10 +11,13 @@
 #include <string>
 #include <google/protobuf/service.h>
 #include <zmq.hpp>
+#include <boost/program_options.hpp>
 
 #include "ConfigManager.hpp"
 #include "Exceptions.hpp"
 #include "ConnectionListener.hpp"
+
+namespace po = boost::program_options;
 
 const std::string DEFAULT_CONFIG_FILE = "commserver.cfg";
 
@@ -54,13 +57,27 @@ int main(int argc, char** argv)
 
     GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-    std::string configFile = DEFAULT_CONFIG_FILE;
+    std::string configFile;
     
-    if (argc > 1)
+    // Declare the supported options.
+    po::options_description desc("Allowed options");
+    desc.add_options()
+        ("help,h", "produce help message")
+        ("config,c", po::value<std::string>(&configFile)->default_value(
+                DEFAULT_CONFIG_FILE), 
+            "set configuration file name")
+    ;
+
+    po::variables_map vm;
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);
+    
+    if (vm.count("help")) 
     {
-        
+        std::cout << desc << std::endl;
+        return 0;
     }
-    
+
     try
     {
         auto instance = ConfigManager::getInstance();
