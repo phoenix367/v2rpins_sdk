@@ -65,8 +65,7 @@ private:
         
         float previousError;
         float integral;
-        int stopCriteria;
-        
+        int stopCriteria;        
         RotationPIDConstants pidConstants;
     };
         

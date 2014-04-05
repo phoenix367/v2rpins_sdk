@@ -17,7 +17,7 @@
 #include <thread>
 #include <fstream>
 
-#define PID_DIAGNOSTIC          1
+#define PID_DIAGNOSTIC          0
 
 namespace cc = cherokey::common;
 namespace cn = cherokey::notifications;
@@ -362,22 +362,22 @@ PIDController::CommandState PIDController::RotationImpl::doCommand(
 
         float error = yawRot * 180 / M_PI;
         
-        integral = integral + error * 0.05f;
+        integral = integral + Ki * error * 0.05f;
         
-        if (fabs(Ki * integral) > 1.0f)
+        if (fabs(integral) > 1.0f)
         {
             if (std::signbit(integral))
             {
-                integral = -1.0f / Ki;
+                integral = -1.0f;
             }
             else
             {
-                integral = 1.0f / Ki;
+                integral = 1.0f;
             }
         }
         
         float derivative = (error - previousError) / 0.05;
-        float output = Kp * error + Ki * integral + Kd * derivative;
+        float output = Kp * error + integral + Kd * derivative;
         
         if (std::signbit(output))
         {
@@ -400,7 +400,21 @@ PIDController::CommandState PIDController::RotationImpl::doCommand(
             }
         }
         
-        std::cout << output << " " << error << std::endl;
+        auto deadZone = pidConstants.deadZone;
+        
+        if (output < deadZone.upperLimit && output > deadZone.lowerLimit)
+        {
+            if (error > 0)
+            {
+                integral = deadZone.upperLimit - Kp * error;
+            }
+            else
+            {
+                integral = deadZone.lowerLimit - Kp * error;
+            }
+        }
+        
+        std::cout << output << " " << error << " " << std::endl;
         
         rotLeftFactor = rotRightFactor = fabs(output);
         
@@ -412,16 +426,21 @@ PIDController::CommandState PIDController::RotationImpl::doCommand(
         
         if (fabs(error) < pidConstants.rotationPrecession)
         {
+            if (!stopCriteria)
+            {
+                owner->stopRotation();
+            }
+            
             stopCriteria++;
             
             if (stopCriteria >= 5)
             {
                 result = sucess;
-                owner->stopRotation();
             }
         }
         else
         {
+            stopCriteria = 0;
             owner->doRotation(rotLeftFactor, rotRightFactor,
                     rotDirection);
         }
