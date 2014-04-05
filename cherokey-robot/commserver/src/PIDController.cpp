@@ -15,11 +15,18 @@
 #include "notifications.pb.h"
 
 #include <thread>
+#include <fstream>
+
+#define PID_DIAGNOSTIC          1
 
 namespace cc = cherokey::common;
 namespace cn = cherokey::notifications;
 
 std::unique_ptr<PIDController> PIDController::instance;
+
+#if PID_DIAGNOSTIC
+std::ofstream pidStream;
+#endif
 
 PIDController::PIDController() 
 : stopVar(true)
@@ -303,11 +310,18 @@ PIDController::RotationImpl::RotationImpl(const tp& t,
     
     pidConstants = instance->getRotationPIDInfo();
     Euler2Quaternion(0, 0, angle * M_PI / 180, &targetQ);
+    
+#if PID_DIAGNOSTIC
+    pidStream.open("rotation_pid.txt", std::ofstream::out |
+        std::ofstream::app);
+#endif
 }
 
 PIDController::RotationImpl::~RotationImpl()
 {
-    
+#if PID_DIAGNOSTIC
+    pidStream.close();
+#endif
 }
 
 PIDController::CommandState PIDController::RotationImpl::doCommand(
@@ -382,6 +396,10 @@ PIDController::CommandState PIDController::RotationImpl::doCommand(
         rotLeftFactor = rotRightFactor = fabs(output);
         
         previousError = error;
+        
+#if PID_DIAGNOSTIC
+        pidStream << angles.yaw << " " << error << " " << output << std::endl;
+#endif
         
         if (fabs(error) < pidConstants.rotationPrecession)
         {
