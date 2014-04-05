@@ -32,6 +32,17 @@ PIDController::PIDController()
 : stopVar(true)
 , imuReader(nullptr)
 {
+    auto instance = ConfigManager::getInstance();
+    
+    if (!instance)
+    {
+        COMM_EXCEPTION(NullPointerException, "Configuration mamager "
+                "instance is null.");
+    }
+    
+    auto info = instance->getCommonPIDInfo();
+    commandSampleTime = std::chrono::milliseconds(info.commandSampleTime);
+    waitSampleTime = std::chrono::milliseconds(info.waitSampleTime);
 }
 
 PIDController::~PIDController() 
@@ -55,8 +66,6 @@ void PIDController::run()
         return;
     }
     
-    auto commandDelay = std::chrono::milliseconds(100);
-    auto pidDelay = std::chrono::milliseconds(50);
     auto t = std::chrono::high_resolution_clock::now();
     
     while (!stopVar)
@@ -93,8 +102,8 @@ void PIDController::run()
             {
                 commandState = command->doCommand(t, this);
                 
-                std::this_thread::sleep_until(t + pidDelay);
-                t += pidDelay;
+                std::this_thread::sleep_until(t + commandSampleTime);
+                t += commandSampleTime;
             }
             
             if (!stopVar)
@@ -118,8 +127,8 @@ void PIDController::run()
         }
         else
         {
-            std::this_thread::sleep_until(t + commandDelay);
-            t += commandDelay;
+            std::this_thread::sleep_until(t + waitSampleTime);
+            t += waitSampleTime;
         }
     }
 }
@@ -330,7 +339,7 @@ PIDController::CommandState PIDController::RotationImpl::doCommand(
     CommandState result = inProgress;
     std::chrono::seconds commandDuration =
         std::chrono::duration_cast<std::chrono::seconds>(t - baseTime);
-    float Kp = pidConstants.Ke;
+    float Kp = pidConstants.Kp;
     float Ki = pidConstants.Ki;
     float Kd = pidConstants.Kd;
 

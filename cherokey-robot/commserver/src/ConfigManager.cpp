@@ -49,11 +49,14 @@ const std::string ConfigManager::VOLTAGE_VOLTAGE_SCALE = "VoltageSensor.VoltageS
 const std::string ConfigManager::VOLTAGE_CURRENT_SCALE = "VoltageSensor.CurrentScale";
 const std::string ConfigManager::VOLTAGE_CURRENT_OFFSET = "VoltageSensor.CurrentOffset";
 const std::string ConfigManager::VOLTAGE_MEASUREMENT_RATE = "VoltageSensor.MeasurementRate";
-const std::string ConfigManager::ROTATION_PID_KE = "RotationPID.Ke";
+const std::string ConfigManager::ROTATION_PID_KP = "RotationPID.Kp";
 const std::string ConfigManager::ROTATION_PID_KI = "RotationPID.Ki";
 const std::string ConfigManager::ROTATION_PID_KD = "RotationPID.Kd";
 const std::string ConfigManager::ROTATION_PID_TIMEOUT = "RotationPID.Timeout";
 const std::string ConfigManager::ROTATION_PID_PRECESSION = "RotationPID.Precession";
+const std::string ConfigManager::ROTATION_PID_DEAD_ZONE = "RotationPID.DeadZone";
+const std::string ConfigManager::COMMON_PID_COMMAND_ST = "CommonPID.CommandST";
+const std::string ConfigManager::COMMON_PID_WAIT_ST = "CommonPID.WaitST";
 
 ConfigManager::ConfigManager() 
 : desc("Options")
@@ -112,8 +115,8 @@ ConfigManager::ConfigManager()
             "Current sensor offset")
         (VOLTAGE_MEASUREMENT_RATE.c_str(), boost::program_options::value<uint32_t>(),
             "Sensors measurement rate")
-        (ROTATION_PID_KE.c_str(), boost::program_options::value<float>()->required(),
-            "Error PID constant")
+        (ROTATION_PID_KP.c_str(), boost::program_options::value<float>()->required(),
+            "Propotional PID constant")
         (ROTATION_PID_KI.c_str(), boost::program_options::value<float>()->required(),
             "Integral PID constant")
         (ROTATION_PID_KD.c_str(), boost::program_options::value<float>()->required(),
@@ -122,6 +125,12 @@ ConfigManager::ConfigManager()
             "Rotation command execution timeout, s.")
         (ROTATION_PID_PRECESSION.c_str(), boost::program_options::value<float>(),
             "Rotation precession")
+        (ROTATION_PID_DEAD_ZONE.c_str(), boost::program_options::value<std::string>(),
+            "Dead zone of rotation plant")
+        (COMMON_PID_COMMAND_ST.c_str(), boost::program_options::value<uint32_t>(),
+            "Command execution sample time")
+        (COMMON_PID_WAIT_ST.c_str(), boost::program_options::value<uint32_t>(),
+            "Waiting sample time")
         ;
 }
 
@@ -464,15 +473,15 @@ void ConfigManager::loadConfiguration(const std::string& fileName)
             voltageInfo.measurementRate = 250;
         }
 
-        if (vm.count(ROTATION_PID_KE))
+        if (vm.count(ROTATION_PID_KP))
         {
-            rotationPID.Ke = 
-                    vm[ROTATION_PID_KE].as<float>();
+            rotationPID.Kp = 
+                    vm[ROTATION_PID_KP].as<float>();
         }
         else
         {
             COMM_EXCEPTION(ConfigurationException, 
-                    "Ke constant isn't specified");
+                    "Kp constant isn't specified");
         }
 
         if (vm.count(ROTATION_PID_KD))
@@ -521,6 +530,37 @@ void ConfigManager::loadConfiguration(const std::string& fileName)
         else
         {
             rotationPID.rotationPrecession = 1.0f;
+        }
+
+        if (vm.count(ROTATION_PID_DEAD_ZONE))
+        {
+            rotationPID.deadZone = 
+                    parseDeadZone(vm[ROTATION_PID_DEAD_ZONE].as<std::string>());
+        }
+        else
+        {
+            rotationPID.deadZone.lowerLimit = rotationPID.deadZone.upperLimit =
+                    0.0f;
+        }
+
+        if (vm.count(COMMON_PID_COMMAND_ST))
+        {
+            commonPIDInfo.commandSampleTime = 
+                    vm[COMMON_PID_COMMAND_ST].as<uint32_t>();
+        }
+        else
+        {
+            commonPIDInfo.commandSampleTime = 50;
+        }
+
+        if (vm.count(COMMON_PID_WAIT_ST))
+        {
+            commonPIDInfo.waitSampleTime = 
+                    vm[COMMON_PID_WAIT_ST].as<uint32_t>();
+        }
+        else
+        {
+            commonPIDInfo.waitSampleTime = 100;
         }
     }
     catch (Exception&)
@@ -663,4 +703,35 @@ uint32_t ConfigManager::getGPSSerialTimeout()
 RotationPIDConstants ConfigManager::getRotationPIDInfo()
 {
     return rotationPID;
+}
+
+PIDInfo ConfigManager::getCommonPIDInfo()
+{
+    return commonPIDInfo;
+}
+
+DeadZone ConfigManager::parseDeadZone(const std::string& str)
+{
+    std::vector<std::string> parts;
+    boost::split(parts, str, [](std::string::value_type v)
+    {
+        return v == ' ' || v == '\t';
+    });
+    
+    if (parts.size() != 2)
+    {
+        COMM_EXCEPTION(ConfigurationException, "Invalid dead zone params");
+    }
+    
+    DeadZone zone;
+    zone.lowerLimit = boost::lexical_cast<float>(parts[0]);
+    zone.upperLimit = boost::lexical_cast<float>(parts[1]);
+    
+    if (zone.upperLimit - zone.lowerLimit < 0.0f)
+    {
+        COMM_EXCEPTION(ConfigurationException, 
+                "Incorrect dead zone range");
+    }
+    
+    return zone;
 }

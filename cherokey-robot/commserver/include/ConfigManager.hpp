@@ -52,13 +52,27 @@ struct VoltageSensorInfo
     uint32_t measurementRate;
 };
 
+struct DeadZone
+{
+    float upperLimit;
+    float lowerLimit;
+};
+
 struct RotationPIDConstants
 {
-    float Ke;
+    float Kp;
     float Ki;
     float Kd;
     uint32_t rotationTimeout;
     float rotationPrecession;
+    
+    DeadZone deadZone;
+};
+
+struct PIDInfo
+{
+    uint32_t commandSampleTime;
+    uint32_t waitSampleTime;
 };
 
 enum class AHRSAlgorithm
@@ -93,10 +107,12 @@ public:
     VoltageSensorInfo getVoltageSensorInfo();
     uint32_t getGPSSerialTimeout();
     RotationPIDConstants getRotationPIDInfo();
+    PIDInfo getCommonPIDInfo();
     
 private:
     boost::numeric::ublas::matrix<float> parseMatrixFromString(
         const std::string& str);
+    DeadZone parseDeadZone(const std::string& str);
     
 private:
     static std::unique_ptr<ConfigManager> instance;
@@ -127,11 +143,14 @@ private:
     static const std::string VOLTAGE_CURRENT_SCALE;
     static const std::string VOLTAGE_CURRENT_OFFSET;
     static const std::string VOLTAGE_MEASUREMENT_RATE;
-    static const std::string ROTATION_PID_KE;
+    static const std::string ROTATION_PID_KP;
     static const std::string ROTATION_PID_KI;
     static const std::string ROTATION_PID_KD;
     static const std::string ROTATION_PID_TIMEOUT;
     static const std::string ROTATION_PID_PRECESSION;
+    static const std::string ROTATION_PID_DEAD_ZONE;
+    static const std::string COMMON_PID_COMMAND_ST;
+    static const std::string COMMON_PID_WAIT_ST;
     
     boost::program_options::options_description desc;
     std::shared_ptr<ConnectionInfo> connectionInfo;
@@ -148,6 +167,7 @@ private:
     VoltageSensorInfo voltageInfo;
     uint32_t gpsSerialTimeout;
     RotationPIDConstants rotationPID;
+    PIDInfo commonPIDInfo;
 };
 
 #endif	/* CONFIGMANAGER_HPP */
