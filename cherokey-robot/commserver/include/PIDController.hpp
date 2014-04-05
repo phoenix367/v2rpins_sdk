@@ -97,6 +97,8 @@ private:
     IMUReader *imuReader;
     std::queue<std::shared_ptr<IPIDCommand> > commandsQueue;
     std::mutex queueMutex;
+    std::chrono::milliseconds commandSampleTime;
+    std::chrono::milliseconds waitSampleTime;
 };
 
 #endif	/* PIDCONTROLLER_HPP */
