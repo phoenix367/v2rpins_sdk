@@ -37,3 +37,52 @@ float RotateCommand::getRotationAngle()
 {
     return rotationAngle;
 }
+
+WaitCommand::WaitCommand(uint64_t id, float d)
+: IPIDCommand(id)
+, duration(d)
+{
+    
+}
+
+WaitCommand::~WaitCommand()
+{
+    
+}
+
+CommandType WaitCommand::getCommandType()
+{
+    return CommandType::wait;
+}
+
+float WaitCommand::getDuration()
+{
+    return duration;
+}
+
+MoveTimeCommand::MoveTimeCommand(uint64_t id, float d, bool r)
+: IPIDCommand(id)
+, duration(d)
+, direction(r)
+{
+    
+}
+MoveTimeCommand::~MoveTimeCommand()
+{
+    
+}
+
+CommandType MoveTimeCommand::getCommandType()
+{
+    return CommandType::moveTime;
+}
+
+float MoveTimeCommand::getDuration()
+{
+    return duration;
+}
+
+bool MoveTimeCommand::getDirection()
+{
+    return direction;
+}

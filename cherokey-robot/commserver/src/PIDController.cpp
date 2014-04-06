@@ -91,6 +91,33 @@ void PIDController::run()
                                 new RotationImpl(t, angle));
                     }
                     break;
+                case CommandType::wait:
+                    {
+                        auto cmd = cPtr->commandInstance<WaitCommand>();
+                        float d = cmd->getDuration();
+
+                        std::cout << 
+                                "Start executing wait command, duration:" <<
+                                d << std::endl;
+                        
+                        command = std::unique_ptr<CommandImpl>(
+                                new WaitImpl(t, d));
+                    }
+                    break;
+                case CommandType::moveTime:
+                    {
+                        auto cmd = cPtr->commandInstance<MoveTimeCommand>();
+                        float d = cmd->getDuration();
+                        bool dir = cmd->getDirection();
+
+                        std::cout << 
+                                "Start executing move command, duration:" <<
+                                d << ", direction: " << dir << std::endl;
+                        
+                        command = std::unique_ptr<CommandImpl>(
+                                new MoveTimeImpl(t, d, dir));
+                    }
+                    break;
                 default:
                     std::cout << "Can't handle unknown PID command";
                     continue;
@@ -112,7 +139,7 @@ void PIDController::run()
                 msg.set_type(cn::NotificationMessage::CMD_EXECUTION);
                 auto cmdEx = msg.mutable_cmd_execution_result();
                 cmdEx->set_command_index(cPtr->getCommandId());
-                cmdEx->set_execution_result((commandState == sucess) ?
+                cmdEx->set_execution_result((commandState == success) ?
                     cn::CmdExecutionResult::SUCCESS :
                     cn::CmdExecutionResult::FAIL);
 
@@ -276,11 +303,65 @@ void PIDController::doRotation(float leftFactor, float rightFactor,
     AbstractSender<cc::CommandMessage>::sendMessage(commandMessage);
 }
 
+void PIDController::doMove(bool direction)
+{
+    cc::CommandMessage commandMessage;
+    commandMessage.set_type(cc::CommandMessage::MOVE);
+    commandMessage.set_cookie(0);
+    
+    cc::MoveAction *moveCmd = commandMessage.mutable_move_action();
+    cc::RunDriveGroup *groupA = moveCmd->mutable_run_group_a();
+    
+    if (direction)
+    {
+        groupA->set_direction(cc::RunDriveGroup::FORWARD);
+    }
+    else
+    {
+        groupA->set_direction(cc::RunDriveGroup::BACKWARD);
+    }
+    
+    groupA->set_power(1.0f);
+
+    cc::RunDriveGroup *groupB = moveCmd->mutable_run_group_b();
+
+    if (direction)
+    {
+        groupB->set_direction(cc::RunDriveGroup::FORWARD);
+    }
+    else
+    {
+        groupB->set_direction(cc::RunDriveGroup::BACKWARD);
+    }
+    
+    groupB->set_power(1.0f);
+    
+    AbstractSender<cc::CommandMessage>::sendMessage(commandMessage);
+}
+
 void PIDController::putRotation(uint64_t cmdId, float angle)
 {
     std::lock_guard<std::mutex> l(queueMutex);
     std::shared_ptr<IPIDCommand> c = std::shared_ptr<IPIDCommand>(
             new RotateCommand(cmdId, angle));
+    
+    commandsQueue.push(c);
+}
+
+void PIDController::putWait(uint64_t cmdId, float duration)
+{
+    std::lock_guard<std::mutex> l(queueMutex);
+    std::shared_ptr<IPIDCommand> c = std::shared_ptr<IPIDCommand>(
+            new WaitCommand(cmdId, duration));
+    
+    commandsQueue.push(c);
+}
+
+void PIDController::putMoveTime(uint64_t cmdId, float duration, bool direction)
+{
+    std::lock_guard<std::mutex> l(queueMutex);
+    std::shared_ptr<IPIDCommand> c = std::shared_ptr<IPIDCommand>(
+            new MoveTimeCommand(cmdId, duration, direction));
     
     commandsQueue.push(c);
 }
@@ -435,7 +516,7 @@ PIDController::CommandState PIDController::RotationImpl::doCommand(
             
             if (stopCriteria >= 5)
             {
-                result = sucess;
+                result = success;
             }
         }
         else
@@ -452,4 +533,71 @@ PIDController::CommandState PIDController::RotationImpl::doCommand(
     }
     
     return result;
+}
+
+PIDController::WaitImpl::WaitImpl(const tp& t, float d)
+: CommandImpl(t)
+{
+    duration = std::chrono::milliseconds((int64_t) (d * 1000.0f));
+}
+
+PIDController::WaitImpl::~WaitImpl()
+{
+    
+}
+
+PIDController::CommandState PIDController::WaitImpl::doCommand(const tp& t, 
+        PIDController *)
+{
+    std::chrono::milliseconds commandDuration =
+        std::chrono::duration_cast<std::chrono::milliseconds>(t - baseTime);
+    
+    if (commandDuration > duration)
+    {
+        return success;
+    }
+    
+    return inProgress;
+}
+
+PIDController::MoveTimeImpl::MoveTimeImpl(const tp& t, float d, bool dir)
+: CommandImpl(t)
+, direction(dir)
+, drivesStarted(false)
+{
+    duration = std::chrono::milliseconds((int64_t) (d * 1000.0f));
+}
+
+PIDController::MoveTimeImpl::~MoveTimeImpl()
+{
+    
+}
+
+PIDController::CommandState PIDController::MoveTimeImpl::doCommand(
+    const tp& t, PIDController *owner)
+{
+    std::chrono::milliseconds commandDuration =
+        std::chrono::duration_cast<std::chrono::milliseconds>(t - baseTime);
+
+    try
+    {
+        if (commandDuration > duration)
+        {
+            owner->stopRotation();
+            return success;
+        }
+        
+        if (!drivesStarted)
+        {
+            owner->doMove(direction);
+            drivesStarted = true;
+        }
+    }
+    catch (Exception&)
+    {
+        owner->stopRotation();
+        return fail;
+    }
+    
+    return inProgress;
 }

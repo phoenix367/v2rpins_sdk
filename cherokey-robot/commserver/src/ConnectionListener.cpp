@@ -70,7 +70,7 @@ void ConnectionListener::run()
         
         try
         {
-            zmq::poll(items, 3, 1000);
+            zmq::poll(items, 3);
         }
         catch (zmq::error_t& e)
         {
@@ -118,6 +118,12 @@ void ConnectionListener::run()
                         break;
                     case cc::CommandMessage::NOTIFICATION_STATE:
                         processNotificationState(socketCmd, commandMsg);
+                        break;
+                    case cc::CommandMessage::WAIT:
+                        processWaitCommand(socketCmd, commandMsg);
+                        break;
+                    case cc::CommandMessage::MOVE_TIME:
+                        processMoveTimeCommand(socketCmd, commandMsg);
                         break;
                     default:
                         std::cout << "Received unknown message with type " <<
@@ -190,7 +196,7 @@ void ConnectionListener::processPing(zmq::socket_t& socket,
     std::vector<uint8_t> outArray(messageSize);
     replyMsg.SerializeToArray(&outArray[0], messageSize);
 
-    socket.send(&outArray[0], messageSize);
+    socket.send(&outArray[0], messageSize, ZMQ_DONTWAIT);
     std::cout << "Sent pong message with seqno=" << seqno << std::endl;
 }
 
@@ -231,7 +237,7 @@ void ConnectionListener::sendNack(const std::string& reason, int64_t cookie,
     std::vector<uint8_t> outArray(messageSize);
     replyMsg.SerializeToArray(&outArray[0], messageSize);
 
-    socket.send(&outArray[0], messageSize);
+    socket.send(&outArray[0], messageSize, ZMQ_DONTWAIT);
 }
 
 void ConnectionListener::sendAck(int64_t cookie, zmq::socket_t& socket)
@@ -244,7 +250,7 @@ void ConnectionListener::sendAck(int64_t cookie, zmq::socket_t& socket)
     std::vector<uint8_t> outArray(messageSize);
     replyMsg.SerializeToArray(&outArray[0], messageSize);
 
-    socket.send(&outArray[0], messageSize);
+    socket.send(&outArray[0], messageSize, ZMQ_DONTWAIT);
 }
 
 void ConnectionListener::runDriveGroup(
@@ -499,6 +505,60 @@ void ConnectionListener::processRotation(zmq::socket_t& socket,
         }
         
         instance->putRotation(msg.command_index(), angle);
+        sendAck(cookie, socket);
+    }
+    catch (std::exception& e)
+    {
+        sendNack(e.what(), cookie, socket);
+    }
+}
+
+void ConnectionListener::processWaitCommand(zmq::socket_t& socket, 
+        const cherokey::common::CommandMessage& msg)
+{
+    auto cookie = msg.cookie();
+
+    try
+    {
+        auto waitAction = msg.wait_command();
+        float duration = waitAction.duration();
+        
+        auto instance = PIDController::getInstance();
+        if (!instance)
+        {
+            COMM_EXCEPTION(NullPointerException, "PID controller instance "
+                    "is null");
+        }
+        
+        instance->putWait(msg.command_index(), duration);
+        sendAck(cookie, socket);
+    }
+    catch (std::exception& e)
+    {
+        sendNack(e.what(), cookie, socket);
+    }
+}
+
+void ConnectionListener::processMoveTimeCommand(zmq::socket_t& socket, 
+        const cherokey::common::CommandMessage& msg)
+{
+    auto cookie = msg.cookie();
+
+    try
+    {
+        auto moveAction = msg.move_time_command();
+        float duration = moveAction.duration();
+        auto direction = moveAction.direction();
+        
+        auto instance = PIDController::getInstance();
+        if (!instance)
+        {
+            COMM_EXCEPTION(NullPointerException, "PID controller instance "
+                    "is null");
+        }
+        
+        instance->putMoveTime(msg.command_index(), duration,
+                (direction == cc::MoveTime::FORWARD) ? true : false);
         sendAck(cookie, socket);
     }
     catch (std::exception& e)

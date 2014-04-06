@@ -430,3 +430,76 @@ CommandType EnableNotifications::getCommandType()
 {
     return notificationsCommandType;
 }
+
+WaitCommand::WaitCommand(float d)
+: duration(d)
+{
+    
+}
+
+WaitCommand::~WaitCommand()
+{
+    
+}
+
+bool WaitCommand::doCommand(zmq::socket_t& socket)
+{
+    cc::CommandMessage commandMessage;
+    commandMessage.set_type(cc::CommandMessage::WAIT);
+    preInitCommand(commandMessage);
+    cc::WaitCommand* waitCmd = 
+            commandMessage.mutable_wait_command();
+    waitCmd->set_duration(duration);
+
+    if (!serializeMessage(commandMessage, socket))
+    {
+        return false;
+    }
+
+    bool replyResult = handleReplyAck(socket);
+
+    return replyResult;
+}
+
+CommandType WaitCommand::getCommandType()
+{
+    return waitCommandType;
+}
+
+MoveTimeCommand::MoveTimeCommand(float d, bool dir)
+: duration(d)
+, direction(dir)
+{
+    
+}
+
+MoveTimeCommand::~MoveTimeCommand()
+{
+    
+}
+
+bool MoveTimeCommand::doCommand(zmq::socket_t& socket)
+{
+    cc::CommandMessage commandMessage;
+    commandMessage.set_type(cc::CommandMessage::MOVE_TIME);
+    preInitCommand(commandMessage);
+    cc::MoveTime* moveCmd = 
+            commandMessage.mutable_move_time_command();
+    moveCmd->set_duration(duration);
+    moveCmd->set_direction((direction) ? cc::MoveTime::FORWARD :
+        cc::MoveTime::BACKWARD);
+
+    if (!serializeMessage(commandMessage, socket))
+    {
+        return false;
+    }
+
+    bool replyResult = handleReplyAck(socket);
+
+    return replyResult;
+}
+
+CommandType MoveTimeCommand::getCommandType()
+{
+    return moveTimeCommandType;
+}

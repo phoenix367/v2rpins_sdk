@@ -27,7 +27,7 @@ private:
     enum CommandState
     {
         inProgress,
-        sucess,
+        success,
         fail
     };
 
@@ -68,7 +68,33 @@ private:
         int stopCriteria;        
         RotationPIDConstants pidConstants;
     };
+    
+    class WaitImpl : public CommandImpl
+    {
+    public:
+        WaitImpl(const tp& t, float d);
+        virtual ~WaitImpl();
         
+        virtual CommandState doCommand(const tp& t, PIDController *);
+        
+    private:
+        std::chrono::milliseconds duration;
+    };
+        
+    class MoveTimeImpl : public CommandImpl
+    {
+    public:
+        MoveTimeImpl(const tp& t, float d, bool dir);
+        virtual ~MoveTimeImpl();
+        
+        virtual CommandState doCommand(const tp& t, PIDController *);
+        
+    private:
+        std::chrono::milliseconds duration;
+        bool direction;
+        bool drivesStarted;
+    };
+
 public:
     virtual ~PIDController();
     
@@ -79,6 +105,8 @@ public:
     
     void setIMUReader(IMUReader* pReader);
     void putRotation(uint64_t cmdId, float angle);
+    void putWait(uint64_t cmdId, float duration);
+    void putMoveTime(uint64_t cmdId, float duration, bool direction);
     
 private:
     void run();
@@ -86,6 +114,7 @@ private:
     void doRotation(float angle, float& leftFactor, float& rightFactor,
             int& rotDirection);
     void doRotation(float leftFactor, float rightFactor, int rotDirection);
+    void doMove(bool direction);
     std::shared_ptr<IPIDCommand> getCommand();
     
 private:

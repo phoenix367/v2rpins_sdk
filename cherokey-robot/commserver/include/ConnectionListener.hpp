@@ -54,6 +54,10 @@ private:
             cherokey::common::CommandMessage& msg);
     void processRotation(zmq::socket_t& socket, 
             const cherokey::common::CommandMessage& msg);
+    void processWaitCommand(zmq::socket_t& socket, 
+            const cherokey::common::CommandMessage& msg);
+    void processMoveTimeCommand(zmq::socket_t& socket, 
+            const cherokey::common::CommandMessage& msg);
     void processNotificationState(zmq::socket_t& socket, 
             const cherokey::common::CommandMessage& msg);
     

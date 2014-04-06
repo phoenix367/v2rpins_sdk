@@ -14,7 +14,9 @@
 
 enum class CommandType
 {
-    rotating
+    rotating,
+    wait,
+    moveTime
 };
 
 class IPIDCommand
@@ -49,6 +51,34 @@ public:
     
 private:
     float rotationAngle;
+};
+
+class WaitCommand : public IPIDCommand
+{
+public:
+    WaitCommand(uint64_t id, float d);
+    virtual ~WaitCommand();
+    
+    virtual CommandType getCommandType();
+    float getDuration();
+    
+private:
+    float duration;
+};
+
+class MoveTimeCommand : public IPIDCommand
+{
+public:
+    MoveTimeCommand(uint64_t id, float d, bool r);
+    virtual ~MoveTimeCommand();
+    
+    virtual CommandType getCommandType();
+    float getDuration();
+    bool getDirection();
+    
+private:
+    float duration;
+    bool direction;
 };
 
 #endif	/* PIDCOMMANDS_HPP */

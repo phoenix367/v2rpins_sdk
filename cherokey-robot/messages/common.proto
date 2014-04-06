@@ -70,12 +70,24 @@ message RotationCommand
     required float rotation_angle = 1;
 }
 
+message WaitCommand
+{
+    required float duration = 1;
+}
+
+message MoveTime
+{
+    enum Direction { FORWARD = 1; BACKWARD = 2; }
+    required float duration = 1;
+    required Direction direction = 2;
+}
+
 message CommandMessage 
 {
     enum Type { 
         PING = 1; MOVE = 2; RUN_DRIVE = 3; SENSORS_INFO = 4; 
         SHOW_VIDEO = 5; CALIBRATION_STATE = 6; ROTATION = 7;
-        NOTIFICATION_STATE = 8;
+        NOTIFICATION_STATE = 8; WAIT = 9; MOVE_TIME = 10;
     }
 
     // Identifies which field is filled in.
@@ -93,6 +105,8 @@ message CommandMessage
     optional CalibrationState calibration_state = 8;
     optional RotationCommand rotation_command = 9;
     optional NotificationState notification_state = 11;
+    optional WaitCommand wait_command = 12;
+    optional MoveTime move_time_command = 13;
 }
 
 message CommandReply {

@@ -26,7 +26,9 @@ enum CommandType
     showVideoType,
     sendSensorsType,
     rotateCommandType,
-    notificationsCommandType
+    notificationsCommandType,
+    waitCommandType,
+    moveTimeCommandType
 };
 
 class SocketCommand
@@ -182,6 +184,33 @@ public:
     
 private:
     bool enableState;
+};
+
+class WaitCommand : public SocketCommand
+{
+public:
+    WaitCommand(float d);
+    virtual ~WaitCommand();
+    
+    virtual bool doCommand(zmq::socket_t& socket);
+    virtual CommandType getCommandType();
+    
+private:
+    float duration;
+};
+
+class MoveTimeCommand : public SocketCommand
+{
+public:
+    MoveTimeCommand(float d, bool dir);
+    virtual ~MoveTimeCommand();
+    
+    virtual bool doCommand(zmq::socket_t& socket);
+    virtual CommandType getCommandType();
+    
+private:
+    float duration;
+    bool direction;
 };
 
 #endif	/* COMMANDS_HPP */

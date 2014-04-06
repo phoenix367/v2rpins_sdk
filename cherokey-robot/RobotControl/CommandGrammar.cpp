@@ -100,7 +100,42 @@ bool parseCommandStr(
     boost::split( SplitVec, commandStr, boost::is_any_of(" \t"), 
             boost::token_compress_on );
     
-    if (SplitVec.size() == 2)
+    if (SplitVec.size() >= 1 && SplitVec[0] == "move")
+    {
+        if (SplitVec.size() >= 2)
+        {
+            bool direction;
+            if (SplitVec[1] == "forward")
+            {
+                direction = true;
+            }
+            else if (SplitVec[1] == "backward")
+            {
+                direction = false;
+            }
+            else
+            {
+                return false;
+            }
+            
+            if (SplitVec.size() == 3)
+            {
+                std::string durationStr = SplitVec[2];
+                float duration = boost::lexical_cast<float>(durationStr);
+
+                if (duration < 0.0f)
+                {
+                    return false;
+                }
+
+                cmd = QSharedPointer<SocketCommand>(
+                        new MoveTimeCommand(duration, direction));
+
+                return true;
+            }
+        }
+    }
+    else if (SplitVec.size() == 2)
     {
         if (SplitVec[0] == "rotate")
         {
@@ -109,6 +144,21 @@ bool parseCommandStr(
             
             cmd = QSharedPointer<SocketCommand>(
                     new RotateCommand(angle));
+            
+            return true;
+        }
+        else if (SplitVec[0] == "wait")
+        {
+            std::string durationStr = SplitVec[1];
+            float duration = boost::lexical_cast<float>(durationStr);
+            
+            if (duration < 0.0f)
+            {
+                return false;
+            }
+            
+            cmd = QSharedPointer<SocketCommand>(
+                    new WaitCommand(duration));
             
             return true;
         }
