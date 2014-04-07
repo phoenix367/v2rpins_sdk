@@ -9,6 +9,7 @@
 #define	DRIVECONTROLLER_HPP
 
 #include <memory>
+#include <mutex>
 
 #include "pincontroller/pincontroller.hpp"
 
@@ -49,6 +50,8 @@ private:
     std::unique_ptr<pc::PWM> pwmB;
     std::unique_ptr<pc::GPIOPin> gpioDirectionA;
     std::unique_ptr<pc::GPIOPin> gpioDirectionB;
+    
+    static std::mutex controllerMutex;
 };
 
 #endif	/* DRIVECONTROLLER_HPP */

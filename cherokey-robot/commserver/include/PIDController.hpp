@@ -111,8 +111,6 @@ public:
 private:
     void run();
     void stopRotation();
-    void doRotation(float angle, float& leftFactor, float& rightFactor,
-            int& rotDirection);
     void doRotation(float leftFactor, float rightFactor, int rotDirection);
     void doMove(bool direction);
     std::shared_ptr<IPIDCommand> getCommand();

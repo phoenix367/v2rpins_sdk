@@ -16,6 +16,7 @@
                                                     // microseconds
 
 std::unique_ptr<DriveController> DriveController::instance;
+std::mutex DriveController::controllerMutex;
 
 DriveController::DriveController()
 {
@@ -48,6 +49,8 @@ DriveController::~DriveController()
 
 DriveController* DriveController::getInstance()
 {
+    std::lock_guard<std::mutex> l(controllerMutex);
+    
     if (!instance)
     {
         instance = std::unique_ptr<DriveController>(new DriveController());
@@ -59,6 +62,8 @@ DriveController* DriveController::getInstance()
 void DriveController::runDriveGroup(DriveGroup group, MoveDirection direction,
         float drivePower)
 {
+    std::lock_guard<std::mutex> l(controllerMutex);
+
     if (drivePower > 1.0f || drivePower < 0.0f)
     {
         COMM_EXCEPTION(OutOfRangeException, "Drive power value is "
@@ -107,6 +112,8 @@ void DriveController::setGroupDirection(DriveGroup group, bool isForward)
 
 void DriveController::stopDrives()
 {
+    std::lock_guard<std::mutex> l(controllerMutex);
+
     pwmA->setPulseParams(0, PWM_PERIOD);
     pwmA->init();
     pwmB->setPulseParams(0, PWM_PERIOD);

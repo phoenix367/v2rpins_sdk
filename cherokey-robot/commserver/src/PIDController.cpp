@@ -223,84 +223,34 @@ void PIDController::stopRotation()
     AbstractSender<cc::CommandMessage>::sendMessage(commandMessage);
 }
 
-void PIDController::doRotation(float angle, float& leftFactor, 
-        float& rightFactor, int& rotDirection)
-{
-    float tmpLeft, tmpRight;
-    int tmpDirection;
-    float absAngle = fabs(angle);
-    
-    if (absAngle > 40.0f)
-    {
-        tmpLeft = tmpRight = 1.0f;
-    }
-    else if (absAngle <= 40.0f && absAngle > 20.0f)
-    {
-        tmpLeft = tmpRight = 0.8f;
-    }
-    else
-    {
-        tmpLeft = tmpRight = 0.6f;
-    }
-
-    if (angle > 0)
-    {
-        tmpDirection = 1;
-    }
-    else
-    {
-        tmpDirection = -1;
-    }
-    
-    if (fabs(tmpLeft - leftFactor) < 1e-5 && 
-        fabs(tmpRight - rightFactor) < 1e-5 &&
-        tmpDirection == rotDirection)
-    {
-        return;
-    }
-    
-    leftFactor = tmpLeft;
-    rightFactor = tmpRight;
-    rotDirection = tmpDirection;
-    
-    doRotation(leftFactor, rightFactor, rotDirection);
-}
-
 void PIDController::doRotation(float leftFactor, float rightFactor, 
         int rotDirection)
 {
-    cc::CommandMessage commandMessage;
-    commandMessage.set_type(cc::CommandMessage::MOVE);
-    commandMessage.set_cookie(0);
-    
-    cc::MoveAction *moveCmd = commandMessage.mutable_move_action();
-    cc::RunDriveGroup *groupA = moveCmd->mutable_run_group_a();
-    
-    if (rotDirection > 0)
-    {
-        groupA->set_direction(cc::RunDriveGroup::FORWARD);
-    }
-    else
-    {
-        groupA->set_direction(cc::RunDriveGroup::BACKWARD);
-    }
-    
-    groupA->set_power(leftFactor);
+    auto driveInstance = DriveController::getInstance();
 
-    cc::RunDriveGroup *groupB = moveCmd->mutable_run_group_b();
+    if (!driveInstance)
+    {
+        COMM_EXCEPTION(NullPointerException, "Drive controller instance "
+                "is null.");
+    }
+
+    DriveController::MoveDirection directionA, directionB;
 
     if (rotDirection > 0)
     {
-        groupB->set_direction(cc::RunDriveGroup::BACKWARD);
+        directionA = DriveController::MoveDirection::MOVE_FORWARD;
+        directionB = DriveController::MoveDirection::MOVE_BACKWARD;
     }
     else
     {
-        groupB->set_direction(cc::RunDriveGroup::FORWARD);
+        directionA = DriveController::MoveDirection::MOVE_BACKWARD;
+        directionB = DriveController::MoveDirection::MOVE_FORWARD;
     }
-    
-    groupB->set_power(rightFactor);
-    
-    AbstractSender<cc::CommandMessage>::sendMessage(commandMessage);
+
+    driveInstance->runDriveGroup(DriveController::DriveGroup::GROUP_A, 
+            directionA, rightFactor);
+    driveInstance->runDriveGroup(DriveController::DriveGroup::GROUP_B, 
+            directionB, leftFactor);
 }
 
 void PIDController::doMove(bool direction)

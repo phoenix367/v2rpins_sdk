@@ -31,7 +31,7 @@ namespace pc
                     "Device doesn't open.");
         }
         
-        std::clog << "Write command to device: " << cmd << std::endl;
+        std::cout << "Write command to device: " << cmd << std::endl;
         writeData(cmd.c_str(), cmd.size());
     }
     
