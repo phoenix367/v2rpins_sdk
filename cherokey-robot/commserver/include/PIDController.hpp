@@ -84,7 +84,8 @@ private:
     class MoveTimeImpl : public CommandImpl
     {
     public:
-        MoveTimeImpl(const tp& t, float d, bool dir);
+        MoveTimeImpl(const tp& t, float d, bool dir,
+                const EulerAngles& angles);
         virtual ~MoveTimeImpl();
         
         virtual CommandState doCommand(const tp& t, PIDController *);
@@ -93,6 +94,9 @@ private:
         std::chrono::milliseconds duration;
         bool direction;
         bool drivesStarted;
+        QUATERNION targetQ;
+        float previousError;
+        float integral;
     };
 
 public:
@@ -112,7 +116,8 @@ private:
     void run();
     void stopRotation();
     void doRotation(float leftFactor, float rightFactor, int rotDirection);
-    void doMove(bool direction);
+    void doMove(bool direction, float leftFactor = 1.0f, 
+            float rightFactor = 1.0f);
     std::shared_ptr<IPIDCommand> getCommand();
     
 private:

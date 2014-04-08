@@ -115,7 +115,8 @@ void PIDController::run()
                                 d << ", direction: " << dir << std::endl;
                         
                         command = std::unique_ptr<CommandImpl>(
-                                new MoveTimeImpl(t, d, dir));
+                                new MoveTimeImpl(t, d, dir,
+                                    imuReader->getCurrentAngles()));
                     }
                     break;
                 default:
@@ -253,7 +254,7 @@ void PIDController::doRotation(float leftFactor, float rightFactor,
             directionB, leftFactor);
 }
 
-void PIDController::doMove(bool direction)
+void PIDController::doMove(bool direction, float leftFactor, float rightFactor)
 {
     cc::CommandMessage commandMessage;
     commandMessage.set_type(cc::CommandMessage::MOVE);
@@ -271,7 +272,7 @@ void PIDController::doMove(bool direction)
         groupA->set_direction(cc::RunDriveGroup::BACKWARD);
     }
     
-    groupA->set_power(1.0f);
+    groupA->set_power(rightFactor);
 
     cc::RunDriveGroup *groupB = moveCmd->mutable_run_group_b();
 
@@ -284,7 +285,7 @@ void PIDController::doMove(bool direction)
         groupB->set_direction(cc::RunDriveGroup::BACKWARD);
     }
     
-    groupB->set_power(1.0f);
+    groupB->set_power(leftFactor);
     
     AbstractSender<cc::CommandMessage>::sendMessage(commandMessage);
 }
@@ -510,17 +511,28 @@ PIDController::CommandState PIDController::WaitImpl::doCommand(const tp& t,
     return inProgress;
 }
 
-PIDController::MoveTimeImpl::MoveTimeImpl(const tp& t, float d, bool dir)
+PIDController::MoveTimeImpl::MoveTimeImpl(const tp& t, float d, bool dir,
+        const EulerAngles& angles)
 : CommandImpl(t)
 , direction(dir)
 , drivesStarted(false)
+, previousError(0.0f)
+, integral(0.0f)
 {
     duration = std::chrono::milliseconds((int64_t) (d * 1000.0f));
+    Euler2Quaternion(0, 0, angles.yaw * M_PI / 180, &targetQ);
+
+#if PID_DIAGNOSTIC
+    pidStream.open("moving_pid.txt", std::ofstream::out |
+        std::ofstream::app);
+#endif
 }
 
 PIDController::MoveTimeImpl::~MoveTimeImpl()
 {
-    
+#if PID_DIAGNOSTIC
+    pidStream.close();
+#endif
 }
 
 PIDController::CommandState PIDController::MoveTimeImpl::doCommand(
@@ -528,6 +540,10 @@ PIDController::CommandState PIDController::MoveTimeImpl::doCommand(
 {
     std::chrono::milliseconds commandDuration =
         std::chrono::duration_cast<std::chrono::milliseconds>(t - baseTime);
+
+    float Kp = 5e-2;
+    float Ki = 2e-2;
+    float Kd = 1e-3;
 
     try
     {
@@ -537,11 +553,66 @@ PIDController::CommandState PIDController::MoveTimeImpl::doCommand(
             return success;
         }
         
-        if (!drivesStarted)
+        auto angles = owner->imuReader->getCurrentAngles();
+
+        QUATERNION qIMU, qIMUConj, qRot;
+        Euler2Quaternion(0, 0, angles.yaw * M_PI / 180, &qIMU);
+        QuaternionConj(&qIMU, &qIMUConj);
+        QuaternionProd(&targetQ, &qIMUConj, &qRot);
+
+        float rollRot, pitchRot, yawRot;
+        Quaternion2Euler(&qRot, &rollRot, &pitchRot, &yawRot);
+
+        float error = yawRot * 180 / M_PI;
+        
+        integral = integral + Ki * error * 0.05f;
+        
+        if (integral > 1.0f)
         {
-            owner->doMove(direction);
-            drivesStarted = true;
+            integral = 1.0f;
         }
+        else if (integral < -1.0f)
+        {
+            integral = -1.0f;
+        }
+        
+        float derivative = (error - previousError) / 0.05;
+        float output = Kp * error + integral + Kd * derivative;
+
+        if (!direction)
+        {
+            output = -output;
+        }
+        
+        float leftFactor = 0.8f - output;
+        if (leftFactor > 1.0f)
+        {
+            leftFactor = 1.0f;
+        }
+        else if (leftFactor < 0.0f)
+        {
+            leftFactor = 0.0f;
+        }
+        
+        float rightFactor = 0.8f + output;
+        if (rightFactor > 1.0f)
+        {
+            rightFactor = 1.0f;
+        }
+        else if (rightFactor < 0.0f)
+        {
+            rightFactor = 0.0f;
+        }
+        
+        std::cout << error << " " << leftFactor << " " << rightFactor << 
+                std::endl;
+        
+#if PID_DIAGNOSTIC
+        pidStream << angles.yaw << " " << leftFactor << " " << rightFactor << 
+                std::endl;
+#endif
+        
+        owner->doMove(direction, leftFactor, rightFactor);
     }
     catch (Exception&)
     {
