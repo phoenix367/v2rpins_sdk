@@ -5,8 +5,8 @@
  * Created on March 20, 2014, 12:29 AM
  */
 
-#ifndef DECLARES_HPP
-#define	DECLARES_HPP
+#ifndef MSLAM_DECLARES_HPP
+#define	MSLAM_DECLARES_HPP
 
 #include <opencv2/opencv.hpp>
 
@@ -14,6 +14,7 @@ namespace mslam
 {
     typedef double RealType;
     typedef cv::Mat_<RealType> RealMatrix;
+    typedef cv::Vector<RealType> RealVector;
     
     struct CameraParams
     {
@@ -29,4 +30,4 @@ namespace mslam
     };
 }
 
-#endif	/* DECLARES_HPP */
+#endif	/* MSLAM_DECLARES_HPP */
