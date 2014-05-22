@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>src/EKF.cpp</itemPath>
       <itemPath>src/slam_functions.cpp</itemPath>
+      <itemPath>src/vector_function.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="HeaderFiles"
                    displayName="Файлы заголовков"
@@ -44,11 +45,11 @@
       </toolsSet>
       <compileType>
         <ccTool>
-          <standard>8</standard>
           <commandlineTool>g++</commandlineTool>
           <incDir>
             <pElem>include</pElem>
           </incDir>
+          <commandLine>-std=c++0x</commandLine>
         </ccTool>
         <archiverTool>
         </archiverTool>
@@ -74,6 +75,8 @@
       <item path="src/EKF.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/slam_functions.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/vector_function.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="3">
@@ -120,6 +123,8 @@
       <item path="src/EKF.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/slam_functions.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/vector_function.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

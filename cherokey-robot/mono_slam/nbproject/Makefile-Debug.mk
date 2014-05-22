@@ -36,15 +36,16 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/src/EKF.o \
-	${OBJECTDIR}/src/slam_functions.o
+	${OBJECTDIR}/src/slam_functions.o \
+	${OBJECTDIR}/src/vector_function.o
 
 
 # C Compiler Flags
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=-std=c++0x
+CXXFLAGS=-std=c++0x
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -68,12 +69,17 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libmono_slam.a: ${OBJECTFILES}
 ${OBJECTDIR}/src/EKF.o: src/EKF.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/EKF.o src/EKF.cpp
+	$(COMPILE.cc) -g -Iinclude -std=c++0x -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/EKF.o src/EKF.cpp
 
 ${OBJECTDIR}/src/slam_functions.o: src/slam_functions.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/slam_functions.o src/slam_functions.cpp
+	$(COMPILE.cc) -g -Iinclude -std=c++0x -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/slam_functions.o src/slam_functions.cpp
+
+${OBJECTDIR}/src/vector_function.o: src/vector_function.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -g -Iinclude -std=c++0x -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/vector_function.o src/vector_function.cpp
 
 # Subprojects
 .build-subprojects:

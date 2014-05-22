@@ -6,6 +6,7 @@
  */
 
 #include "mono_slam/EKF.hpp"
+#include "mono_slam/vector_function.hpp"
 
 namespace mslam
 {
@@ -47,13 +48,13 @@ namespace mslam
             RealMatrix K = p_km1_k * H.t() * invS;
 
             // updated state and covariance
-            //x_k_k = x_km1_k + K * (z - h);
-            //p_k_k = p_km1_k - K * S * K.t();
-            //p_k_k = 0.5 * p_k_k + 0.5 * p_k_k.t();
+            x_k_k = x_km1_k + K * (z - h);
+            p_k_k = p_km1_k - K * S * K.t();
+            p_k_k = 0.5 * p_k_k + 0.5 * p_k_k.t();
 
             // normalize the quaternion
-//            Jnorm = normJac( x_k_k( 4:7 ) );
-//            size_p_k_k = size(p_k_k,1);
+            RealMatrix Jnorm = normJac(x_k_k(cv::Range(3, 6)));
+            int size_p_k_k = p_k_k.rows;
 //            p_k_k = [   p_k_k(1:3,1:3)              p_k_k(1:3,4:7)*Jnorm'               p_k_k(1:3,8:size_p_k_k);
 //                Jnorm*p_k_k(4:7,1:3)        Jnorm*p_k_k(4:7,4:7)*Jnorm'         Jnorm*p_k_k(4:7,8:size_p_k_k);
 //                p_k_k(8:size_p_k_k,1:3)     p_k_k(8:size_p_k_k,4:7)*Jnorm'      p_k_k(8:size_p_k_k,8:size_p_k_k)];

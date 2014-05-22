@@ -36,7 +36,8 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/src/EKF.o \
-	${OBJECTDIR}/src/slam_functions.o
+	${OBJECTDIR}/src/slam_functions.o \
+	${OBJECTDIR}/src/vector_function.o
 
 
 # C Compiler Flags
@@ -74,6 +75,11 @@ ${OBJECTDIR}/src/slam_functions.o: src/slam_functions.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/slam_functions.o src/slam_functions.cpp
+
+${OBJECTDIR}/src/vector_function.o: src/vector_function.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/vector_function.o src/vector_function.cpp
 
 # Subprojects
 .build-subprojects:

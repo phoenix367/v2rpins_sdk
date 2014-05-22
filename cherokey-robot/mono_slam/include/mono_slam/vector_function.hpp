@@ -8,11 +8,13 @@
 #ifndef MSLAM_VECTOR_FUNCTION_HPP
 #define	MSLAM_VECTOR_FUNCTION_HPP
 
-#include "exceptions.hpp"
+#include "declares.hpp"
 
 namespace mslam
 {
-    
+    RealMatrix operator -(const RealVector& a, const RealVector& b);
+    RealVector operator +(const RealVector& a, const RealMatrix& b);
+    RealMatrix normJac(const RealVector& q);
 }
 
 #endif	/* MSLAM_VECTOR_FUNCTION_HPP */
