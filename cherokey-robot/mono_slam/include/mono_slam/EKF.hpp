@@ -30,6 +30,9 @@ namespace mslam
             const RealMatrix& H, const RealMatrix& R, const RealVector& z, 
             const RealVector& h);
         
+        RealVector getX();
+        RealMatrix getP();
+        
     private:
         RealVector x_k_k;
         RealMatrix p_k_k;

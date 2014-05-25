@@ -40,6 +40,12 @@ namespace mslam
     
     RealMatrix normJac(const RealVector& q)
     {
+        if (q.size() < 4)
+        {
+            SLAM_EXCEPTION(IncorrectParamException, 
+                    "Vector size is too small");
+        }
+
         RealType r = q[0];
         RealType x = q[1];
         RealType y = q[2];
@@ -65,5 +71,39 @@ namespace mslam
         J(3, 3) = r * r + x * x + y * y;
         
         return f * J;
+    }
+    
+    RealMatrix v2m(const RealVector& q)
+    {
+        RealMatrix r(q.size(), 1);
+        std::copy(q.begin(), q.end(), r.begin());
+        return r;
+    }
+    
+    RealMatrix q2r(const RealVector& q)
+    {
+        if (q.size() < 4)
+        {
+            SLAM_EXCEPTION(IncorrectParamException, 
+                    "Vector size is too small");
+        }
+
+        RealMatrix R(3, 3);
+        RealType r = q[0];
+        RealType x = q[1];
+        RealType y = q[2];
+        RealType z = q[3];
+
+        R(0, 0) = r * r + x * x - y * y - z * z;
+        R(0, 1) = 2 * (x * y - r * z);
+        R(0, 2) = 2 * (z * x + r * y);
+        R(1, 0) = 2 * (x * y + r * z);
+        R(1, 1) = r * r - x * x + y * y - z * z;
+        R(1, 2) = 2 * (y * z - r * x);
+        R(2, 0) = 2 * (z * x - r * y);
+        R(2, 1) = 2 * (y * z + r * x);
+        R(2, 2) = r * r - x * x - y * y + z * z;
+        
+        return R;
     }
 }

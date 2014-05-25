@@ -39,6 +39,12 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/slam_functions.o \
 	${OBJECTDIR}/src/vector_function.o
 
+# Test Directory
+TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
+
+# Test Files
+TESTFILES= \
+	${TESTDIR}/TestFiles/f1
 
 # C Compiler Flags
 CFLAGS=
@@ -83,6 +89,73 @@ ${OBJECTDIR}/src/vector_function.o: src/vector_function.cpp
 
 # Subprojects
 .build-subprojects:
+
+# Build Test Targets
+.build-tests-conf: .build-conf ${TESTFILES}
+${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/VfunctionsTest.o ${TESTDIR}/tests/vfunctions_test.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc}   -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS} `cppunit-config --libs`   
+
+
+${TESTDIR}/tests/VfunctionsTest.o: tests/VfunctionsTest.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} $@.d
+	$(COMPILE.cc) -O2 `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/VfunctionsTest.o tests/VfunctionsTest.cpp
+
+
+${TESTDIR}/tests/vfunctions_test.o: tests/vfunctions_test.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} $@.d
+	$(COMPILE.cc) -O2 `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/vfunctions_test.o tests/vfunctions_test.cpp
+
+
+${OBJECTDIR}/src/EKF_nomain.o: ${OBJECTDIR}/src/EKF.o src/EKF.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/EKF.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} $@.d;\
+	    $(COMPILE.cc) -O2 -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/EKF_nomain.o src/EKF.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/src/EKF.o ${OBJECTDIR}/src/EKF_nomain.o;\
+	fi
+
+${OBJECTDIR}/src/slam_functions_nomain.o: ${OBJECTDIR}/src/slam_functions.o src/slam_functions.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/slam_functions.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} $@.d;\
+	    $(COMPILE.cc) -O2 -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/slam_functions_nomain.o src/slam_functions.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/src/slam_functions.o ${OBJECTDIR}/src/slam_functions_nomain.o;\
+	fi
+
+${OBJECTDIR}/src/vector_function_nomain.o: ${OBJECTDIR}/src/vector_function.o src/vector_function.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/vector_function.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} $@.d;\
+	    $(COMPILE.cc) -O2 -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/vector_function_nomain.o src/vector_function.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/src/vector_function.o ${OBJECTDIR}/src/vector_function_nomain.o;\
+	fi
+
+# Run Test Targets
+.test-conf:
+	@if [ "${TEST}" = "" ]; \
+	then  \
+	    ${TESTDIR}/TestFiles/f1 || true; \
+	else  \
+	    ./${TEST} || true; \
+	fi
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
