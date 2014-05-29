@@ -26,6 +26,11 @@
                    displayName="Файлы тестов"
                    projectFiles="false"
                    kind="TEST_LOGICAL_FOLDER">
+      <logicalFolder name="f2" displayName="EKF test" projectFiles="true" kind="TEST">
+        <itemPath>tests/ekfTest.cpp</itemPath>
+        <itemPath>tests/ekfTest.hpp</itemPath>
+        <itemPath>tests/ekf_test.cpp</itemPath>
+      </logicalFolder>
       <logicalFolder name="f1"
                      displayName="Vector functions test"
                      projectFiles="true"
@@ -62,6 +67,13 @@
         <archiverTool>
         </archiverTool>
       </compileType>
+      <folder path="TestFiles">
+        <linkerTool>
+          <linkerLibItems>
+            <linkerOptionItem>`pkg-config --libs opencv`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </folder>
       <folder path="TestFiles/f1">
         <cTool>
           <commandLine>`cppunit-config --cflags`</commandLine>
@@ -73,7 +85,20 @@
           <output>${TESTDIR}/TestFiles/f1</output>
           <linkerLibItems>
             <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
-            <linkerOptionItem>`pkg-config --libs opencv`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </folder>
+      <folder path="TestFiles/f2">
+        <cTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </cTool>
+        <ccTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f2</output>
+          <linkerLibItems>
+            <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
           </linkerLibItems>
         </linkerTool>
       </folder>
@@ -104,6 +129,12 @@
       <item path="tests/VfunctionsTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/VfunctionsTest.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/ekfTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/ekfTest.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/ekf_test.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/vfunctions_test.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -145,6 +176,20 @@
           </linkerLibItems>
         </linkerTool>
       </folder>
+      <folder path="TestFiles/f2">
+        <cTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </cTool>
+        <ccTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f2</output>
+          <linkerLibItems>
+            <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </folder>
       <item path="include/mono_slam/EKF.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/mono_slam/declares.hpp" ex="false" tool="3" flavor2="0">
@@ -172,6 +217,12 @@
       <item path="tests/VfunctionsTest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/VfunctionsTest.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/ekfTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/ekfTest.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/ekf_test.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="tests/vfunctions_test.cpp" ex="false" tool="1" flavor2="0">
       </item>
