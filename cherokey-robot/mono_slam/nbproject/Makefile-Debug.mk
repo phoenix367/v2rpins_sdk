@@ -44,6 +44,7 @@ TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 
 # Test Files
 TESTFILES= \
+	${TESTDIR}/TestFiles/f2 \
 	${TESTDIR}/TestFiles/f1
 
 # C Compiler Flags
@@ -92,9 +93,25 @@ ${OBJECTDIR}/src/vector_function.o: src/vector_function.cpp
 
 # Build Test Targets
 .build-tests-conf: .build-conf ${TESTFILES}
+${TESTDIR}/TestFiles/f2: ${TESTDIR}/tests/ekfTest.o ${TESTDIR}/tests/ekf_test.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc}   -o ${TESTDIR}/TestFiles/f2 $^ ${LDLIBSOPTIONS} `pkg-config --libs opencv`   `cppunit-config --libs`   
+
 ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/VfunctionsTest.o ${TESTDIR}/tests/vfunctions_test.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
-	${LINK.cc}   -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS} `cppunit-config --libs` `pkg-config --libs opencv`   
+	${LINK.cc}   -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS} `pkg-config --libs opencv`   `cppunit-config --libs`   
+
+
+${TESTDIR}/tests/ekfTest.o: tests/ekfTest.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} $@.d
+	$(COMPILE.cc) -g -Iinclude -std=c++0x `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/ekfTest.o tests/ekfTest.cpp
+
+
+${TESTDIR}/tests/ekf_test.o: tests/ekf_test.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} $@.d
+	$(COMPILE.cc) -g -Iinclude -std=c++0x `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/ekf_test.o tests/ekf_test.cpp
 
 
 ${TESTDIR}/tests/VfunctionsTest.o: tests/VfunctionsTest.cpp 
@@ -152,6 +169,7 @@ ${OBJECTDIR}/src/vector_function_nomain.o: ${OBJECTDIR}/src/vector_function.o sr
 .test-conf:
 	@if [ "${TEST}" = "" ]; \
 	then  \
+	    ${TESTDIR}/TestFiles/f2 || true; \
 	    ${TESTDIR}/TestFiles/f1 || true; \
 	else  \
 	    ./${TEST} || true; \
