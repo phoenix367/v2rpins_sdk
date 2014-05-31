@@ -11,6 +11,7 @@
 #include "VoltageReader.hpp"
 #include "IMUReader.hpp"
 #include "PIDController.hpp"
+#include "WiFiInfoParser.hpp"
 
 #define MAX_QUEUE_LENGTH                100
 
@@ -102,6 +103,7 @@ void SensorsController::processSensorMessages(zmq::socket_t& pubSocket)
     
     GPSReader gpsReader;
     VoltageReader voltageReader;
+    WiFiInfoParser wifiReader;
     IMUReader imuReader;
     
     pidInstance->setIMUReader(&imuReader);

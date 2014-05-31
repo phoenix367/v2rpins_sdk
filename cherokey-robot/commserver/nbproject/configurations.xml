@@ -25,6 +25,7 @@
       <itemPath>include/SensorsController.hpp</itemPath>
       <itemPath>include/VideoController.hpp</itemPath>
       <itemPath>include/VoltageReader.hpp</itemPath>
+      <itemPath>include/WiFiInfoParser.hpp</itemPath>
       <itemPath>include/decls.hpp</itemPath>
       <itemPath>include/serialstream.h</itemPath>
     </logicalFolder>
@@ -62,6 +63,7 @@
       <itemPath>src/SensorsController.cpp</itemPath>
       <itemPath>src/VideoController.cpp</itemPath>
       <itemPath>src/VoltageReader.cpp</itemPath>
+      <itemPath>src/WiFiInfoParser.cpp</itemPath>
       <itemPath>src/main.cpp</itemPath>
       <itemPath>src/serialstream.cpp</itemPath>
     </logicalFolder>
@@ -165,6 +167,20 @@
       </item>
       <item path="configs/commserver.cfg" ex="false" tool="3" flavor2="0">
       </item>
+      <folder path="TestFiles/f1">
+        <cTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </cTool>
+        <ccTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f1</output>
+          <linkerLibItems>
+            <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </folder>
       <item path="include/AHRSProcessor.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/AHRSStrategy.hpp" ex="false" tool="3" flavor2="0">
@@ -200,6 +216,8 @@
       <item path="include/VideoController.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/VoltageReader.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/WiFiInfoParser.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/decls.hpp" ex="false" tool="3" flavor2="0">
       </item>
@@ -248,6 +266,8 @@
       <item path="src/VideoController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/VoltageReader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/WiFiInfoParser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -349,6 +369,21 @@
       </item>
       <item path="configs/commserver.cfg" ex="false" tool="3" flavor2="0">
       </item>
+      <folder path="TestFiles/f1">
+        <cTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </cTool>
+        <ccTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f1</output>
+          <commandlineTool>g++</commandlineTool>
+          <linkerLibItems>
+            <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </folder>
       <item path="include/AHRSProcessor.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/AHRSStrategy.hpp" ex="false" tool="3" flavor2="0">
@@ -384,6 +419,8 @@
       <item path="include/VideoController.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/VoltageReader.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/WiFiInfoParser.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/decls.hpp" ex="false" tool="3" flavor2="0">
       </item>
@@ -435,6 +472,8 @@
       <item path="src/VideoController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/VoltageReader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/WiFiInfoParser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
