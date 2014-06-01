@@ -129,6 +129,25 @@ void SensorsConnector::run()
                             }
                         }
                     }
+                    else if (dataMsg.sensor_id() == 3)
+                    {
+                        for (int i = 0; i < dataMsg.sensor_values_size(); i++)
+                        {
+                            cs::SensorValue value = dataMsg.sensor_values(i);
+                            if (value.associated_name() == "wifi_interface" &&
+                                value.has_wifi_info())
+                            {
+                                cs::WiFiInfo wifiInfo = value.wifi_info();
+                                std::cout << wifiInfo.interface_name() << " " <<
+                                       wifiInfo.link_quality() << " " <<
+                                        wifiInfo.signal_level() << std::endl;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        std::cout << "Unknown sensor message" << std::endl;
+                    }
                 }
             }
             

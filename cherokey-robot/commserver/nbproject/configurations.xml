@@ -167,20 +167,6 @@
       </item>
       <item path="configs/commserver.cfg" ex="false" tool="3" flavor2="0">
       </item>
-      <folder path="TestFiles/f1">
-        <cTool>
-          <commandLine>`cppunit-config --cflags`</commandLine>
-        </cTool>
-        <ccTool>
-          <commandLine>`cppunit-config --cflags`</commandLine>
-        </ccTool>
-        <linkerTool>
-          <output>${TESTDIR}/TestFiles/f1</output>
-          <linkerLibItems>
-            <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
-          </linkerLibItems>
-        </linkerTool>
-      </folder>
       <item path="include/AHRSProcessor.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/AHRSStrategy.hpp" ex="false" tool="3" flavor2="0">
@@ -369,21 +355,6 @@
       </item>
       <item path="configs/commserver.cfg" ex="false" tool="3" flavor2="0">
       </item>
-      <folder path="TestFiles/f1">
-        <cTool>
-          <commandLine>`cppunit-config --cflags`</commandLine>
-        </cTool>
-        <ccTool>
-          <commandLine>`cppunit-config --cflags`</commandLine>
-        </ccTool>
-        <linkerTool>
-          <output>${TESTDIR}/TestFiles/f1</output>
-          <commandlineTool>g++</commandlineTool>
-          <linkerLibItems>
-            <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
-          </linkerLibItems>
-        </linkerTool>
-      </folder>
       <item path="include/AHRSProcessor.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/AHRSStrategy.hpp" ex="false" tool="3" flavor2="0">

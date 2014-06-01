@@ -143,7 +143,7 @@ bool SensorsController::getMessage(std::vector<int8_t>& msg)
     
     if (!messageQueue.empty())
     {
-        msg = messageQueue.back();
+        msg = messageQueue.front();
         messageQueue.pop();
         
         return true;

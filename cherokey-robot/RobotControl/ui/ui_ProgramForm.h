@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ProgramForm.ui'
 **
-** Created: Sun Mar 30 20:47:37 2014
-**      by: Qt User Interface Compiler version 4.8.1
+** Created: Sun Jun 1 14:56:20 2014
+**      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
