@@ -126,6 +126,9 @@ void RemoteConnector::connectToServer(const ConnectionInfo& info,
             SLOT(onSensorsReady()));
     connect(sensorsConnector.data(), SIGNAL(cmdResult(quint64, bool)), 
             pf, SLOT(onCmdResult(quint64, bool)));
+    connect(sensorsConnector.data(), SIGNAL(WiFiData(QString, float, 
+            float)), 
+            parent(), SLOT(onWiFiData(QString, float, float)));
     
     int lingerValue = 0;
     socketPtr->setsockopt(ZMQ_LINGER, &lingerValue, sizeof(int));

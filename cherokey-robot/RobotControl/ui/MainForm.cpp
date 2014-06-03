@@ -422,3 +422,14 @@ void MainForm::onCommands()
 {
     programWidget->show();
 }
+
+void MainForm::onWiFiData(QString interfaceName, float linkQuality, 
+        float signalLevel)
+{
+    if (interfaceName.startsWith("wlan0"))
+    {
+        widget.lblLinkQuality->setText(QString::number(linkQuality) +
+            "/70");
+        widget.lblSigLevel->setText(QString::number(signalLevel));
+    }
+}

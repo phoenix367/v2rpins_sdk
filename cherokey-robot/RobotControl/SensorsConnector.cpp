@@ -138,9 +138,12 @@ void SensorsConnector::run()
                                 value.has_wifi_info())
                             {
                                 cs::WiFiInfo wifiInfo = value.wifi_info();
-                                std::cout << wifiInfo.interface_name() << " " <<
-                                       wifiInfo.link_quality() << " " <<
-                                        wifiInfo.signal_level() << std::endl;
+                                emit WiFiData(
+                                        QString::fromStdString(
+                                            wifiInfo.interface_name()),
+                                        wifiInfo.link_quality(),
+                                        wifiInfo.signal_level()
+                                        );
                             }
                         }
                     }

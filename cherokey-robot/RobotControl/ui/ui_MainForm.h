@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'MainForm.ui'
 **
-** Created: Sun Jun 1 14:56:20 2014
-**      by: Qt User Interface Compiler version 4.8.3
+** Created: Tue Jun 3 23:10:49 2014
+**      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -52,6 +52,11 @@ public:
     QLabel *label_10;
     QLabel *lblLatitude;
     QLabel *lblLongitude;
+    QLabel *label_17;
+    QLabel *label_18;
+    QLabel *label_19;
+    QLabel *lblSigLevel;
+    QLabel *lblLinkQuality;
     QLabel *label_3;
     QPushButton *btnShowComposite;
     QLabel *label_6;
@@ -114,7 +119,7 @@ public:
         label_2->setGeometry(QRect(60, 310, 131, 20));
         frmSensors = new QFrame(MainForm);
         frmSensors->setObjectName(QString::fromUtf8("frmSensors"));
-        frmSensors->setGeometry(QRect(240, 330, 201, 161));
+        frmSensors->setGeometry(QRect(240, 330, 201, 201));
         frmSensors->setFrameShape(QFrame::StyledPanel);
         frmSensors->setFrameShadow(QFrame::Raised);
         label_4 = new QLabel(frmSensors);
@@ -144,6 +149,21 @@ public:
         lblLongitude = new QLabel(frmSensors);
         lblLongitude->setObjectName(QString::fromUtf8("lblLongitude"));
         lblLongitude->setGeometry(QRect(100, 100, 91, 17));
+        label_17 = new QLabel(frmSensors);
+        label_17->setObjectName(QString::fromUtf8("label_17"));
+        label_17->setGeometry(QRect(20, 130, 31, 17));
+        label_18 = new QLabel(frmSensors);
+        label_18->setObjectName(QString::fromUtf8("label_18"));
+        label_18->setGeometry(QRect(20, 150, 81, 17));
+        label_19 = new QLabel(frmSensors);
+        label_19->setObjectName(QString::fromUtf8("label_19"));
+        label_19->setGeometry(QRect(20, 170, 121, 17));
+        lblSigLevel = new QLabel(frmSensors);
+        lblSigLevel->setObjectName(QString::fromUtf8("lblSigLevel"));
+        lblSigLevel->setGeometry(QRect(140, 170, 41, 17));
+        lblLinkQuality = new QLabel(frmSensors);
+        lblLinkQuality->setObjectName(QString::fromUtf8("lblLinkQuality"));
+        lblLinkQuality->setGeometry(QRect(140, 150, 41, 17));
         label_3 = new QLabel(MainForm);
         label_3->setObjectName(QString::fromUtf8("label_3"));
         label_3->setGeometry(QRect(310, 310, 51, 17));
@@ -220,6 +240,11 @@ public:
         label_10->setText(QApplication::translate("MainForm", "Longitude:", 0, QApplication::UnicodeUTF8));
         lblLatitude->setText(QApplication::translate("MainForm", "-", 0, QApplication::UnicodeUTF8));
         lblLongitude->setText(QApplication::translate("MainForm", "-", 0, QApplication::UnicodeUTF8));
+        label_17->setText(QApplication::translate("MainForm", "WiFi", 0, QApplication::UnicodeUTF8));
+        label_18->setText(QApplication::translate("MainForm", "Link quality:", 0, QApplication::UnicodeUTF8));
+        label_19->setText(QApplication::translate("MainForm", "Signal level, dBm:", 0, QApplication::UnicodeUTF8));
+        lblSigLevel->setText(QApplication::translate("MainForm", "-", 0, QApplication::UnicodeUTF8));
+        lblLinkQuality->setText(QApplication::translate("MainForm", "-", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("MainForm", "Sensors", 0, QApplication::UnicodeUTF8));
         btnShowComposite->setText(QApplication::translate("MainForm", "Start video", 0, QApplication::UnicodeUTF8));
         label_6->setText(QApplication::translate("MainForm", "Command server port:", 0, QApplication::UnicodeUTF8));

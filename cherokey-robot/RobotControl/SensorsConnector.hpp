@@ -37,6 +37,8 @@ public:
     Q_SIGNAL void ModelRotation(float angleX, float angleY, float angleZ);
     Q_SIGNAL void ready();
     Q_SIGNAL void cmdResult(quint64 cmdIdx, bool result);
+    Q_SIGNAL void WiFiData(QString interfaceName, float quality, 
+        float sigLevel);
     
 protected:
     virtual void run();
