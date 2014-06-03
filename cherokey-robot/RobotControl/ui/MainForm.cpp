@@ -354,6 +354,8 @@ void MainForm::onModelRotation(float angleX, float angleY, float angleZ)
     platformWidget->rotateModel(angleX, angleY, angleZ);
 }
 
+#include <linux/videodev2.h>
+
 void MainForm::startVideo()
 {
     QString pipeDescr;

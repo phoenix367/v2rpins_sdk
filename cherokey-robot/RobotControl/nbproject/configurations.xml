@@ -14,6 +14,7 @@
       <itemPath>PortValidator.hpp</itemPath>
       <itemPath>RemoteConnector.hpp</itemPath>
       <itemPath>SensorsConnector.hpp</itemPath>
+      <itemPath>VideoCaptureFinder.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="messages" displayName="messages" projectFiles="true">
       <itemPath>messages/common.pb.cc</itemPath>
@@ -43,6 +44,7 @@
       <itemPath>PortValidator.cpp</itemPath>
       <itemPath>RemoteConnector.cpp</itemPath>
       <itemPath>SensorsConnector.cpp</itemPath>
+      <itemPath>VideoCaptureFinder.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="f1" displayName="UI" projectFiles="true">
@@ -94,7 +96,6 @@
           <incDir>
             <pElem>ui</pElem>
             <pElem>messages</pElem>
-            <pElem>../../3pty/include</pElem>
             <pElem>../qwtplot3d/include</pElem>
           </incDir>
           <preprocessorList>
@@ -118,6 +119,8 @@
                             OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libqwtplot3d.a">
               </makeArtifact>
             </linkerLibProjectItem>
+            <linkerLibLibItem>boost_filesystem</linkerLibLibItem>
+            <linkerLibLibItem>boost_system</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
         <requiredProjects>
@@ -178,6 +181,10 @@
       <item path="SensorsConnector.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SensorsConnector.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="VideoCaptureFinder.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="VideoCaptureFinder.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -276,6 +283,10 @@
       <item path="SensorsConnector.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SensorsConnector.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="VideoCaptureFinder.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="VideoCaptureFinder.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
