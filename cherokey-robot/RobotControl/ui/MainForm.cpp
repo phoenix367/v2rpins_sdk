@@ -10,6 +10,7 @@
 #include "../IP4Validator.hpp"
 #include "../PortValidator.hpp"
 #include "../PlatformModel.hpp"
+#include "../VideoCaptureFinder.hpp"
 
 #include <QMessageBox>
 #include <QSharedPointer>
@@ -126,6 +127,8 @@ MainForm::MainForm()
     odometryPlot->updateGL();
     
     odometrySink.enableDrop(true);
+    
+    VideoCaptureFinder finder;
 }
 
 MainForm::~MainForm() 
