@@ -19,6 +19,8 @@
 #include <QGst/Parse>
 #include <QGridLayout>
 
+#include <iostream>
+
 class Rosenbrock : public Qwt3D::Function
 {
 public:
@@ -126,7 +128,7 @@ MainForm::MainForm()
     odometryPlot->updateData();
     odometryPlot->updateGL();
     
-    odometrySink.enableDrop(true);
+    odometrySink.enableDrop(true); 
     
     VideoCaptureFinder finder;
 }
@@ -373,18 +375,38 @@ void MainForm::startVideo()
     }
     else
     {
-        return;
+        VideoCaptureFinder finder;
+        std::vector<std::string> devices = finder.getCaptureDevices();
+        if (devices.empty())
+        {
+            return;
+        }
+        
+        std::ostringstream stream;
+        stream << "v4l2src device=" << devices[0] << 
+                " !  video/x-raw-yuv,width=720,height=480,framerate=(fraction)30000/1001 !  ffmpegcolorspace ! "
+                " videoscale add-borders=true ! "
+                "tee name=t ! queue ! appsink name=\"odometry_sink\" t. ! queue ! "
+                "ximagesink sync=false";
+        pipeDescr = QString::fromStdString(stream.str());
     }
 
-    m_pipeline = QGst::Parse::launch(
-            pipeDescr).dynamicCast<QGst::Pipeline>();
-
-    if (m_pipeline)
+    try
     {
-        odometrySink.setElement(m_pipeline->getElementByName("odometry_sink"));
-        
-        videoWidget->watchPipeline(m_pipeline);
-        m_pipeline->setState(QGst::StatePlaying);
+        m_pipeline = QGst::Parse::launch(
+                pipeDescr).dynamicCast<QGst::Pipeline>();
+
+        if (m_pipeline)
+        {
+            odometrySink.setElement(m_pipeline->getElementByName("odometry_sink"));
+
+            videoWidget->watchPipeline(m_pipeline);
+            m_pipeline->setState(QGst::StatePlaying);
+        }
+    }
+    catch (std::exception& e)
+    {
+        std::cout << e.what() << std::endl;
     }
 }
 

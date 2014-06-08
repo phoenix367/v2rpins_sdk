@@ -121,6 +121,7 @@
             </linkerLibProjectItem>
             <linkerLibLibItem>boost_filesystem</linkerLibLibItem>
             <linkerLibLibItem>boost_system</linkerLibLibItem>
+            <linkerLibLibItem>boost_regex</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
         <requiredProjects>
