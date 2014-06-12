@@ -384,7 +384,7 @@ void MainForm::startVideo()
         
         std::ostringstream stream;
         stream << "v4l2src device=" << devices[0] << 
-                " !  video/x-raw-yuv,width=720,height=480,framerate=(fraction)30000/1001 !  ffmpegcolorspace ! "
+                " ! ffmpegcolorspace ! "
                 " videoscale add-borders=true ! "
                 "tee name=t ! queue ! appsink name=\"odometry_sink\" t. ! queue ! "
                 "ximagesink sync=false";
