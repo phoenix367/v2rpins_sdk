@@ -23,11 +23,11 @@ namespace pc
         
         if (direction == GPIO_DIRECTION::input)
         {
-            stream << "set gpio" << (int) p << " input";
+            stream << "set gpio " << (int) p << " input";
         }
         else
         {
-            stream << "set gpio" << (int) p << " output:" << 
+            stream << "set gpio " << (int) p << " output " << 
                     (int) ll;
         }
         
@@ -55,7 +55,7 @@ namespace pc
         }
         
         std::ostringstream stream;
-        stream << "set gpio" << (int) pin << " output:" << (int) ll;
+        stream << "set gpio " << (int) pin << " output " << (int) ll;
         
         devHelper->sendCommand(stream.str());
         logicLevel = ll;

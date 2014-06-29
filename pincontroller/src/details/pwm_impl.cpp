@@ -10,8 +10,8 @@ namespace pc
     
     const PWMImpl::ConnectionMap PWMImpl::conMap =
     {
-        {PWM_CHANNEL::PWM_0, "con43"}, {PWM_CHANNEL::PWM_1, "con44"}, 
-        {PWM_CHANNEL::PWM_2, "con16"}, {PWM_CHANNEL::PWM_3, "con42"}
+        {PWM_CHANNEL::PWM_0, "con 43"}, {PWM_CHANNEL::PWM_1, "con 44"}, 
+        {PWM_CHANNEL::PWM_2, "con 16"}, {PWM_CHANNEL::PWM_3, "con 42"}
     };
     
     const std::string PWMImpl::PWM_PREFIX = "pwm";
@@ -77,8 +77,8 @@ namespace pc
         // We subtract 1 from period value because PWM
         // controller automatically add it
         uint64_t hwPeriod = (period > 0) ? period - 1 : 0;
-        stream << "set " << PWM_PREFIX << (int) pin << " duty:" <<
-                duty << " period:" << hwPeriod;
+        stream << "set " << PWM_PREFIX << " " << (int) pin << " " <<
+                duty << " " << hwPeriod;
         devHelper.sendCommand(stream.str());
     }
 
