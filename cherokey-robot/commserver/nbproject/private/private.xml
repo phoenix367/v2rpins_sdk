@@ -5,4 +5,17 @@
         <activeConfIndexElem>1</activeConfIndexElem>
     </data>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/commserver/include/WiFiInfoParser.hpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/commserver/src/WiFiInfoParser.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/commserver/src/NotificationHelper.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/commserver/src/SensorsController.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/commserver/include/VoltageReader.hpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/commserver/src/VoltageReader.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/commserver/src/ConfigManager.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/commserver/include/decls.hpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/commserver/src/GPSReader.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/commserver/src/SensorReader.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/commserver/src/PIDController.cpp</file>
+    </open-files>
 </project-private>
