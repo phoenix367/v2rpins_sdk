@@ -46,6 +46,7 @@ namespace mslam
             
             cv::invert(S, invS);
             RealMatrix K = p_km1_k * H.t() * invS;
+            
 
             // updated state and covariance
             x_k_k = x_km1_k + K * (z - h);
@@ -53,33 +54,33 @@ namespace mslam
             p_k_k = 0.5 * p_k_k + 0.5 * p_k_k.t();
 
             // normalize the quaternion
-            RealMatrix Jnorm = normJac(x_k_k(cv::Range(3, 6)));
+            RealMatrix Jnorm = normJac(x_k_k(cv::Range(3, 7)));
             
             // update P matrix
             int size_p_k_k = p_k_k.rows;
             RealMatrix p_k_k_new(size_p_k_k, size_p_k_k);
-            p_k_k(cv::Range(0, 2), cv::Range(0, 2)).copyTo(
-                    p_k_k_new(cv::Range(0, 2), cv::Range(0, 2)));
-            RealMatrix tmp = p_k_k(cv::Range(0, 2), cv::Range(3, 6)) * 
+            p_k_k(cv::Range(0, 3), cv::Range(0, 3)).copyTo(
+                    p_k_k_new(cv::Range(0, 3), cv::Range(0, 3)));
+            RealMatrix tmp = p_k_k(cv::Range(0, 3), cv::Range(3, 7)) * 
                     Jnorm.t();
-            tmp.copyTo(p_k_k_new(cv::Range(0, 2), cv::Range(3, 6)));
-            p_k_k(cv::Range(0, 2), cv::Range(7, size_p_k_k)).copyTo(
-                    p_k_k_new(cv::Range(0, 2), cv::Range(7, size_p_k_k)));
+            tmp.copyTo(p_k_k_new(cv::Range(0, 3), cv::Range(3, 7)));
+            p_k_k(cv::Range(0, 3), cv::Range(7, size_p_k_k)).copyTo(
+                    p_k_k_new(cv::Range(0, 3), cv::Range(7, size_p_k_k)));
             
-            tmp = Jnorm * p_k_k(cv::Range(3, 6), cv::Range(0, 2));
-            tmp.copyTo(p_k_k_new(cv::Range(3, 6), cv::Range(0, 2)));
+            tmp = Jnorm * p_k_k(cv::Range(3, 7), cv::Range(0, 3));
+            tmp.copyTo(p_k_k_new(cv::Range(3, 7), cv::Range(0, 3)));
             
-            tmp = Jnorm * p_k_k(cv::Range(3, 6), cv::Range(3, 6)) * Jnorm.t();
-            tmp.copyTo(p_k_k_new(cv::Range(3, 6), cv::Range(3, 6)));
+            tmp = Jnorm * p_k_k(cv::Range(3, 7), cv::Range(3, 7)) * Jnorm.t();
+            tmp.copyTo(p_k_k_new(cv::Range(3, 7), cv::Range(3, 7)));
             
-            tmp = Jnorm * p_k_k(cv::Range(3, 6), cv::Range(7, size_p_k_k));
-            tmp.copyTo(p_k_k_new(cv::Range(3, 6), cv::Range(7, size_p_k_k)));
+            tmp = Jnorm * p_k_k(cv::Range(3, 7), cv::Range(7, size_p_k_k));
+            tmp.copyTo(p_k_k_new(cv::Range(3, 7), cv::Range(7, size_p_k_k)));
 
-            p_k_k(cv::Range(7, size_p_k_k), cv::Range(0, 2)).copyTo(
-                    p_k_k_new(cv::Range(7, size_p_k_k), cv::Range(0, 2)));
+            p_k_k(cv::Range(7, size_p_k_k), cv::Range(0, 3)).copyTo(
+                    p_k_k_new(cv::Range(7, size_p_k_k), cv::Range(0, 3)));
             
-            tmp = p_k_k(cv::Range(7, size_p_k_k), cv::Range(3, 6)) * Jnorm.t();
-            tmp.copyTo(p_k_k_new(cv::Range(7, size_p_k_k), cv::Range(3, 6)));
+            tmp = p_k_k(cv::Range(7, size_p_k_k), cv::Range(3, 7)) * Jnorm.t();
+            tmp.copyTo(p_k_k_new(cv::Range(7, size_p_k_k), cv::Range(3, 7)));
 
             p_k_k(cv::Range(7, size_p_k_k), cv::Range(7, size_p_k_k)).copyTo(
                     p_k_k_new(cv::Range(7, size_p_k_k), 
@@ -89,7 +90,7 @@ namespace mslam
 //                Jnorm*p_k_k(4:7,1:3)        Jnorm*p_k_k(4:7,4:7)*Jnorm'         Jnorm*p_k_k(4:7,8:size_p_k_k);
 //                p_k_k(8:size_p_k_k,1:3)     p_k_k(8:size_p_k_k,4:7)*Jnorm'      p_k_k(8:size_p_k_k,8:size_p_k_k)];
 
-            RealType n = (RealType) cv::norm(v2m(x_k_k( cv::Range(3, 6) )));
+            RealType n = (RealType) cv::norm(v2m(x_k_k( cv::Range(3, 7) )));
             for (size_t i = 3; i < 7; i++)
             {
                 x_k_k[i] /= n;

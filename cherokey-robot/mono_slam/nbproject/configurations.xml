@@ -30,6 +30,7 @@
         <itemPath>tests/ekfTest.cpp</itemPath>
         <itemPath>tests/ekfTest.hpp</itemPath>
         <itemPath>tests/ekf_test.cpp</itemPath>
+        <itemPath>tests/load_util.hpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f1"
                      displayName="Vector functions test"
@@ -136,6 +137,8 @@
       </item>
       <item path="tests/ekf_test.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="tests/load_util.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="tests/vfunctions_test.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
@@ -223,6 +226,8 @@
       <item path="tests/ekfTest.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/ekf_test.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/load_util.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/vfunctions_test.cpp" ex="false" tool="1" flavor2="0">
       </item>

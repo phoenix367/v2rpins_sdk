@@ -7,82 +7,51 @@
 
 #include "ekfTest.hpp"
 #include "mono_slam/mono_slam.hpp"
+#include "load_util.hpp"
 
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ekfTest);
 
-ekfTest::ekfTest() {
+ekfTest::ekfTest() 
+{
 }
 
-ekfTest::~ekfTest() {
+ekfTest::~ekfTest() 
+{
 }
 
-void ekfTest::setUp() {
+void ekfTest::setUp() 
+{
 }
 
-void ekfTest::tearDown() {
+void ekfTest::tearDown() 
+{
 }
 
 void ekfTest::testUpdate() 
 {
-    mslam::RealType datah[20] =
+    auto H = test::loadMatrix("tests/data/test_update_data/H.dat");
+    auto R = test::loadMatrix("tests/data/test_update_data/R.dat");
+    auto x_km1_k = test::loadMatrix("tests/data/test_update_data/x_km1_k.dat");
+    auto p_km1_k = test::loadMatrix("tests/data/test_update_data/p_km1_k.dat");
+    auto h = test::loadMatrix("tests/data/test_update_data/h_v.dat");
+    auto z = test::loadMatrix("tests/data/test_update_data/z.dat");
+    auto p_k_k = test::loadMatrix("tests/data/test_update_data/p_k_k.dat");
+    auto x_k_k = test::loadMatrix("tests/data/test_update_data/x_k_k.dat");
+    
+    mslam::EKF ekf;
+    mslam::RealVector h_v(h, true);
+    mslam::RealVector z_v(z, true);
+    mslam::RealVector x_km1_k_v(x_km1_k, true);
+    
+    ekf.update(x_km1_k_v, p_km1_k, H, R, z_v, h_v);
+    auto x_res = ekf.getX();
+    
+    std::cout << mslam::v2m(x_res) - x_km1_k << std::endl;
+    if (cv::countNonZero(cv::abs(mslam::v2m(x_res) - x_km1_k) > 1e-10))
     {
-        5.299999999999980105e+01,
-        1.270000000000002700e+02,
-        9.299999999999981526e+01,
-        1.530000000000002842e+02,
-        3.199999999999982947e+01,
-        1.620000000000003126e+02,
-        7.399999999999972999e+01,
-        4.300000000000027001e+01,
-        8.299999999999974420e+01,
-        6.200000000000025580e+01,
-        7.899999999999977263e+01,
-        1.310000000000002558e+02,
-        1.279999999999997726e+02,
-        9.600000000000022737e+01,
-        2.829999999999997158e+02,
-        3.200000000000005684e+01,
-        9.699999999999974420e+01,
-        5.500000000000025580e+01,
-        7.599999999999987210e+01,
-        1.950000000000002842e+02,
-    };
-    mslam::RealVector h(datah, 20);
-    
-    mslam::RealType dataz[20] =
-    {
-        4.900000000000000000e+01,
-        1.280000000000000000e+02,
-        8.900000000000000000e+01,
-        1.540000000000000000e+02,
-        2.900000000000000000e+01,
-        1.630000000000000000e+02,
-        7.100000000000000000e+01,
-        4.400000000000000000e+01,
-        8.000000000000000000e+01,
-        6.300000000000000000e+01,
-        7.500000000000000000e+01,
-        1.320000000000000000e+02,
-        1.240000000000000000e+02,
-        9.700000000000000000e+01,
-        2.800000000000000000e+02,
-        3.200000000000000000e+01,
-        9.400000000000000000e+01,
-        5.600000000000000000e+01,
-        7.200000000000000000e+01,
-        1.960000000000000000e+02,
-    };
-    mslam::RealVector z(dataz, 20);
-    
-    mslam::RealMatrix R = mslam::RealMatrix::eye(20, 20);
-    
-//    mslam::RealType dataH[85 * 85] =
-//    {
-//    };
-//    mslam::RealVector x_km1_k(datax_km1_k, 85);
-    
-    CPPUNIT_ASSERT(true);
+        CPPUNIT_ASSERT(false);
+    }
 }
 
 void ekfTest::testFailedMethod() 
