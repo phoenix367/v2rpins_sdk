@@ -13,6 +13,13 @@
 namespace mslam
 {
     void randomMatrix6D(int nPointsRand, RealMatrix& rndMat);
+    RealMatrix hu(const RealMatrix31& yi, const CameraParams& cam);
+    RealMatrix distort_fm(const RealMatrix& uv, const CameraParams& cam);
+    RealMatrix31 m(RealType a, RealType b);
+    RealMatrix hi_inverse_depth(const RealMatrix61& yinit,
+            const RealMatrix31& t_wc,
+            const RealMatrix33& r_wc,
+            const CameraParams& cam);
 }
 
 #endif	/* SLAM_FUNCTIONS_HPP */

@@ -15,10 +15,14 @@ namespace mslam
     typedef double RealType;
     typedef cv::Mat_<RealType> RealMatrix;
     typedef cv::Vector<RealType> RealVector;
+    typedef cv::Matx<RealType, 3, 1> RealMatrix31;
+    typedef cv::Matx<RealType, 6, 1> RealMatrix61;
+    typedef cv::Matx<RealType, 3, 3> RealMatrix33;
     
     struct CameraParams
     {
-        RealType d;
+        RealType dx;
+        RealType dy;
         int nRows;
         int nCols;
         RealType Cx;

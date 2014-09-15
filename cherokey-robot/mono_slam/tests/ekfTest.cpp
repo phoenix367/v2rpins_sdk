@@ -46,12 +46,11 @@ void ekfTest::testUpdate()
     
     ekf.update(x_km1_k_v, p_km1_k, H, R, z_v, h_v);
     auto x_res = ekf.getX();
+    auto p_res = ekf.getP();
     
-    std::cout << mslam::v2m(x_res) - x_km1_k << std::endl;
-    if (cv::countNonZero(cv::abs(mslam::v2m(x_res) - x_km1_k) > 1e-10))
-    {
-        CPPUNIT_ASSERT(false);
-    }
+    CPPUNIT_ASSERT(cv::countNonZero(cv::abs(mslam::v2m(x_res) - x_k_k) > 
+            1e-15) == 0);    
+    CPPUNIT_ASSERT(cv::countNonZero(cv::abs(p_res - p_k_k) > 1e-15) == 0);
 }
 
 void ekfTest::testFailedMethod() 

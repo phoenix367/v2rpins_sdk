@@ -85,6 +85,7 @@ namespace mslam
             p_k_k(cv::Range(7, size_p_k_k), cv::Range(7, size_p_k_k)).copyTo(
                     p_k_k_new(cv::Range(7, size_p_k_k), 
                     cv::Range(7, size_p_k_k)));
+            p_k_k = p_k_k_new;
 
 //            p_k_k = [   p_k_k(1:3,1:3)              p_k_k(1:3,4:7)*Jnorm'               p_k_k(1:3,8:size_p_k_k);
 //                Jnorm*p_k_k(4:7,1:3)        Jnorm*p_k_k(4:7,4:7)*Jnorm'         Jnorm*p_k_k(4:7,8:size_p_k_k);
