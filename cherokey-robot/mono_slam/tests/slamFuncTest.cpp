@@ -47,7 +47,7 @@ void slamFuncTest::testHuFunc()
     
     auto res = mslam::hu(yi, cam);
     
-    CPPUNIT_ASSERT(cv::countNonZero(cv::abs(res - uv_u) > 1e-15) == 0);
+    CPPUNIT_ASSERT(cv::countNonZero(cv::abs(res - uv_u) > 1e-14) == 0);
 }
 
 void slamFuncTest::testDistortFmFunc() 
