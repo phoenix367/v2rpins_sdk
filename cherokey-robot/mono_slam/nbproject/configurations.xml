@@ -5,6 +5,9 @@
                    displayName="Исходные файлы"
                    projectFiles="true">
       <itemPath>src/EKF.cpp</itemPath>
+      <itemPath>src/fast.c</itemPath>
+      <itemPath>src/fast_9.c</itemPath>
+      <itemPath>src/nonmax.c</itemPath>
       <itemPath>src/slam_functions.cpp</itemPath>
       <itemPath>src/vector_function.cpp</itemPath>
     </logicalFolder>
@@ -14,6 +17,7 @@
       <itemPath>include/mono_slam/EKF.hpp</itemPath>
       <itemPath>include/mono_slam/declares.hpp</itemPath>
       <itemPath>include/mono_slam/exceptions.hpp</itemPath>
+      <itemPath>include/mono_slam/fast.h</itemPath>
       <itemPath>include/mono_slam/mono_slam.hpp</itemPath>
       <itemPath>include/mono_slam/slam_functions.hpp</itemPath>
       <itemPath>include/mono_slam/vector_function.hpp</itemPath>
@@ -66,6 +70,11 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <cTool>
+          <incDir>
+            <pElem>include</pElem>
+          </incDir>
+        </cTool>
         <ccTool>
           <commandlineTool>g++</commandlineTool>
           <incDir>
@@ -131,6 +140,8 @@
       </item>
       <item path="include/mono_slam/exceptions.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/mono_slam/fast.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/mono_slam/mono_slam.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/mono_slam/slam_functions.hpp"
@@ -144,6 +155,12 @@
             flavor2="0">
       </item>
       <item path="src/EKF.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/fast.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/fast_9.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/nonmax.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/slam_functions.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -241,6 +258,8 @@
       </item>
       <item path="include/mono_slam/exceptions.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/mono_slam/fast.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/mono_slam/mono_slam.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/mono_slam/slam_functions.hpp"
@@ -254,6 +273,12 @@
             flavor2="0">
       </item>
       <item path="src/EKF.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/fast.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/fast_9.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/nonmax.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/slam_functions.cpp" ex="false" tool="1" flavor2="0">
       </item>

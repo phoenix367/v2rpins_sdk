@@ -36,6 +36,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/src/EKF.o \
+	${OBJECTDIR}/src/fast.o \
+	${OBJECTDIR}/src/fast_9.o \
+	${OBJECTDIR}/src/nonmax.o \
 	${OBJECTDIR}/src/slam_functions.o \
 	${OBJECTDIR}/src/vector_function.o
 
@@ -78,6 +81,21 @@ ${OBJECTDIR}/src/EKF.o: src/EKF.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -g -Iinclude -std=c++0x -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/EKF.o src/EKF.cpp
+
+${OBJECTDIR}/src/fast.o: src/fast.c 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.c) -g -Iinclude -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/fast.o src/fast.c
+
+${OBJECTDIR}/src/fast_9.o: src/fast_9.c 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.c) -g -Iinclude -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/fast_9.o src/fast_9.c
+
+${OBJECTDIR}/src/nonmax.o: src/nonmax.c 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.c) -g -Iinclude -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/nonmax.o src/nonmax.c
 
 ${OBJECTDIR}/src/slam_functions.o: src/slam_functions.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
@@ -154,6 +172,45 @@ ${OBJECTDIR}/src/EKF_nomain.o: ${OBJECTDIR}/src/EKF.o src/EKF.cpp
 	    $(COMPILE.cc) -g -Iinclude -std=c++0x -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/EKF_nomain.o src/EKF.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/EKF.o ${OBJECTDIR}/src/EKF_nomain.o;\
+	fi
+
+${OBJECTDIR}/src/fast_nomain.o: ${OBJECTDIR}/src/fast.o src/fast.c 
+	${MKDIR} -p ${OBJECTDIR}/src
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/fast.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} $@.d;\
+	    $(COMPILE.c) -g -Iinclude -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/fast_nomain.o src/fast.c;\
+	else  \
+	    ${CP} ${OBJECTDIR}/src/fast.o ${OBJECTDIR}/src/fast_nomain.o;\
+	fi
+
+${OBJECTDIR}/src/fast_9_nomain.o: ${OBJECTDIR}/src/fast_9.o src/fast_9.c 
+	${MKDIR} -p ${OBJECTDIR}/src
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/fast_9.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} $@.d;\
+	    $(COMPILE.c) -g -Iinclude -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/fast_9_nomain.o src/fast_9.c;\
+	else  \
+	    ${CP} ${OBJECTDIR}/src/fast_9.o ${OBJECTDIR}/src/fast_9_nomain.o;\
+	fi
+
+${OBJECTDIR}/src/nonmax_nomain.o: ${OBJECTDIR}/src/nonmax.o src/nonmax.c 
+	${MKDIR} -p ${OBJECTDIR}/src
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/nonmax.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} $@.d;\
+	    $(COMPILE.c) -g -Iinclude -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/nonmax_nomain.o src/nonmax.c;\
+	else  \
+	    ${CP} ${OBJECTDIR}/src/nonmax.o ${OBJECTDIR}/src/nonmax_nomain.o;\
 	fi
 
 ${OBJECTDIR}/src/slam_functions_nomain.o: ${OBJECTDIR}/src/slam_functions.o src/slam_functions.cpp 

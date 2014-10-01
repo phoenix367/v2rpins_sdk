@@ -92,5 +92,47 @@ void slamFuncTest::testMFunc()
 
 void slamFuncTest::testHighInverseDepthFunc()
 {
+    mslam::RealType yinitData[] = {
+        0,
+        0,
+        0,
+        -0.348435644970339964,
+        -0.121573649901980524,
+        1
+    };
+    mslam::RealMatrix61 yinit(yinitData);
     
+    mslam::RealType t_wcData[] = {
+        0.0108888137549603657,
+        0.00251060415912785894,
+        0.00311901665777174642,
+    };
+    mslam::RealMatrix31 t_wc(t_wcData);
+    
+    mslam::RealType r_wcData[] = {
+         0.999970880513577187,    0.000357468264786742608,  0.00762301392765437052,
+        -0.000294558034737228442, 0.999965906650850833,    -0.00825219798033385854,
+        -0.00762570393247167123,  0.00824971226056550599,   0.999936893452358255
+    };
+    mslam::RealMatrix33 r_wc(r_wcData);
+
+    mslam::CameraParams cam;
+    cam.Cx = 160.22321428571428;
+    cam.Cy = 128.86607142857144;
+    cam.dx = 0.0112;
+    cam.dy = 0.0112;
+    cam.k1 = 0.063329999999999997;
+    cam.k2 = 0.013899999999999999;
+    cam.f = 2.1735000000000002;
+    cam.nRows = 240;
+    cam.nCols = 320;
+    
+    mslam::RealType targetData[] = {
+        89.1484448208473736,
+        154.018333421641529
+    };
+    mslam::RealMatrix m(2, 1, targetData);
+    
+    auto res = mslam::hi_inverse_depth(yinit, t_wc, r_wc, cam);
+    CPPUNIT_ASSERT(cv::countNonZero(cv::abs(cv::Mat(res - m)) > 1e-13) == 0);
 }
