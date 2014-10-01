@@ -1,4 +1,5 @@
 #include "mono_slam/slam_functions.hpp"
+#include "mono_slam/vector_function.hpp"
 
 namespace mslam
 {
@@ -160,5 +161,29 @@ namespace mslam
         {
             return RealMatrix();
         }
+    }
+
+    std::list<FeatureInfo> predict_camera_measurements(const RealVector& x_k_k, 
+            const CameraParams& cam,
+            const std::list<FeatureInfo>& features_info)
+    {
+        RealMatrix31 t_wc = v2m(x_k_k(cv::Range(0, 3)));
+        RealMatrix33 r_wc = q2r(x_k_k(cv::Range(3, 7)));
+        RealVector features = x_k_k(cv::Range(13, x_k_k.size()));
+        
+        std::for_each(features_info.begin(), features_info.end(), 
+                [](const FeatureInfo& info) 
+        {
+            if (info.type == cartesian)
+            {
+                
+            }
+            else if (info.type == inversedepth)
+            {
+                
+            }
+        });
+        
+        return std::list<FeatureInfo>();
     }
 }
