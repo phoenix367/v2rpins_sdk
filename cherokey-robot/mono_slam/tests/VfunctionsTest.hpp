@@ -15,6 +15,7 @@ class VfunctionsTest : public CPPUNIT_NS::TestFixture {
 
     CPPUNIT_TEST(testNormJ);
     CPPUNIT_TEST(testNormJFailed);
+    CPPUNIT_TEST(testq2rFunction);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -27,6 +28,7 @@ public:
 private:
     void testNormJ();
     void testNormJFailed();
+    void testq2rFunction();
 };
 
 #endif	/* VFUNCTIONSTEST_HPP */

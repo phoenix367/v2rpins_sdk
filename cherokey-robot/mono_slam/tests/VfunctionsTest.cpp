@@ -66,3 +66,24 @@ void VfunctionsTest::testNormJFailed()
     CPPUNIT_ASSERT_THROW(mslam::normJac(mslam::RealVector()),
             mslam::IncorrectParamException);
 }
+
+void VfunctionsTest::testq2rFunction()
+{
+    mslam::RealType qData[4] = {
+        0.999981401328104647,
+        0.00372253651322187237,
+        0.00480838103813518037,
+        0.000468179003859795124
+    };
+    mslam::RealVector q(qData, 4);
+    
+    mslam::RealType targetData[] = {
+         0.99995332056042463,     -0.000900541844736344279,  0.00962006884414099393,
+         0.000972139340672111842,  0.999971847060655894,    -0.00744043219188406449,
+        -0.00961309759039462482,   0.00744943692406251426,   0.999926044387399515
+    };
+    mslam::RealMatrix target(3, 3, targetData);
+    
+    auto res = mslam::q2r(q);
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(cv::abs(res - target) > 1e-15));
+}
