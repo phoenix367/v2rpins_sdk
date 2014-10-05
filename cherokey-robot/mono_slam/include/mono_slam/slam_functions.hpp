@@ -20,9 +20,9 @@ namespace mslam
             const RealMatrix31& t_wc,
             const RealMatrix33& r_wc,
             const CameraParams& cam);
-    std::list<FeatureInfo> predict_camera_measurements(const RealVector& x_k_k, 
+    void predict_camera_measurements(const RealVector& x_k_k, 
             const CameraParams& cam,
-            const std::list<FeatureInfo>& features_info);
+            std::vector<FeatureInfo>& features_info);
 }
 
 #endif	/* SLAM_FUNCTIONS_HPP */

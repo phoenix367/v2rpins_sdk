@@ -163,27 +163,30 @@ namespace mslam
         }
     }
 
-    std::list<FeatureInfo> predict_camera_measurements(const RealVector& x_k_k, 
+    void predict_camera_measurements(const RealVector& x_k_k, 
             const CameraParams& cam,
-            const std::list<FeatureInfo>& features_info)
+            std::vector<FeatureInfo>& features_info)
     {
         RealMatrix31 t_wc = v2m(x_k_k(cv::Range(0, 3)));
         RealMatrix33 r_wc = q2r(x_k_k(cv::Range(3, 7)));
         RealVector features = x_k_k(cv::Range(13, x_k_k.size()));
         
-        std::for_each(features_info.begin(), features_info.end(), 
-                [](const FeatureInfo& info) 
+        for (size_t i = 0; i < features_info.size(); i++)
         {
-            if (info.type == cartesian)
+            if (features_info[i].type == cartesian)
             {
                 
             }
-            else if (info.type == inversedepth)
+            else if (features_info[i].type == inversedepth)
             {
-                
+                RealMatrix61 yi = v2m(features(cv::Range(0, 6)));
+                features = features(cv::Range(6, features.size()));
+                auto hi = hi_inverse_depth( yi, t_wc, r_wc, cam);
+                if (!hi.empty())
+                {
+                    features_info[i].h = hi;
+                }
             }
-        });
-        
-        return std::list<FeatureInfo>();
+        }
     }
 }

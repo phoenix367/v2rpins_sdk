@@ -8,6 +8,7 @@
 #include "slamFuncTest.hpp"
 #include "mono_slam/declares.hpp"
 #include "mono_slam/slam_functions.hpp"
+#include "load_util.hpp"
 
 
 CPPUNIT_TEST_SUITE_REGISTRATION(slamFuncTest);
@@ -135,4 +136,40 @@ void slamFuncTest::testHighInverseDepthFunc()
     
     auto res = mslam::hi_inverse_depth(yinit, t_wc, r_wc, cam);
     CPPUNIT_ASSERT(cv::countNonZero(cv::abs(cv::Mat(res - m)) > 1e-13) == 0);
+}
+
+void slamFuncTest::testPredCamMeasurements()
+{
+    auto x_k_k = test::loadMatrix("tests/data/test_pred_cam/x_k_k.dat");
+    mslam::RealVector x_k_k_v(x_k_k, true);
+    static const int FEATURES_COUNT = 12;
+    
+    mslam::CameraParams cam;
+    cam.Cx = 160.22321428571428;
+    cam.Cy = 128.86607142857144;
+    cam.dx = 0.0112;
+    cam.dy = 0.0112;
+    cam.k1 = 0.063329999999999997;
+    cam.k2 = 0.013899999999999999;
+    cam.f = 2.1735000000000002;
+    cam.nRows = 240;
+    cam.nCols = 320;
+
+    std::vector<mslam::FeatureInfo> featuresInfo(FEATURES_COUNT);
+    for (size_t i = 0; i < FEATURES_COUNT; i++)
+    {
+        featuresInfo[i].type = mslam::inversedepth;
+    }
+    
+    mslam::predict_camera_measurements(x_k_k_v, cam, featuresInfo);
+    
+    CPPUNIT_ASSERT(featuresInfo.size() == FEATURES_COUNT);
+    for (size_t i = 0; i < FEATURES_COUNT; i++)
+    {
+        std::ostringstream stream;
+        stream << "tests/data/test_pred_cam/h_" << i << ".dat";
+        auto h_t = test::loadMatrix(stream.str());
+        mslam::RealVector h_t_v(h_t, true);
+        
+    }
 }
