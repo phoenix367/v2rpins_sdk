@@ -169,7 +169,8 @@ void slamFuncTest::testPredCamMeasurements()
         std::ostringstream stream;
         stream << "tests/data/test_pred_cam/h_" << i << ".dat";
         auto h_t = test::loadMatrix(stream.str());
-        mslam::RealVector h_t_v(h_t, true);
         
+        CPPUNIT_ASSERT(cv::countNonZero(cv::abs(h_t.t() - featuresInfo[i].h) > 
+                1e-13) == 0);
     }
 }

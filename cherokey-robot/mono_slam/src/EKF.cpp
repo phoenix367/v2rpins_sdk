@@ -113,4 +113,9 @@ namespace mslam
     {
         return p_k_k;
     }
+    
+    RealType EKF::getStdZ()
+    {
+        return std_z;
+    }
 }

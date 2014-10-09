@@ -1,6 +1,8 @@
 #include "mono_slam/slam_functions.hpp"
 #include "mono_slam/vector_function.hpp"
 
+#include "mono_slam/fast.h"
+
 namespace mslam
 {
     void randomMatrix6D(int nPointsRand, RealMatrix& rndMat)
@@ -187,6 +189,49 @@ namespace mslam
                     features_info[i].h = hi;
                 }
             }
+        }
+    }
+
+    void initialize_a_feature(int step, const CameraParams& cam, 
+            const cv::Mat1b& im_k, 
+            std::vector<FeatureInfo>& features_info,
+            EKF& filter, RealMatrix& uv)
+    {
+        int half_patch_size_when_initialized = 20;
+        int excluded_band = half_patch_size_when_initialized + 1;
+        int max_initialization_attempts = 1;
+        int initializing_box_semisize[2] = { 60 / 2, 40 / 2 };
+        RealType initial_rho = 1;
+        RealType std_rho = 1;
+
+        RealType std_pxl = filter.getStdZ();
+        predict_camera_measurements(filter.getX(), cam, features_info);
+        
+        RealMatrix uvPred(2, features_info.size());
+        for (size_t i = 0; i < features_info.size(); i++)
+        {
+            features_info[i].h.copyTo(uvPred.col(i));
+        }
+        
+        cv::RNG r;
+        bool detected_new = false;
+        for (int i = 0; i < max_initialization_attempts; i++)
+        {
+            if (detected_new)
+            {
+                break;
+            }
+            
+            RealMatrix21 search_region_center;
+            r.fill(search_region_center, cv::RNG::UNIFORM, 0, 1);
+            search_region_center(0) = round(search_region_center(0) * (
+                    cam.nCols - 2 * excluded_band - 2 * initializing_box_semisize[0]))
+                    + excluded_band + initializing_box_semisize[0];
+            search_region_center(1) = round(search_region_center(1) * (
+                    cam.nRows - 2 * excluded_band - 2 * initializing_box_semisize[1]))
+                    + excluded_band + initializing_box_semisize[1];
+            
+            //c = fast9_detect_nonmax(im_k.data, im_k.cols, )
         }
     }
 }

@@ -9,6 +9,7 @@
 #define	SLAM_FUNCTIONS_HPP
 
 #include "declares.hpp"
+#include "EKF.hpp"
 
 namespace mslam
 {
@@ -23,6 +24,10 @@ namespace mslam
     void predict_camera_measurements(const RealVector& x_k_k, 
             const CameraParams& cam,
             std::vector<FeatureInfo>& features_info);
+    void initialize_a_feature(int step, const CameraParams& cam, 
+            const cv::Mat1b& im_k, 
+            std::vector<FeatureInfo>& features_info,
+            EKF& filter, RealMatrix& uv);
 }
 
 #endif	/* SLAM_FUNCTIONS_HPP */
