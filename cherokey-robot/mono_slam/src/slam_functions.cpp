@@ -191,6 +191,36 @@ namespace mslam
             }
         }
     }
+    
+    void find_ransac_features(const RealMatrix21& search_region_center,
+            const cv::Mat1b& im_k, const CameraParams& cam,
+            int initializing_box_semisize[2])
+    {
+//    cs = fast_corner_detect_9(double(im_k(search_region_center(2)-initializing_box_semisize(2):search_region_center(2)+initializing_box_semisize(2),...
+//        search_region_center(1)-initializing_box_semisize(1):search_region_center(1)+initializing_box_semisize(1))),... % the image,
+//        100);
+//    c = fast_nonmax(double(im_k(search_region_center(2)-initializing_box_semisize(2):search_region_center(2)+initializing_box_semisize(2),...
+//        search_region_center(1)-initializing_box_semisize(1):search_region_center(1)+initializing_box_semisize(1))),... % the image,
+//        100, cs);
+//    all_uv = c';
+//    cd ..
+//    
+//    if ~isempty(all_uv)
+//        all_uv = all_uv + [ (- initializing_box_semisize(1) + search_region_center(1) - 1)*ones(1,size(all_uv,2));...
+//            (- initializing_box_semisize(2) + search_region_center(2) - 1)*ones(1,size(all_uv,2))];
+//    end
+//    
+//    nPoints=size(all_uv,2);
+//    
+//    % Are there corners in the box?
+//    are_there_corners = not(isempty(all_uv));
+        
+        int numPoints;
+        //cv::Mat1b r = im_k.adjustROI()
+        auto xy = fast9_detect_nonmax(im_k.data, im_k.cols, im_k.rows, 
+                im_k.step[0], 100, &numPoints);
+        free(xy);
+    }
 
     void initialize_a_feature(int step, const CameraParams& cam, 
             const cv::Mat1b& im_k, 
@@ -231,7 +261,8 @@ namespace mslam
                     cam.nRows - 2 * excluded_band - 2 * initializing_box_semisize[1]))
                     + excluded_band + initializing_box_semisize[1];
             
-            //c = fast9_detect_nonmax(im_k.data, im_k.cols, )
+            find_ransac_features(search_region_center, im_k, cam,
+                    initializing_box_semisize);
         }
     }
 }

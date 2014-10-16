@@ -18,6 +18,7 @@ class slamFuncTest : public CPPUNIT_NS::TestFixture {
     CPPUNIT_TEST(testMFunc);
     CPPUNIT_TEST(testHighInverseDepthFunc);
     CPPUNIT_TEST(testPredCamMeasurements);
+    CPPUNIT_TEST(testFindRANSACFeatures);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -33,6 +34,7 @@ private:
     void testMFunc();
     void testHighInverseDepthFunc();
     void testPredCamMeasurements();
+    void testFindRANSACFeatures();
 };
 
 #endif	/* SLAMFUNCTEST_HPP */

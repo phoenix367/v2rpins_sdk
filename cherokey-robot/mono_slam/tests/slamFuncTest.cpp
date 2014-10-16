@@ -174,3 +174,29 @@ void slamFuncTest::testPredCamMeasurements()
                 1e-13) == 0);
     }
 }
+
+void slamFuncTest::testFindRANSACFeatures()
+{
+    cv::Mat1b im_k = cv::imread("tests/data/rawoutput0090.pgm");
+    CPPUNIT_ASSERT(!im_k.empty());
+    
+    mslam::CameraParams cam;
+    cam.Cx = 160.22321428571428;
+    cam.Cy = 128.86607142857144;
+    cam.dx = 0.0112;
+    cam.dy = 0.0112;
+    cam.k1 = 0.063329999999999997;
+    cam.k2 = 0.013899999999999999;
+    cam.f = 2.1735000000000002;
+    cam.nRows = 240;
+    cam.nCols = 320;
+
+    mslam::RealMatrix21 search_region_center;
+    search_region_center(0) = 110;
+    search_region_center(0) = 184;
+    
+    int initializing_box_semisize[2] = { 60 / 2, 40 / 2 };
+    
+    mslam::find_ransac_features(search_region_center, im_k, cam,
+            initializing_box_semisize);
+}

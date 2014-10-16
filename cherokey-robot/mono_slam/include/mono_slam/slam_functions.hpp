@@ -28,6 +28,9 @@ namespace mslam
             const cv::Mat1b& im_k, 
             std::vector<FeatureInfo>& features_info,
             EKF& filter, RealMatrix& uv);
+    void find_ransac_features(const RealMatrix21& search_region_center,
+            const cv::Mat1b& im_k, const CameraParams& cam,
+            int initializing_box_semisize[2]);
 }
 
 #endif	/* SLAM_FUNCTIONS_HPP */
