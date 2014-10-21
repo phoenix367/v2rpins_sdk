@@ -5,4 +5,8 @@
         <activeConfIndexElem>1</activeConfIndexElem>
     </data>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/pincontroller/src/details/gpio_pin_impl.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/pincontroller/src/details/pwm_impl.cpp</file>
+    </open-files>
 </project-private>

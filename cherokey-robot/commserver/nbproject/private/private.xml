@@ -17,5 +17,9 @@
         <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/commserver/src/GPSReader.cpp</file>
         <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/commserver/src/SensorReader.cpp</file>
         <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/commserver/src/PIDController.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/commserver/src/IMUReader.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/commserver/include/IMUReader.hpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/commserver/src/AHRSProcessor.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/commserver/src/AHRSStrategy.cpp</file>
     </open-files>
 </project-private>

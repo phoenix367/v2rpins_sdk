@@ -5,4 +5,15 @@
         <activeConfIndexElem>0</activeConfIndexElem>
     </data>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/messages/sensors.proto</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/RobotControl/SensorsConnector.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/RobotControl/SensorsConnector.hpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/RobotControl/RemoteConnector.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/RobotControl/ui/MainForm.hpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/RobotControl/ui/MainForm.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/RobotControl/VideoCaptureFinder.hpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/RobotControl/VideoCaptureFinder.cpp</file>
+        <file>file:/home/ivan/NetBeansProjects/v2rpins_sdk/cherokey-robot/RobotControl/OdometrySink.cpp</file>
+    </open-files>
 </project-private>
