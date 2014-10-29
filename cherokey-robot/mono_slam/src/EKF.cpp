@@ -14,12 +14,12 @@ namespace mslam
     : std_a(0)
     , std_alpha(0)
     , std_z(0)
-    , filterType(FilterType::constant_velocity)
+    , filterType(constant_velocity)
     {
     }
 
     EKF::EKF(const RealVector& x, const RealMatrix& p, RealType a,
-        RealType alpha, RealType z, FilterType type)
+        RealType alpha, RealType z, PredictionType type)
     : x_k_k(x)
     , p_k_k(p)
     , std_a(a)
@@ -86,10 +86,6 @@ namespace mslam
                     p_k_k_new(cv::Range(7, size_p_k_k), 
                     cv::Range(7, size_p_k_k)));
             p_k_k = p_k_k_new;
-
-//            p_k_k = [   p_k_k(1:3,1:3)              p_k_k(1:3,4:7)*Jnorm'               p_k_k(1:3,8:size_p_k_k);
-//                Jnorm*p_k_k(4:7,1:3)        Jnorm*p_k_k(4:7,4:7)*Jnorm'         Jnorm*p_k_k(4:7,8:size_p_k_k);
-//                p_k_k(8:size_p_k_k,1:3)     p_k_k(8:size_p_k_k,4:7)*Jnorm'      p_k_k(8:size_p_k_k,8:size_p_k_k)];
 
             RealType n = (RealType) cv::norm(v2m(x_k_k( cv::Range(3, 7) )));
             for (size_t i = 3; i < 7; i++)

@@ -38,6 +38,23 @@ namespace mslam
         return r;
     }
     
+    RealVector operator +(const RealVector& a, const RealVector& b)
+    {
+        if (a.size() != b.size())
+        {
+            SLAM_EXCEPTION(IncorrectParamException, 
+                    "Invalid argument sizes");
+        }
+        
+        RealVector r(a.size());
+        for (size_t i = 0; i < r.size(); i++)
+        {
+            r[i] = a[i] + b[i];
+        }
+        
+        return r;
+    }
+
     RealMatrix normJac(const RealVector& q)
     {
         if (q.size() < 4)
@@ -82,10 +99,10 @@ namespace mslam
     
     RealMatrix q2r(const RealVector& q)
     {
-        if (q.size() < 4)
+        if (q.size() != 4)
         {
             SLAM_EXCEPTION(IncorrectParamException, 
-                    "Vector size is too small");
+                    "Quaternion vector size is invalid");
         }
 
         RealMatrix R(3, 3);
@@ -105,5 +122,99 @@ namespace mslam
         R(2, 2) = r * r - x * x - y * y + z * z;
         
         return R;
+    }
+
+    RealVector operator *(const RealVector& a, const RealType& c)
+    {
+        RealVector r(a.size());
+        
+        for (size_t i = 0; i < a.size(); i++)
+        {
+            r[i] = a[i] * c;
+        }
+        
+        return r;
+    }
+    
+    RealVector operator /(const RealVector& a, const RealType& c)
+    {
+        RealVector r(a.size());
+        
+        for (size_t i = 0; i < a.size(); i++)
+        {
+            r[i] = a[i] / c;
+        }
+        
+        return r;
+    }
+
+    RealVector operator *(const RealType& c, const RealVector& a)
+    {
+        return operator *(a, c);
+    }
+    
+    RealVector cross(const RealVector& a, const RealVector& b)
+    {
+        if (a.size() != 3 || b.size() != 3)
+        {
+            SLAM_EXCEPTION(IncorrectParamException, 
+                    "Vector size is invalid");
+        }
+        
+        RealVector c(3);
+        c[0] = a[1] * b[2] - a[2] * b[1];
+        c[1] = a[2] * b[0] - a[0] * b[2];
+        c[2] = a[0] * b[1] - a[1] * b[0];
+        
+        return c;
+    }
+    
+    RealVector qprod(const RealVector& q, const RealVector& p)
+    {
+        if (q.size() != 4)
+        {
+            SLAM_EXCEPTION(IncorrectParamException, 
+                    "Quaternion vector size is invalid");
+        }
+
+        RealVector r(4);
+        RealType a = q[0];
+        RealVector v = q(cv::Range(1, 4));
+        RealType x = p[0];
+        RealVector u = p(cv::Range(1, 4));
+        r[0] = a * x - cv::dot(v, u);
+        
+        auto tmp = a * u + x * v + cross(v, u);
+        std::copy(tmp.begin(), tmp.end(), r.begin() + 1);
+        return r;
+    }
+    
+    RealType norm(const RealVector& v)
+    {
+        return (RealType) cv::norm(v2m(v));
+    }
+    
+    RealVector v2q(const RealVector& v)
+    {
+        RealVector q(4);
+        
+        RealType theta = norm(v);
+        if (theta < std::numeric_limits<RealType>::epsilon())
+        {
+            q[0] = 1;
+            q[1] = 0;
+            q[2] = 0;
+            q[3] = 0;
+        }
+        else
+        {
+            RealVector v_n = v / theta;
+            
+            q[0] = cos(theta);
+            auto tmp = sin(theta) * v_n;
+            std::copy(tmp.begin(), tmp.end(), q.begin() + 1);
+        }
+        
+        return q;
     }
 }

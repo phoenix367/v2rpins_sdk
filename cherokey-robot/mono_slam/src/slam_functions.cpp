@@ -265,4 +265,40 @@ namespace mslam
                     initializing_box_semisize);
         }
     }
+
+    RealVector fv(const RealVector& X_k_k, RealType delta, 
+            PredictionType type)
+    {
+        assert(X_k_k.size() == 13);
+        
+        RealVector rW = X_k_k(cv::Range(0, 3));
+        RealVector qWR= X_k_k(cv::Range(3, 7));
+        RealVector vW = X_k_k(cv::Range(7, 10));
+        RealVector wW = X_k_k(cv::Range(10, 13));
+        RealVector res(13);
+        
+        switch (type)
+        {
+            case constant_orientation:
+                break;
+            case constant_position:
+                break;
+            case constant_position_and_orientation:
+                break;
+            case constant_position_and_orientation_location_noise:
+                break;
+            case constant_velocity:
+                {
+                    auto tmp = rW + vW * delta;
+                    std::copy(tmp.begin(), tmp.end(), res.begin());
+                    tmp = qprod(qWR, v2q(wW * delta));
+                    std::copy(tmp.begin(), tmp.end(), res.begin() + 3);
+                    std::copy(vW.begin(), vW.end(), res.begin() + 7);
+                    std::copy(wW.begin(), wW.end(), res.begin() + 10);
+                }
+                break;
+        }
+        
+        return res;
+    }
 }

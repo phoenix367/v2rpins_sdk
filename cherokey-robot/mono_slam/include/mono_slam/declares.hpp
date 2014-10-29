@@ -27,6 +27,15 @@ namespace mslam
         inversedepth
     };
     
+    enum PredictionType
+    {
+        constant_orientation,
+        constant_position,
+        constant_position_and_orientation,
+        constant_position_and_orientation_location_noise,
+        constant_velocity
+    };
+    
     struct CameraParams
     {
         RealType dx;

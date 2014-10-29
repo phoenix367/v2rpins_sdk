@@ -15,15 +15,9 @@ namespace mslam
     class EKF 
     {
     public:
-        enum class FilterType
-        {
-            constant_velocity
-        };
-        
-    public:
         EKF();
         EKF(const RealVector& x, const RealMatrix& p, RealType a,
-            RealType alpha, RealType z, FilterType type);
+            RealType alpha, RealType z, PredictionType type);
         virtual ~EKF();
         
         void update(const RealVector& x_km1_k, const RealMatrix& p_km1_k, 
@@ -40,7 +34,7 @@ namespace mslam
         RealType std_a;
         RealType std_alpha;
         RealType std_z;
-        FilterType filterType;
+        PredictionType filterType;
         RealVector x_k_k_mixing_estimate;
         RealMatrix p_k_k_mixing_covariance;
     };
