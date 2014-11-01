@@ -87,3 +87,58 @@ void VfunctionsTest::testq2rFunction()
     auto res = mslam::q2r(q);
     CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(cv::abs(res - target) > 1e-15));
 }
+
+void VfunctionsTest::testv2qFunction()
+{
+    mslam::RealType vData[3] = {
+        0.00744521313538017843,
+        0.00961693688994200505,
+        0.000936372857725279459
+    };
+    mslam::RealVector v(vData, 3, true);
+    
+    mslam::RealType qData[4] = {
+        0.999981400874166759,
+        0.00372258348858547916,
+        0.00480843863383081417,
+        0.000468183526239605982
+    };
+    mslam::RealMatrix q(4, 1, qData, true);
+
+    auto res = mslam::v2q(v);
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(cv::abs(mslam::v2m(res) - q) > 
+            1e-15));
+}
+
+void VfunctionsTest::testqprodFunction()
+{
+    mslam::RealType qData[4] = {
+        0.999981401328104758,
+        0.00372253651322209007,
+        0.0048083810381358439,
+        0.000468179003860142828
+    };
+    mslam::RealVector q(qData, 4, true);
+
+    mslam::RealType pData[4] = {
+        0.999981400874166759,
+        0.00372258348858547916,
+        0.00480843863383081417,
+        0.000468183526239605982
+    };
+    mslam::RealVector p(pData, 4, true);
+
+    mslam::RealType qpData[4] = {
+        0.999925605096383951,
+        0.0074449815255538624,
+        0.0096166408148683543,
+        0.000936345103314383301
+    };
+    mslam::RealMatrix qp(4, 1, pData, true);
+
+    auto res = mslam::qprod(p, q);
+    //std::cout << mslam::v2m(res) - qp << std::endl;
+
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(cv::abs(mslam::v2m(res) - qp) > 
+            1e-15));
+}

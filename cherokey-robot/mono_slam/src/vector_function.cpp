@@ -196,6 +196,12 @@ namespace mslam
     
     RealVector v2q(const RealVector& v)
     {
+        if (v.size() != 3)
+        {
+            SLAM_EXCEPTION(IncorrectParamException, 
+                    "Rotation vector size is invalid");
+        }
+
         RealVector q(4);
         
         RealType theta = norm(v);
@@ -210,8 +216,8 @@ namespace mslam
         {
             RealVector v_n = v / theta;
             
-            q[0] = cos(theta);
-            auto tmp = sin(theta) * v_n;
+            q[0] = cos(theta / 2);
+            auto tmp = sin(theta / 2) * v_n;
             std::copy(tmp.begin(), tmp.end(), q.begin() + 1);
         }
         
