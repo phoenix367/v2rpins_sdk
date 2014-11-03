@@ -200,3 +200,112 @@ void slamFuncTest::testFindRANSACFeatures()
     mslam::find_ransac_features(search_region_center, im_k, cam,
             initializing_box_semisize);
 }
+
+void slamFuncTest::testfvFunction()
+{
+    mslam::RealType X_k_kData[13] = {
+        0.00944470513327697048,
+        0.00254699924075205229,
+        0.0016850961941712833,
+        0.999981401328104647,
+        0.00372253651322187237,
+        0.00480838103813518037,
+        0.000468179003859795124,
+        0.00944470513327704854,
+        0.00254699924075206356,
+        0.0016850961941712833,
+        0.00744521313537957301,
+        0.00961693688994071094,
+        0.000936372857724466308
+    };
+    mslam::RealVector X_k_k(X_k_kData, 13, true);
+    
+    mslam::RealType delta_t = 1;
+    
+    mslam::RealType X_k_km1Data[13] = {
+        0.0188894102665540173,
+        0.00509399848150411585,
+        0.00337019238834256659,
+        0.99992560509638384,
+        0.00744498152555334112,
+        0.00961664081486704111,
+        0.000936345103313629347,
+        0.00944470513327704854,
+        0.00254699924075206356,
+        0.0016850961941712833,
+        0.00744521313537957301,
+        0.00961693688994071094,
+        0.000936372857724466308
+    };
+    mslam::RealMatrix X_k_km1(13, 1, X_k_km1Data);
+
+    auto res = mslam::fv(X_k_k, delta_t, mslam::constant_velocity);
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
+            cv::abs(mslam::v2m(res) - X_k_km1) > 
+            1e-15));
+}
+
+void slamFuncTest::testdq3_by_dq1Function()
+{
+    mslam::RealType q2_inData[4] = {
+        0.999981401328104647,
+        0.00372253651322187237,
+        0.00480838103813518037,
+        0.000468179003859795124
+    };
+    mslam::RealVector q2_in(q2_inData, 4, true);
+
+    mslam::RealType  dq3_by_dq1RESData[4 *4] = {
+        0.999981401328104647,
+        -0.00372253651322187237,
+        -0.00480838103813518037,
+        -0.000468179003859795124,
+        0.00372253651322187237,
+        0.999981401328104647,
+        -0.000468179003859795124,
+        0.00480838103813518037,
+        0.00480838103813518037,
+        0.000468179003859795124,
+        0.999981401328104647,
+        -0.00372253651322187237,
+        0.000468179003859795124,
+        -0.00480838103813518037,
+        0.00372253651322187237,
+        0.999981401328104647
+    };
+    mslam::RealMatrix44 dq3_by_dq1(dq3_by_dq1RESData);
+    
+    auto res = mslam::dq3_by_dq1(q2_in);
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
+            cv::abs(cv::Mat(res) - cv::Mat(dq3_by_dq1)) > 1e-15));
+}
+
+void slamFuncTest::testdqomegadt_by_domegaFunction()
+{
+    mslam::RealType omegaData[3] = {
+        0.00744521313537957301,
+        0.00961693688994071094,
+        0.000936372857724466308
+    };
+    mslam::RealVector omega(omegaData, 3, true);
+    
+    mslam::RealType dqomegadt_by_domegaRESData[4 * 3] = {
+        -0.00186129174429258823,
+        -0.00240421931691508313,
+        -0.000234091763119599703,
+        0.499994590517165993,
+        -2.98332827145172399e-06,
+        -2.90477898632301932e-07,
+        -2.98332827145172399e-06,
+        0.499993046594720991,
+        -3.75208549207909756e-07,
+        -2.90477898632301932e-07,
+        -3.75208549207909756e-07,
+        0.499996863608898001
+    };
+    mslam::RealMatrix43 dqomegadt_by_domegaRES(dqomegadt_by_domegaRESData);
+    
+    auto res = mslam::dqomegadt_by_domega(omega, 1);
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
+            cv::abs(cv::Mat(res - dqomegadt_by_domegaRES)) > 1e-15));
+}

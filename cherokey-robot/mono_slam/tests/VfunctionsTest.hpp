@@ -18,6 +18,7 @@ class VfunctionsTest : public CPPUNIT_NS::TestFixture {
     CPPUNIT_TEST(testq2rFunction);
     CPPUNIT_TEST(testv2qFunction);
     CPPUNIT_TEST(testqprodFunction);
+    CPPUNIT_TEST(testcrossFunction);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -33,6 +34,7 @@ private:
     void testq2rFunction();
     void testv2qFunction();
     void testqprodFunction();
+    void testcrossFunction();
 };
 
 #endif	/* VFUNCTIONSTEST_HPP */

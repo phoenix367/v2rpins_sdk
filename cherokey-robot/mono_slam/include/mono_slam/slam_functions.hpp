@@ -33,6 +33,9 @@ namespace mslam
             int initializing_box_semisize[2]);
     RealVector fv(const RealVector& X_k_k, RealType delta, 
             PredictionType type);
+    RealMatrix44 dq3_by_dq1(const RealVector& q2_in);
+    RealMatrix43 dqomegadt_by_domega(const RealVector& omega,
+            RealType delta_t);
 }
 
 #endif	/* SLAM_FUNCTIONS_HPP */

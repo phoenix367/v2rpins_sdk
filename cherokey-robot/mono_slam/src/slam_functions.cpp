@@ -2,6 +2,7 @@
 #include "mono_slam/vector_function.hpp"
 
 #include "mono_slam/fast.h"
+#include "mono_slam/exceptions.hpp"
 
 namespace mslam
 {
@@ -300,5 +301,97 @@ namespace mslam
         }
         
         return res;
+    }
+
+    RealMatrix44 dq3_by_dq1(const RealVector& q2_in)
+    {
+        if (q2_in.size() != 4)
+        {
+            SLAM_EXCEPTION(IncorrectParamException, 
+                    "Quaternion vector size is invalid");
+        }
+        
+        RealType R = q2_in[0]; 
+        RealType X = q2_in[1];
+        RealType Y = q2_in[2];
+        RealType Z = q2_in[3];
+ 
+        RealType dq3_by_dq1RESData[4 * 4] = {
+            R, -X, -Y, -Z,
+            X,  R, -Z,  Y,
+            Y,  Z,  R, -X,
+            Z, -Y,  X,  R
+        };
+        
+        RealMatrix44 dq3_by_dq1RES(dq3_by_dq1RESData);
+        
+        return dq3_by_dq1RES;
+    }
+
+    RealType dq0_by_domegaA(RealType omegaA, RealType omega, RealType delta_t)
+    {
+        RealType dq0_by_domegaARES = (-delta_t / 2.0) * (omegaA / omega) * 
+                sin(omega * delta_t / 2.0);
+        return dq0_by_domegaARES;
+    }
+
+    RealType dqA_by_domegaA(RealType omegaA, RealType omega, RealType delta_t)
+    {
+        RealType dqA_by_domegaARES = (delta_t / 2.0) * omegaA * omegaA / (omega * omega) 
+                        * cos(omega * delta_t / 2.0) 
+                        + (1.0 / omega) * (1.0 - omegaA * omegaA / (omega * omega))
+                        * sin(omega * delta_t / 2.0);
+        return dqA_by_domegaARES;
+    }
+
+    RealType dqA_by_domegaB(RealType omegaA, RealType omegaB, RealType omega, 
+            RealType delta_t)
+    {
+        RealType dqA_by_domegaBRES=(omegaA * omegaB / (omega * omega)) * 
+                        ( (delta_t / 2.0) * cos(omega * delta_t / 2.0) 
+                        - (1.0 / omega) * sin(omega * delta_t / 2.0) );
+        return dqA_by_domegaBRES;
+    }
+
+    RealMatrix43 dqomegadt_by_domega(const RealVector& omega,
+            RealType delta_t)
+    {
+        RealMatrix43 dqomegadt_by_domegaRES = RealMatrix43::zeros();
+
+        if (omega.size() != 3)
+        {
+            SLAM_EXCEPTION(IncorrectParamException, 
+                    "Vector size is invalid");
+        }
+        
+        RealType omegamod = norm(omega);
+
+        // Use generic ancillary functions to calculate components of Jacobian
+        dqomegadt_by_domegaRES(0, 0) = dq0_by_domegaA(omega[0], omegamod, 
+                delta_t);
+        dqomegadt_by_domegaRES(0, 1) = dq0_by_domegaA(omega[1], omegamod, 
+                delta_t);
+        dqomegadt_by_domegaRES(0, 2) = dq0_by_domegaA(omega[2], omegamod, 
+                delta_t);
+        dqomegadt_by_domegaRES(1, 0) = dqA_by_domegaA(omega[0], omegamod, 
+                delta_t);
+        dqomegadt_by_domegaRES(1, 1) = dqA_by_domegaB(omega[0], omega[1], 
+                omegamod, delta_t);
+        dqomegadt_by_domegaRES(1, 2) = dqA_by_domegaB(omega[0], omega[2], 
+                omegamod, delta_t);
+        dqomegadt_by_domegaRES(2, 0) = dqA_by_domegaB(omega[1], omega[0], 
+                omegamod, delta_t);
+        dqomegadt_by_domegaRES(2, 1) = dqA_by_domegaA(omega[1], omegamod, 
+                delta_t);
+        dqomegadt_by_domegaRES(2, 2) = dqA_by_domegaB(omega[1], omega[2], 
+                omegamod, delta_t);
+        dqomegadt_by_domegaRES(3, 0) = dqA_by_domegaB(omega[2], omega[0], 
+                omegamod, delta_t);
+        dqomegadt_by_domegaRES(3, 1) = dqA_by_domegaB(omega[2], omega[1], 
+                omegamod, delta_t);
+        dqomegadt_by_domegaRES(3, 2) = dqA_by_domegaA(omega[2], omegamod, 
+                delta_t);
+        
+        return dqomegadt_by_domegaRES;
     }
 }

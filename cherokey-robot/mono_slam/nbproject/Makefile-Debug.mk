@@ -118,7 +118,7 @@ ${TESTDIR}/TestFiles/f2: ${TESTDIR}/tests/ekfTest.o ${TESTDIR}/tests/ekf_test.o 
 
 ${TESTDIR}/TestFiles/f3: ${TESTDIR}/tests/slamFuncTest.o ${TESTDIR}/tests/slamTest.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
-	${LINK.cc}   -o ${TESTDIR}/TestFiles/f3 $^ ${LDLIBSOPTIONS} `pkg-config --libs opencv`   `cppunit-config --libs`   
+	${LINK.cc}   -o ${TESTDIR}/TestFiles/f3 $^ ${LDLIBSOPTIONS} `pkg-config --libs opencv`   `cppunit-config --libs` `pkg-config --libs opencv`   
 
 ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/VfunctionsTest.o ${TESTDIR}/tests/vfunctions_test.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles

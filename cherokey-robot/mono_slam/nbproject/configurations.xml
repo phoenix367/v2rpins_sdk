@@ -131,6 +131,7 @@
           <output>${TESTDIR}/TestFiles/f3</output>
           <linkerLibItems>
             <linkerOptionItem>`cppunit-config --libs`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs opencv`</linkerOptionItem>
           </linkerLibItems>
         </linkerTool>
       </folder>

@@ -160,7 +160,7 @@ namespace mslam
             SLAM_EXCEPTION(IncorrectParamException, 
                     "Vector size is invalid");
         }
-        
+                
         RealVector c(3);
         c[0] = a[1] * b[2] - a[2] * b[1];
         c[1] = a[2] * b[0] - a[0] * b[2];
@@ -184,7 +184,7 @@ namespace mslam
         RealVector u = p(cv::Range(1, 4));
         r[0] = a * x - cv::dot(v, u);
         
-        auto tmp = a * u + x * v + cross(v, u);
+        auto tmp = (a * u + x * v) + cross(v, u);
         std::copy(tmp.begin(), tmp.end(), r.begin() + 1);
         return r;
     }
