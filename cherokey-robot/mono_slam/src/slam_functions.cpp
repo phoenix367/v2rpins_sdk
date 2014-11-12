@@ -493,4 +493,57 @@ namespace mslam
         
         return dfv_by_dxvRES;
     }
+
+    RealMatrix22 jacob_undistor_fm(const CameraParams& cam, 
+            const RealMatrix21& uvd)
+    {
+        RealType ud = uvd(0);
+        RealType vd = uvd(1);
+        RealType xd = (uvd(0) - cam.Cx) * cam.dx;
+        RealType yd = (uvd(1) - cam.Cy) * cam.dy;
+
+        RealType rd2 = xd * xd + yd * yd;
+        RealType rd4 = rd2 * rd2;
+
+        RealType uu_ud = (1 + cam.k1 * rd2 + cam.k2 * rd4) +
+                (ud - cam.Cx) * (cam.k1 + 2 * cam.k2 * rd2) *
+                (2 * (ud - cam.Cx) * cam.dx * cam.dx);
+        RealType vu_vd = (1 + cam.k1 * rd2 + cam.k2 * rd4) + 
+                (vd - cam.Cy) * (cam.k1 + 2 * cam.k2 * rd2) *
+                (2 * (vd - cam.Cy) * cam.dy * cam.dy);
+
+        RealType uu_vd = (ud - cam.Cx) * (cam.k1 + 2 * cam.k2 * rd2) *
+                (2 * (vd - cam.Cy) * cam.dy * cam.dy);
+        RealType vu_ud = (vd - cam.Cy) * (cam.k1 + 2 * cam.k2 * rd2) *
+                (2 * (ud - cam.Cx) * cam.dx * cam.dx);
+
+        RealMatrix22 J_undistor;
+        J_undistor(0, 0) = uu_ud;
+        J_undistor(0, 1) = uu_vd;
+        J_undistor(1, 0) = vu_ud;
+        J_undistor(1, 1) = vu_vd;
+        
+        return J_undistor;
+    }
+
+    RealMatrix21 undistor_fm(const CameraParams& cam, 
+            const RealMatrix21& uvd)
+    {
+        RealType xd = ( uvd(0) - cam.Cx ) * cam.dx;
+        RealType yd = ( uvd(1) - cam.Cy ) * cam.dy;
+
+        RealType rd = sqrt( xd * xd + yd * yd );
+        RealType rd2 = rd * rd;
+        RealType rd4 = rd2 * rd2;
+        
+        RealType D = 1 + cam.k1 * rd2 + cam.k2 * rd4;
+        RealType xu = xd * D;
+        RealType yu = yd * D;
+
+        RealMatrix21 uvu;
+        uvu(0) = xu / cam.dx + cam.Cx;
+        uvu(1) = yu / cam.dy + cam.Cy;   
+        
+        return uvu;
+    }
 }

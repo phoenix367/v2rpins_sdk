@@ -449,3 +449,65 @@ void slamFuncTest::testdfv_by_dxvFunction()
     CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
             cv::abs(cv::Mat(res - dfv_by_dxvRES)) > 1e-15));
 }
+
+void slamFuncTest::testjacob_undistor_fmFunction()
+{
+    mslam::CameraParams cam;
+    cam.Cx = 160.22321428571428;
+    cam.Cy = 128.86607142857144;
+    cam.dx = 0.0112;
+    cam.dy = 0.0112;
+    cam.k1 = 0.063329999999999997;
+    cam.k2 = 0.013899999999999999;
+    cam.f = 2.1735000000000002;
+    cam.nRows = 240;
+    cam.nCols = 320;
+
+    mslam::RealType uvdData[2] = {
+        53, 127
+    };
+    mslam::RealMatrix21 uvd(uvdData);
+    
+    mslam::RealType J_undistorData[2 * 2] = {
+        1.41862436820537008,
+        0.00519215136113831445,
+        0.00519215136113831445,
+        1.12037719118838375
+    };
+    mslam::RealMatrix22 J_undistor(J_undistorData);
+
+    auto res = mslam::jacob_undistor_fm(cam, uvd);
+    
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
+            cv::abs(cv::Mat(res - J_undistor)) > 1e-15));
+}
+
+void slamFuncTest::testundistor_fmFunction()
+{
+    mslam::CameraParams cam;
+    cam.Cx = 160.22321428571428;
+    cam.Cy = 128.86607142857144;
+    cam.dx = 0.0112;
+    cam.dy = 0.0112;
+    cam.k1 = 0.063329999999999997;
+    cam.k2 = 0.013899999999999999;
+    cam.f = 2.1735000000000002;
+    cam.nRows = 240;
+    cam.nCols = 320;
+
+    mslam::RealType uvdData[2] = {
+        53, 127
+    };
+    mslam::RealMatrix21 uvd(uvdData);
+    
+    mslam::RealType uvuData[2] = {
+        40.1024595594033713,
+        126.775536185187377
+    };
+    mslam::RealMatrix21 uvu(uvuData);
+
+    auto res = mslam::undistor_fm(cam, uvd);
+    
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
+            cv::abs(cv::Mat(res - uvu)) > 1e-15));
+}

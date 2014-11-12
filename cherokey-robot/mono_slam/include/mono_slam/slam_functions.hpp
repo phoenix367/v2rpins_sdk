@@ -41,6 +41,10 @@ namespace mslam
     RealMatrix44 dq3_by_dq2(const RealVector& q2_in);
     RealMatrix dfv_by_dxv(const RealVector& Xv, RealType delta_t, 
             PredictionType type);
+    RealMatrix22 jacob_undistor_fm(const CameraParams& cam, 
+            const RealMatrix21& uvd);
+    RealMatrix21 undistor_fm(const CameraParams& cam, 
+            const RealMatrix21& uvd);
 }
 
 #endif	/* SLAM_FUNCTIONS_HPP */
