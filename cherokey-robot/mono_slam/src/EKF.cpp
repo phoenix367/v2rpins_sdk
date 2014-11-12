@@ -6,7 +6,6 @@
  */
 
 #include <algorithm>
-#include <c++/4.6/bits/stl_iterator.h>
 
 #include "mono_slam/EKF.hpp"
 #include "mono_slam/vector_function.hpp"
