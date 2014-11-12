@@ -45,6 +45,10 @@ namespace mslam
             const RealMatrix21& uvd);
     RealMatrix21 undistor_fm(const CameraParams& cam, 
             const RealMatrix21& uvd);
+    RealMatrix61 hinv(const CameraParams& cam, 
+            const RealMatrix21& uvd,
+            const RealVector& Xv,
+            RealType initial_rho);
 }
 
 #endif	/* SLAM_FUNCTIONS_HPP */

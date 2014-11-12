@@ -28,6 +28,8 @@ namespace mslam
         RealVector getX();
         RealMatrix getP();
         RealType getStdZ();
+        RealVector getXM1();
+        RealMatrix getPM1();
         
     private:
         RealVector x_k_k;

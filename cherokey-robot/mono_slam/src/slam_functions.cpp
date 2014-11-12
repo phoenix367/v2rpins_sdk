@@ -533,8 +533,8 @@ namespace mslam
         RealType yd = ( uvd(1) - cam.Cy ) * cam.dy;
 
         RealType rd = sqrt( xd * xd + yd * yd );
-        RealType rd2 = rd * rd;
-        RealType rd4 = rd2 * rd2;
+        RealType rd2 = pow(rd, 2);
+        RealType rd4 = pow(rd, 4);
         
         RealType D = 1 + cam.k1 * rd2 + cam.k2 * rd4;
         RealType xu = xd * D;
@@ -545,5 +545,40 @@ namespace mslam
         uvu(1) = yu / cam.dy + cam.Cy;   
         
         return uvu;
+    }
+
+    RealMatrix61 hinv(const CameraParams& cam, 
+            const RealMatrix21& uvd,
+            const RealVector& Xv,
+            RealType initial_rho)
+    {
+        RealType fku =  cam.K(0, 0);
+        RealType fkv =  cam.K(1, 1);
+        RealType U0  =  cam.K(0, 2);
+        RealType V0  =  cam.K(1, 2);
+
+        RealMatrix21 uv = undistor_fm(cam, uvd);
+        RealType u = uv(0);
+        RealType v = uv(1);
+
+        RealVector r_W = Xv(cv::Range(0, 3));
+        RealVector q_WR = Xv(cv::Range(3, 7));
+
+        RealType h_LR_x = -(U0 - u) / fku;
+        RealType h_LR_y = -(V0 - v) / fkv;
+        RealType h_LR_z = 1;
+
+        RealMatrix31 h_LR(h_LR_x, h_LR_y, h_LR_z);
+
+        RealMatrix n = q2r(q_WR) * RealMatrix(h_LR);
+        RealType nx = n(0);
+        RealType ny = n(1);
+        RealType nz = n(2);
+
+        RealMatrix61 newFeature(r_W[0], r_W[1], r_W[2], atan2(nx, nz), 
+                atan2(-ny, sqrt(nx * nx + nz * nz)),
+                initial_rho);
+        
+        return newFeature;
     }
 }

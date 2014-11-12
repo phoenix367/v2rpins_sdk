@@ -53,7 +53,21 @@ void ekfTest::testUpdate()
     CPPUNIT_ASSERT(cv::countNonZero(cv::abs(p_res - p_k_k) > 1e-15) == 0);
 }
 
-void ekfTest::testFailedMethod() 
+void ekfTest::testPredict() 
 {
-    CPPUNIT_ASSERT(false);
+    auto p_k_k = test::loadMatrix("tests/data/test_ekf_pred/p_k_k.dat");
+    auto p_k_km1 = test::loadMatrix("tests/data/test_ekf_pred/p_k_km1.dat");
+    auto x_k_k = test::loadMatrix("tests/data/test_ekf_pred/x_k_k.dat");
+    auto x_k_km1 = test::loadMatrix("tests/data/test_ekf_pred/x_k_km1.dat");
+
+    mslam::RealVector x_k_k_v(x_k_k, true);
+    mslam::EKF ekf(x_k_k_v, p_k_k, 0.007, 0.007, 1, mslam::constant_velocity);
+    
+    ekf.predict();
+    auto x_t = ekf.getXM1();
+    auto p_t = ekf.getPM1();
+    
+    CPPUNIT_ASSERT(cv::countNonZero(cv::abs(mslam::v2m(x_t) - x_k_km1) > 
+            1e-15) == 0);    
+    CPPUNIT_ASSERT(cv::countNonZero(cv::abs(p_t - p_k_km1) > 1e-15) == 0);
 }

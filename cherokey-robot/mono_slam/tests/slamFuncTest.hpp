@@ -27,6 +27,7 @@ class slamFuncTest : public CPPUNIT_NS::TestFixture {
     CPPUNIT_TEST(testdfv_by_dxvFunction);
     CPPUNIT_TEST(testjacob_undistor_fmFunction);
     CPPUNIT_TEST(testundistor_fmFunction);
+    CPPUNIT_TEST(testhinvFunction);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -51,6 +52,7 @@ private:
     void testdfv_by_dxvFunction();
     void testjacob_undistor_fmFunction();
     void testundistor_fmFunction();
+    void testhinvFunction();
 };
 
 #endif	/* SLAMFUNCTEST_HPP */

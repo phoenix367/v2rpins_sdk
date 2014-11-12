@@ -14,7 +14,7 @@ class ekfTest : public CPPUNIT_NS::TestFixture {
     CPPUNIT_TEST_SUITE(ekfTest);
 
     CPPUNIT_TEST(testUpdate);
-    CPPUNIT_TEST(testFailedMethod);
+    CPPUNIT_TEST(testPredict);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -26,7 +26,7 @@ public:
 
 private:
     void testUpdate();
-    void testFailedMethod();
+    void testPredict();
 };
 
 #endif	/* EKFTEST_HPP */

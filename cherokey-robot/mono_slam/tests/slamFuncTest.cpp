@@ -509,5 +509,63 @@ void slamFuncTest::testundistor_fmFunction()
     auto res = mslam::undistor_fm(cam, uvd);
     
     CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
-            cv::abs(cv::Mat(res - uvu)) > 1e-15));
+            cv::abs(cv::Mat(res - uvu)) > 1e-14));
+}
+
+void slamFuncTest::testhinvFunction()
+{
+    mslam::CameraParams cam;
+    cam.Cx = 160.22321428571428;
+    cam.Cy = 128.86607142857144;
+    cam.dx = 0.0112;
+    cam.dy = 0.0112;
+    cam.k1 = 0.063329999999999997;
+    cam.k2 = 0.013899999999999999;
+    cam.f = 2.1735000000000002;
+    cam.nRows = 240;
+    cam.nCols = 320;
+
+    mslam::RealType uvdData[2] = {
+        233, 157
+    };
+    mslam::RealMatrix21 uvd(uvdData);
+    
+    mslam::RealType KData[3 * 3] = {
+        194.062500000000028,                   0, 160.223214285714278,
+                          0, 194.062500000000028, 128.866071428571445,
+                          0,                   0,                   1
+    };
+    cam.K = mslam::RealMatrix33(KData);
+
+    mslam::RealType newFeatureData[6] = {
+        0.00944470513327725324,
+        0.00254699924075165894,
+        0.00168509619417212117,
+        0.3863318373392442,
+        -0.134880740673630123,
+        1
+    };
+    mslam::RealMatrix61 newFeature(newFeatureData);
+
+    mslam::RealType XvData[13] = {
+        0.00944470513327725324,
+        0.00254699924075165894,
+        0.00168509619417212117,
+        0.999981401328104758,
+        0.00372253651322209007,
+        0.0048083810381358439,
+        0.000468179003860142828,
+        0.00944470513327727926,
+        0.00254699924075172616,
+        0.00168509619417211661,
+        0.00744521313538017843,
+        0.00961693688994200505,
+        0.000936372857725279459
+    };
+    mslam::RealVector Xv(XvData, 13, true);
+    mslam::RealType initial_rho = 1;
+
+    auto res = mslam::hinv(cam, uvd, Xv, initial_rho);
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
+            cv::abs(cv::Mat(res - newFeature)) > 1e-15));
 }

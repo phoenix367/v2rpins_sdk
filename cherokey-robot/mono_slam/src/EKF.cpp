@@ -168,4 +168,14 @@ namespace mslam
         D.copyTo(p_k_km1(cv::Range(B.rows, p_k_km1.rows), cv::Range(A.cols, 
                 p_k_km1.cols)));
     }
+
+    RealVector EKF::getXM1()
+    {
+        return x_k_km1;
+    }
+    
+    RealMatrix EKF::getPM1()
+    {
+        return p_k_km1;
+    }
 }
