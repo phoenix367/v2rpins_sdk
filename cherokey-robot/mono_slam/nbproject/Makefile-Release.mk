@@ -55,8 +55,8 @@ TESTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=-std=c++0x
+CXXFLAGS=-std=c++0x
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -80,32 +80,32 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libmono_slam.a: ${OBJECTFILES}
 ${OBJECTDIR}/src/EKF.o: src/EKF.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/EKF.o src/EKF.cpp
+	$(COMPILE.cc) -O2 -Iinclude -std=c++0x -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/EKF.o src/EKF.cpp
 
 ${OBJECTDIR}/src/fast.o: src/fast.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/fast.o src/fast.c
+	$(COMPILE.c) -O2 -Iinclude -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/fast.o src/fast.c
 
 ${OBJECTDIR}/src/fast_9.o: src/fast_9.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/fast_9.o src/fast_9.c
+	$(COMPILE.c) -O2 -Iinclude -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/fast_9.o src/fast_9.c
 
 ${OBJECTDIR}/src/nonmax.o: src/nonmax.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/nonmax.o src/nonmax.c
+	$(COMPILE.c) -O2 -Iinclude -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/nonmax.o src/nonmax.c
 
 ${OBJECTDIR}/src/slam_functions.o: src/slam_functions.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/slam_functions.o src/slam_functions.cpp
+	$(COMPILE.cc) -O2 -Iinclude -std=c++0x -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/slam_functions.o src/slam_functions.cpp
 
 ${OBJECTDIR}/src/vector_function.o: src/vector_function.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/vector_function.o src/vector_function.cpp
+	$(COMPILE.cc) -O2 -Iinclude -std=c++0x -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/vector_function.o src/vector_function.cpp
 
 # Subprojects
 .build-subprojects:
@@ -114,51 +114,51 @@ ${OBJECTDIR}/src/vector_function.o: src/vector_function.cpp
 .build-tests-conf: .build-conf ${TESTFILES}
 ${TESTDIR}/TestFiles/f2: ${TESTDIR}/tests/ekfTest.o ${TESTDIR}/tests/ekf_test.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
-	${LINK.cc}   -o ${TESTDIR}/TestFiles/f2 $^ ${LDLIBSOPTIONS} `cppunit-config --libs`   
+	${LINK.cc}   -o ${TESTDIR}/TestFiles/f2 $^ ${LDLIBSOPTIONS} `pkg-config --libs opencv`   `cppunit-config --libs`   
 
 ${TESTDIR}/TestFiles/f3: ${TESTDIR}/tests/slamFuncTest.o ${TESTDIR}/tests/slamTest.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
-	${LINK.cc}   -o ${TESTDIR}/TestFiles/f3 $^ ${LDLIBSOPTIONS} `cppunit-config --libs`   
+	${LINK.cc}   -o ${TESTDIR}/TestFiles/f3 $^ ${LDLIBSOPTIONS} `pkg-config --libs opencv`   `cppunit-config --libs`   
 
 ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/VfunctionsTest.o ${TESTDIR}/tests/vfunctions_test.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
-	${LINK.cc}   -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS} `cppunit-config --libs`   
+	${LINK.cc}   -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS} `pkg-config --libs opencv`   `cppunit-config --libs`   
 
 
 ${TESTDIR}/tests/ekfTest.o: tests/ekfTest.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -O2 `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/ekfTest.o tests/ekfTest.cpp
+	$(COMPILE.cc) -O2 -Iinclude -std=c++0x `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/ekfTest.o tests/ekfTest.cpp
 
 
 ${TESTDIR}/tests/ekf_test.o: tests/ekf_test.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -O2 `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/ekf_test.o tests/ekf_test.cpp
+	$(COMPILE.cc) -O2 -Iinclude -std=c++0x `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/ekf_test.o tests/ekf_test.cpp
 
 
 ${TESTDIR}/tests/slamFuncTest.o: tests/slamFuncTest.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -O2 `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/slamFuncTest.o tests/slamFuncTest.cpp
+	$(COMPILE.cc) -O2 -Iinclude -std=c++0x `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/slamFuncTest.o tests/slamFuncTest.cpp
 
 
 ${TESTDIR}/tests/slamTest.o: tests/slamTest.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -O2 `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/slamTest.o tests/slamTest.cpp
+	$(COMPILE.cc) -O2 -Iinclude -std=c++0x `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/slamTest.o tests/slamTest.cpp
 
 
 ${TESTDIR}/tests/VfunctionsTest.o: tests/VfunctionsTest.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -O2 `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/VfunctionsTest.o tests/VfunctionsTest.cpp
+	$(COMPILE.cc) -O2 -Iinclude -std=c++0x `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/VfunctionsTest.o tests/VfunctionsTest.cpp
 
 
 ${TESTDIR}/tests/vfunctions_test.o: tests/vfunctions_test.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -O2 `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/vfunctions_test.o tests/vfunctions_test.cpp
+	$(COMPILE.cc) -O2 -Iinclude -std=c++0x `cppunit-config --cflags` -MMD -MP -MF $@.d -o ${TESTDIR}/tests/vfunctions_test.o tests/vfunctions_test.cpp
 
 
 ${OBJECTDIR}/src/EKF_nomain.o: ${OBJECTDIR}/src/EKF.o src/EKF.cpp 
@@ -169,7 +169,7 @@ ${OBJECTDIR}/src/EKF_nomain.o: ${OBJECTDIR}/src/EKF.o src/EKF.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -O2 -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/EKF_nomain.o src/EKF.cpp;\
+	    $(COMPILE.cc) -O2 -Iinclude -std=c++0x -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/EKF_nomain.o src/EKF.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/EKF.o ${OBJECTDIR}/src/EKF_nomain.o;\
 	fi
@@ -182,7 +182,7 @@ ${OBJECTDIR}/src/fast_nomain.o: ${OBJECTDIR}/src/fast.o src/fast.c
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.c) -O2 -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/fast_nomain.o src/fast.c;\
+	    $(COMPILE.c) -O2 -Iinclude -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/fast_nomain.o src/fast.c;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/fast.o ${OBJECTDIR}/src/fast_nomain.o;\
 	fi
@@ -195,7 +195,7 @@ ${OBJECTDIR}/src/fast_9_nomain.o: ${OBJECTDIR}/src/fast_9.o src/fast_9.c
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.c) -O2 -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/fast_9_nomain.o src/fast_9.c;\
+	    $(COMPILE.c) -O2 -Iinclude -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/fast_9_nomain.o src/fast_9.c;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/fast_9.o ${OBJECTDIR}/src/fast_9_nomain.o;\
 	fi
@@ -208,7 +208,7 @@ ${OBJECTDIR}/src/nonmax_nomain.o: ${OBJECTDIR}/src/nonmax.o src/nonmax.c
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.c) -O2 -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/nonmax_nomain.o src/nonmax.c;\
+	    $(COMPILE.c) -O2 -Iinclude -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/nonmax_nomain.o src/nonmax.c;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/nonmax.o ${OBJECTDIR}/src/nonmax_nomain.o;\
 	fi
@@ -221,7 +221,7 @@ ${OBJECTDIR}/src/slam_functions_nomain.o: ${OBJECTDIR}/src/slam_functions.o src/
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -O2 -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/slam_functions_nomain.o src/slam_functions.cpp;\
+	    $(COMPILE.cc) -O2 -Iinclude -std=c++0x -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/slam_functions_nomain.o src/slam_functions.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/slam_functions.o ${OBJECTDIR}/src/slam_functions_nomain.o;\
 	fi
@@ -234,7 +234,7 @@ ${OBJECTDIR}/src/vector_function_nomain.o: ${OBJECTDIR}/src/vector_function.o sr
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -O2 -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/vector_function_nomain.o src/vector_function.cpp;\
+	    $(COMPILE.cc) -O2 -Iinclude -std=c++0x -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/vector_function_nomain.o src/vector_function.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/vector_function.o ${OBJECTDIR}/src/vector_function_nomain.o;\
 	fi

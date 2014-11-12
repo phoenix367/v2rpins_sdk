@@ -394,4 +394,103 @@ namespace mslam
         
         return dqomegadt_by_domegaRES;
     }
+
+    RealMatrix func_Q(const RealVector& Xv, const RealMatrix& Pn,
+            RealType delta_t, PredictionType type)
+    {
+        RealMatrix G;
+        if (type == constant_position_and_orientation_location_noise)
+        {
+            
+        }
+        else
+        {
+            RealVector omegaOld = Xv(cv::Range(10, 13));
+            RealVector qOld = Xv(cv::Range(3, 7));
+
+            G = RealMatrix::zeros(13,6);
+            auto r = dq3_by_dq1(qOld) * dqomegadt_by_domega(omegaOld,
+                    delta_t);
+
+            for (int i = 0; i < 3; i++)
+            {
+                G(7 + i, i) = 1;
+                G(10 + i, 3 + i) = 1;
+                G(i, i) = delta_t;
+            }
+            
+            assert(r.rows == 4 && r.cols == 3);
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    G(3 + i, 3 + j) = r(i, j);
+                }
+            }
+        }
+        
+        RealMatrix Q = G * Pn * G.t();
+        return Q;
+    }
+
+    RealMatrix44 dq3_by_dq2(const RealVector& q1_in)
+    {
+        if (q1_in.size() != 4)
+        {
+            SLAM_EXCEPTION(IncorrectParamException, 
+                    "Quaternion vector size is invalid");
+        }
+        
+        RealType R = q1_in[0]; 
+        RealType X = q1_in[1];
+        RealType Y = q1_in[2];
+        RealType Z = q1_in[3];
+ 
+        RealType dq3_by_dq2RESData[4 * 4] = {
+            R, -X, -Y, -Z,
+            X,  R,  Z, -Y,
+            Y, -Z,  R,  X,
+            Z,  Y, -X,  R
+        };
+        
+        RealMatrix44 dq3_by_dq2RES(dq3_by_dq2RESData);
+        
+        return dq3_by_dq2RES;
+    }
+
+    RealMatrix dfv_by_dxv(const RealVector& Xv, RealType delta_t, 
+            PredictionType type)
+    {
+        RealVector omegaOld = Xv(cv::Range(10, 13));
+        RealVector qOld = Xv(cv::Range(3, 7));
+
+        RealMatrix dfv_by_dxvRES = RealMatrix::eye(13, 13);
+
+        RealVector qwt = v2q(omegaOld * delta_t);
+        RealMatrix44 dqwt = dq3_by_dq2(qwt);
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                dfv_by_dxvRES(3 + i, 3 + j) = dqwt(i, j);
+            }
+        }
+        
+        if (type == constant_velocity)
+        {
+            auto tmp = dq3_by_dq1(qOld) * dqomegadt_by_domega(omegaOld, 
+                    delta_t);
+            for (int j = 0; j < 3; j++)
+            {
+                dfv_by_dxvRES(j, 7 + j) = delta_t;
+                
+                for (int i = 0; i < 4; i++)
+                {
+                    dfv_by_dxvRES(3 + i, 10 + j) = tmp(i, j);
+                }
+            }
+        }
+        
+        return dfv_by_dxvRES;
+    }
 }

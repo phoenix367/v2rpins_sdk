@@ -36,6 +36,11 @@ namespace mslam
     RealMatrix44 dq3_by_dq1(const RealVector& q2_in);
     RealMatrix43 dqomegadt_by_domega(const RealVector& omega,
             RealType delta_t);
+    RealMatrix func_Q(const RealVector& Xv, const RealMatrix& Pn,
+            RealType delta_t, PredictionType type);
+    RealMatrix44 dq3_by_dq2(const RealVector& q2_in);
+    RealMatrix dfv_by_dxv(const RealVector& Xv, RealType delta_t, 
+            PredictionType type);
 }
 
 #endif	/* SLAM_FUNCTIONS_HPP */

@@ -23,6 +23,7 @@ namespace mslam
         void update(const RealVector& x_km1_k, const RealMatrix& p_km1_k, 
             const RealMatrix& H, const RealMatrix& R, const RealVector& z, 
             const RealVector& h);
+        void predict();
         
         RealVector getX();
         RealMatrix getP();
@@ -37,6 +38,8 @@ namespace mslam
         PredictionType filterType;
         RealVector x_k_k_mixing_estimate;
         RealMatrix p_k_k_mixing_covariance;
+        RealVector x_k_km1;
+        RealMatrix p_k_km1;
     };
 }
 

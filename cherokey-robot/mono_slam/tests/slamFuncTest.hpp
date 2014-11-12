@@ -22,6 +22,9 @@ class slamFuncTest : public CPPUNIT_NS::TestFixture {
     CPPUNIT_TEST(testfvFunction);
     CPPUNIT_TEST(testdq3_by_dq1Function);
     CPPUNIT_TEST(testdqomegadt_by_domegaFunction);
+    CPPUNIT_TEST(testfunc_QFunction);
+    CPPUNIT_TEST(testdq3_by_dq2Function);
+    CPPUNIT_TEST(testdfv_by_dxvFunction);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -41,6 +44,9 @@ private:
     void testfvFunction();
     void testdq3_by_dq1Function();
     void testdqomegadt_by_domegaFunction();
+    void testfunc_QFunction();
+    void testdq3_by_dq2Function();
+    void testdfv_by_dxvFunction();
 };
 
 #endif	/* SLAMFUNCTEST_HPP */
