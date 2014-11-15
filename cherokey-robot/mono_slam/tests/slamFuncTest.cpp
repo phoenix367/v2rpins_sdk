@@ -569,3 +569,152 @@ void slamFuncTest::testhinvFunction()
     CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
             cv::abs(cv::Mat(res - newFeature)) > 1e-15));
 }
+
+void slamFuncTest::testdhu_dhrlFunction()
+{
+    mslam::CameraParams cam;
+    cam.Cx = 160.22321428571428;
+    cam.Cy = 128.86607142857144;
+    cam.dx = 0.0112;
+    cam.dy = 0.0112;
+    cam.k1 = 0.063329999999999997;
+    cam.k2 = 0.013899999999999999;
+    cam.f = 2.1735000000000002;
+    cam.nRows = 240;
+    cam.nCols = 320;
+
+    mslam::RealType Xv_km1_kData[13] = {
+        0.0188894102665545308,
+        0.00509399848150338466,
+        0.003370192388344238,
+        0.999925605096383951,
+        0.0074449815255538624,
+        0.0096166408148683543,
+        0.000936345103314383301,
+        0.00944470513327727926,
+        0.00254699924075172616,
+        0.00168509619417211661,
+        0.00744521313538017843,
+        0.00961693688994200505,
+        0.000936372857725279459
+    };
+    mslam::RealVector Xv_km1_k(Xv_km1_kData, 13, true);
+
+    mslam::RealType yiData[6] = {
+        0,
+        0,
+        0,
+        -0.555565960359473032,
+        0.00884530452744248553,
+        1
+    };
+    mslam::RealVector yi(yiData, 6, true);
+
+    mslam::RealType aData[2 * 3] = {
+        232.231688314087194,
+        0,
+        156.318148434977218,
+        0,
+        232.231688314087194,
+        0.105247335115085827
+    };
+    mslam::RealMatrix23 a(aData);
+    
+    auto res = mslam::dhu_dhrl(cam, Xv_km1_k, yi);
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
+            cv::abs(cv::Mat(res - a)) > 1e-15));
+}
+
+void slamFuncTest::testdhd_dhuFunction()
+{
+    mslam::CameraParams cam;
+    cam.Cx = 160.22321428571428;
+    cam.Cy = 128.86607142857144;
+    cam.dx = 0.0112;
+    cam.dy = 0.0112;
+    cam.k1 = 0.063329999999999997;
+    cam.k2 = 0.013899999999999999;
+    cam.f = 2.1735000000000002;
+    cam.nRows = 240;
+    cam.nCols = 320;
+
+    mslam::RealType zi_dData[2] = {
+        45.7922478625165468,
+        128.789026284477416
+    };
+    mslam::RealMatrix21 zi_d(zi_dData);
+    
+    mslam::RealType aData[2 * 2] = {
+        0.666851444095186929,
+        -0.000140830948012770978,
+        -0.000140830948012770978,
+        0.876019904579995456
+    };
+    mslam::RealMatrix22 a(aData);
+
+    auto res = mslam::dhd_dhu(cam,zi_d);
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
+            cv::abs(cv::Mat(res - a)) > 1e-15));
+}
+
+void slamFuncTest::testdh_dhrlFunction()
+{
+    mslam::CameraParams cam;
+    cam.Cx = 160.22321428571428;
+    cam.Cy = 128.86607142857144;
+    cam.dx = 0.0112;
+    cam.dy = 0.0112;
+    cam.k1 = 0.063329999999999997;
+    cam.k2 = 0.013899999999999999;
+    cam.f = 2.1735000000000002;
+    cam.nRows = 240;
+    cam.nCols = 320;
+
+    mslam::RealType ziData[2] = {
+        45.7922478625165468,
+        128.789026284477416
+    };
+    mslam::RealMatrix21 zi(ziData);
+
+    mslam::RealType Xv_km1_kData[13] = {
+        0.0188894102665545308,
+        0.00509399848150338466,
+        0.003370192388344238,
+        0.999925605096383951,
+        0.0074449815255538624,
+        0.0096166408148683543,
+        0.000936345103314383301,
+        0.00944470513327727926,
+        0.00254699924075172616,
+        0.00168509619417211661,
+        0.00744521313538017843,
+        0.00961693688994200505,
+        0.000936372857725279459
+    };
+    mslam::RealVector Xv_km1_k(Xv_km1_kData, 13, true);
+
+    mslam::RealType yiData[6] = {
+        0,
+        0,
+        0,
+        -0.555565960359473032,
+        0.00884530452744248553,
+        1
+    };
+    mslam::RealVector yi(yiData, 6, true);
+
+    mslam::RealType aData[2 * 3] = {
+        154.864036716912381,
+        -0.0327054088238792479,
+        104.240968200068366,
+        -0.0327054088238792479,
+        203.439581437357901,
+        0.0701843274291173991
+    };
+    mslam::RealMatrix23 a(aData);
+
+    auto res = mslam::dh_dhrl(cam, Xv_km1_k, yi, zi);
+    
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
+            cv::abs(cv::Mat(res - a)) > 1e-13));
+}

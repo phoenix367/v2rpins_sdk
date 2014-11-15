@@ -581,4 +581,43 @@ namespace mslam
         
         return newFeature;
     }
+
+    RealMatrix23 dhu_dhrl(const CameraParams& cam, const RealVector& Xv_km1_k,
+            const RealVector& yi)
+    {
+        RealType f = cam.f;
+        RealType ku = 1 / cam.dx;
+        RealType kv = 1 / cam.dy;
+        RealVector rw = Xv_km1_k(cv::Range(0, 3));
+        RealMatrix Rrw = q2r(Xv_km1_k(cv::Range(3, 7))).inv();
+
+        RealType theta = yi[3];
+        RealType phi = yi[4];
+        RealType rho = yi[5];
+        RealMatrix31 mi(cos(phi) * sin(theta), -sin(phi), 
+                cos(phi) * cos(theta));
+
+        RealMatrix hc = Rrw * ((yi(cv::Range(0, 3)) - rw) * rho + 
+                RealMatrix(mi));
+        RealType hcx = hc(0);
+        RealType hcy = hc(1);
+        RealType hcz = hc(2);
+        RealMatrix23 a(+f * ku / hcz, 0, -hcx * f * ku / (hcz * hcz),
+                       0, +f * kv / hcz, -hcy * f * kv /
+                       (hcz * hcz));
+        return a;
+    }
+
+    RealMatrix22 dhd_dhu(const CameraParams& cam, const RealMatrix21& zi_d)
+    {
+        RealMatrix22 a = jacob_undistor_fm(cam, zi_d).inv();
+        return a;
+    }
+
+    RealMatrix23 dh_dhrl(const CameraParams& cam, const RealVector& Xv_km1_k,
+            const RealVector& yi, const RealMatrix21& zi)
+    {
+        RealMatrix23 a = dhd_dhu(cam, zi) * dhu_dhrl(cam, Xv_km1_k, yi);
+        return a;
+    }
 }
