@@ -718,3 +718,239 @@ void slamFuncTest::testdh_dhrlFunction()
     CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
             cv::abs(cv::Mat(res - a)) > 1e-13));
 }
+
+void slamFuncTest::testdR_by_dqzFunction()
+{
+    mslam::RealType qData[4] = {
+        0.999925605096383951,
+        -0.0074449815255538624,
+        -0.0096166408148683543,
+        -0.000936345103314383301,
+    };
+    mslam::RealVector q(qData, 4, true);
+
+    mslam::RealType dR_by_dqzRESData[3 * 3] = {
+        0.0018726902066287666,
+        -1.9998512101927679,
+        -0.0148899630511077248,
+        1.9998512101927679,
+        0.0018726902066287666,
+        -0.0192332816297367086,
+        -0.0148899630511077248,
+        -0.0192332816297367086,
+        -0.0018726902066287666
+    };
+    mslam::RealMatrix33 dR_by_dqzRES(dR_by_dqzRESData);
+
+    auto res = mslam::dR_by_dqz(q);
+    
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
+            cv::abs(cv::Mat(res - dR_by_dqzRES)) > 1e-15));
+}
+
+void slamFuncTest::testdR_by_dqyFunction()
+{
+    mslam::RealType qData[4] = {
+        0.999925605096383951,
+        -0.0074449815255538624,
+        -0.0096166408148683543,
+        -0.000936345103314383301,
+    };
+    mslam::RealVector q(qData, 4, true);
+
+    mslam::RealType dR_by_dqyRESData[3 * 3] = {
+        0.0192332816297367086,
+        -0.0148899630511077248,
+        1.9998512101927679,
+        -0.0148899630511077248,
+        -0.0192332816297367086,
+        -0.0018726902066287666,
+        -1.9998512101927679,
+        -0.0018726902066287666,
+        0.0192332816297367086
+    };
+    mslam::RealMatrix33 dR_by_dqyRES(dR_by_dqyRESData);
+
+    auto res = mslam::dR_by_dqy(q);
+
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
+            cv::abs(cv::Mat(res - dR_by_dqyRES)) > 1e-15));
+}
+
+void slamFuncTest::testdR_by_dqxFunction()
+{
+    mslam::RealType qData[4] = {
+        0.999925605096383951,
+        -0.0074449815255538624,
+        -0.0096166408148683543,
+        -0.000936345103314383301,
+    };
+    mslam::RealVector q(qData, 4, true);
+
+    mslam::RealType dR_by_dqxRESData[3 * 3] = {
+        -0.0148899630511077248,
+        -0.0192332816297367086,
+        -0.0018726902066287666,
+        -0.0192332816297367086,
+        0.0148899630511077248,
+        -1.9998512101927679,
+        -0.0018726902066287666,
+        1.9998512101927679,
+        0.0148899630511077248
+    };
+    mslam::RealMatrix33 dR_by_dqxRES(dR_by_dqxRESData);
+
+    auto res = mslam::dR_by_dqx(q);
+
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
+            cv::abs(cv::Mat(res - dR_by_dqxRES)) > 1e-15));
+}
+
+void slamFuncTest::testdR_by_dq0Function()
+{
+    mslam::RealType qData[4] = {
+        0.999925605096383951,
+        -0.0074449815255538624,
+        -0.0096166408148683543,
+        -0.000936345103314383301,
+    };
+    mslam::RealVector q(qData, 4, true);
+
+    mslam::RealType dR_by_dq0RESData[3 * 3] = {
+        1.9998512101927679,
+        0.0018726902066287666,
+        -0.0192332816297367086,
+        -0.0018726902066287666,
+        1.9998512101927679,
+        0.0148899630511077248,
+        0.0192332816297367086,
+        -0.0148899630511077248,
+        1.9998512101927679
+    };
+    mslam::RealMatrix33 dR_by_dq0RES(dR_by_dq0RESData);
+
+    auto res = mslam::dR_by_dq0(q);
+
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
+            cv::abs(cv::Mat(res - dR_by_dq0RES)) > 1e-15));
+}
+
+void slamFuncTest::testdRq_times_a_by_dqFunction()
+{
+    mslam::RealType qData[4] = {
+        0.999925605096383951,
+        -0.0074449815255538624,
+        -0.0096166408148683543,
+        -0.000936345103314383301,
+    };
+    mslam::RealVector q(qData, 4, true);
+
+    mslam::RealType aMatData[3] = {
+        -0.546293003463796167,
+        -0.0139391876674926155,
+        0.846198646794745435
+    };
+    mslam::RealMatrix31 aMat(aMatData);
+
+    mslam::RealType dRq_times_a_by_dqRESData[3 * 4] = {
+        -1.10880600476565361,
+        0.00681771104003819385,
+        1.68197193465731187,
+        0.0142533971837316316,
+        -0.0142533971837316316,
+        -1.68197193465731187,
+        0.00681771104003819385,
+        -1.10880600476565361,
+        1.68197193465731187,
+        -0.0142533971837316316,
+        1.10880600476565361,
+        0.00681771104003819385
+    };
+    mslam::RealMatrix34 dRq_times_a_by_dqRES(dRq_times_a_by_dqRESData);
+
+    auto res = mslam::dRq_times_a_by_dq(q, aMat);
+
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
+            cv::abs(cv::Mat(res - dRq_times_a_by_dqRES)) > 1e-15));
+}
+
+void slamFuncTest::testdhrl_dqwrFunction()
+{
+    mslam::RealType Xv_km1_kData[13] = {
+        0.0188894102665545308,
+        0.00509399848150338466,
+        0.003370192388344238,
+        0.999925605096383951,
+        0.0074449815255538624,
+        0.0096166408148683543,
+        0.000936345103314383301,
+        0.00944470513327727926,
+        0.00254699924075172616,
+        0.00168509619417211661,
+        0.00744521313538017843,
+        0.00961693688994200505,
+        0.000936372857725279459
+    };
+    mslam::RealVector Xv_km1_k(Xv_km1_kData, 13, true);
+
+    mslam::RealType yiData[6] = {
+        0,
+        0,
+        0,
+        -0.555565960359473032,
+        0.00884530452744248553,
+        1
+    };
+    mslam::RealVector yi(yiData, 6, true);
+
+    mslam::RealType aData[3 * 4] = {
+        -1.10880600476565361,
+        -0.00681771104003819385,
+        -1.68197193465731187,
+        -0.0142533971837316316,
+        -0.0142533971837316316,
+        1.68197193465731187,
+        -0.00681771104003819385,
+        1.10880600476565361,
+        1.68197193465731187,
+        0.0142533971837316316,
+        -1.10880600476565361,
+        -0.00681771104003819385
+    };
+    mslam::RealMatrix34 a(aData);
+
+    auto res = mslam::dhrl_dqwr(Xv_km1_k, yi);
+
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
+            cv::abs(cv::Mat(res - a)) > 1e-15));
+}
+
+void slamFuncTest::testdhrl_dqwrFunction()
+{
+    mslam::RealType Xv_km1_kData[13] = {
+        0.0188894102665545308,
+        0.00509399848150338466,
+        0.003370192388344238,
+        0.999925605096383951,
+        0.0074449815255538624,
+        0.0096166408148683543,
+        0.000936345103314383301,
+        0.00944470513327727926,
+        0.00254699924075172616,
+        0.00168509619417211661,
+        0.00744521313538017843,
+        0.00961693688994200505,
+        0.000936372857725279459
+    };
+    mslam::RealVector Xv_km1_k(Xv_km1_kData, 13, true);
+
+    mslam::RealType yiData[6] = {
+        0,
+        0,
+        0,
+        -0.555565960359473032,
+        0.00884530452744248553,
+        1
+    };
+    mslam::RealVector yi(yiData, 6, true);
+}

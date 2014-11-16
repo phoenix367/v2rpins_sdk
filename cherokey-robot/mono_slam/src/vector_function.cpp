@@ -223,4 +223,22 @@ namespace mslam
         
         return q;
     }
+
+    RealVector qconj(const RealVector& q)
+    {
+        if (q.size() != 4)
+        {
+            SLAM_EXCEPTION(IncorrectParamException, 
+                    "Quaternion vector size is invalid");
+        }
+        
+        RealVector q_bar(4);
+        
+        q_bar[0] =  q[0];
+        q_bar[1] = -q[1];
+        q_bar[2] = -q[2];
+        q_bar[3] = -q[3];
+        
+        return q_bar;
+    }
 }

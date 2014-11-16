@@ -28,8 +28,8 @@ namespace mslam
             cv::Vec<RealType, 6> a(X(i), Y(i), Z(i), theta(i), phi(i), 
                     lambda(i));
             a = a / cv::norm(a) * sqrt(12.59158724374398);
-            X(i) = a(1); Y(i) = a(2); Z(i) = a(3);
-            theta(i) = a(4); phi(i) = a(5); lambda(i) = a(6);
+            X(i) = a(0); Y(i) = a(1); Z(i) = a(2);
+            theta(i) = a(3); phi(i) = a(4); lambda(i) = a(5);
         }
         
         rndMat = RealMatrix::zeros(6, nPointsRand);
@@ -619,5 +619,130 @@ namespace mslam
     {
         RealMatrix23 a = dhd_dhu(cam, zi) * dhu_dhrl(cam, Xv_km1_k, yi);
         return a;
+    }
+    
+    RealMatrix44 dqbar_by_dq()
+    {
+        RealMatrix44 m;
+        m(0, 0) =  1;
+        m(1, 1) = -1;
+        m(2, 2) = -1;
+        m(3, 3) = -1;
+        
+        return m;
+    }
+
+    RealMatrix33 dR_by_dqz(const RealVector& q)
+    {
+        RealType q0 = q[0];
+        RealType qx = q[1];
+        RealType qy = q[2];
+        RealType qz = q[3];
+
+        RealMatrix33 dR_by_dqzRES(-2 * qz, -2 * q0, 2 * qx,
+                                   2 * q0, -2 * qz, 2 * qy,
+                                   2 * qx,  2 * qy, 2 * qz);
+        return dR_by_dqzRES;
+    }
+
+    RealMatrix33 dR_by_dqy(const RealVector& q)
+    {
+        RealType q0 = q[0];
+        RealType qx = q[1];
+        RealType qy = q[2];
+        RealType qz = q[3];
+
+        RealMatrix33 dR_by_dqyRES(-2 * qy, 2 * qx,  2 * q0,
+                                   2 * qx, 2 * qy,  2 * qz,
+                                  -2 * q0, 2 * qz, -2 * qy);
+        return dR_by_dqyRES;
+    }
+
+    RealMatrix33 dR_by_dqx(const RealVector& q)
+    {
+        RealType q0 = q[0];
+        RealType qx = q[1];
+        RealType qy = q[2];
+        RealType qz = q[3];
+
+        RealMatrix33 dR_by_dqxRES(2 * qx,  2 * qy,  2 * qz,
+		                          2 * qy, -2 * qx, -2 * q0,
+		                          2 * qz,  2 * q0, -2 * qx);
+        return dR_by_dqxRES;
+    }
+
+    RealMatrix33 dR_by_dq0(const RealVector& q)
+    {
+        RealType q0 = q[0];
+        RealType qx = q[1];
+        RealType qy = q[2];
+        RealType qz = q[3];
+
+        RealMatrix33 dR_by_dq0RES( 2 * q0, -2 * qz,  2 * qy,
+		                           2 * qz,  2 * q0, -2 * qx,
+		                          -2 * qy,  2 * qx,  2 * q0);
+        return dR_by_dq0RES;
+    }
+
+    RealMatrix34 dRq_times_a_by_dq(const RealVector& q, 
+            const RealMatrix31& aMat)
+    {
+        RealMatrix34 dRq_times_a_by_dqRES;
+        
+        RealMatrix33 TempR = dR_by_dq0(q);
+        RealMatrix31 Temp31 = TempR * aMat;
+
+        for (int i = 0; i < 3; i++)
+        {
+            dRq_times_a_by_dqRES(i, 0) = Temp31(i);
+        }
+
+        TempR = dR_by_dqx(q);
+        Temp31 = TempR * aMat;
+        for (int i = 0; i < 3; i++)
+        {
+            dRq_times_a_by_dqRES(i, 1) = Temp31(i);
+        }
+
+        TempR = dR_by_dqy(q);
+        Temp31 = TempR * aMat;
+        for (int i = 0; i < 3; i++)
+        {
+            dRq_times_a_by_dqRES(i, 2) = Temp31(i);
+        }
+
+        TempR = dR_by_dqz(q);
+        Temp31 = TempR * aMat;
+        for (int i = 0; i < 3; i++)
+        {
+            dRq_times_a_by_dqRES(i, 3) = Temp31(i);
+        }
+
+        return dRq_times_a_by_dqRES;
+    }
+
+    RealMatrix34 dhrl_dqwr(const RealVector& Xv_km1_k,
+            const RealVector& yi)
+    {
+        RealVector rw = Xv_km1_k(cv::Range(0, 3));
+        RealVector qwr = Xv_km1_k(cv::Range(3, 7));
+        RealType lambda = yi[5];
+        RealType phi = yi[4];
+        RealType theta = yi[3];
+        RealMatrix31 mi(cos(phi) * sin(theta), -sin(phi), 
+                cos(phi) * cos(theta));
+
+        RealMatrix31 tmp = RealMatrix((yi(cv::Range(0, 3)) - rw) * lambda + 
+                RealMatrix(mi));
+        auto a = dRq_times_a_by_dq(qconj(qwr), tmp) * dqbar_by_dq();
+        return a;
+    }
+
+    RealMatrix24 dh_dqwr(const CameraParams& cam, const RealVector& Xv_km1_k,
+            const RealVector& yi, const RealMatrix21& zi)
+    {
+        auto Hi12 = dh_dhrl( cam, Xv_km1_k, yi, zi ) * 
+            dhrl_dqwr( Xv_km1_k, yi );
+        return Hi12;
     }
 }

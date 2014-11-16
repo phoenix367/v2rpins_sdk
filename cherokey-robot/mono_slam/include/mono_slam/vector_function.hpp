@@ -25,6 +25,7 @@ namespace mslam
     RealVector cross(const RealVector& a, const RealVector& b);
     RealType norm(const RealVector& v);
     RealVector v2q(const RealVector& v);
+    RealVector qconj(const RealVector& q);
 }
 
 #endif	/* MSLAM_VECTOR_FUNCTION_HPP */
