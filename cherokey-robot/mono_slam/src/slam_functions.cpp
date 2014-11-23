@@ -785,4 +785,37 @@ namespace mslam
         
         return H1;
     }
+
+    RealMatrix36 dhrl_dy(const RealVector& Xv_km1_k,
+            const RealVector& yi)
+    {
+        RealVector rw = Xv_km1_k(cv::Range(0, 3));
+        RealMatrix33 Rrw = RealMatrix(q2r( Xv_km1_k(cv::Range(3, 7))).inv());
+        RealType lambda = yi[5];
+        RealType phi = yi[4];
+        RealType theta = yi[3];
+
+        RealMatrix31 dmi_dthetai = Rrw * RealMatrix31(cos(phi) * cos(theta), 0, 
+                -cos(phi) * sin(theta));
+        RealMatrix31 dmi_dphii = Rrw * RealMatrix31(-sin(phi) * sin(theta), 
+                -cos(phi), -sin(phi) * cos(theta));
+
+        RealMatrix a = RealMatrix::zeros(3, 6);
+        RealMatrix(lambda * Rrw).copyTo(a(cv::Range(0, 3), cv::Range(0, 3)));
+        RealMatrix(dmi_dthetai).copyTo(a(cv::Range(0, 3), cv::Range(3, 4)));
+        RealMatrix(dmi_dphii).copyTo(a(cv::Range(0, 3), cv::Range(4, 5)));
+        
+        RealMatrix31 tmp = RealMatrix(yi(cv::Range(0, 3)) - rw);
+        RealMatrix(Rrw * tmp).copyTo(a(cv::Range(0, 3), 
+                cv::Range(5, 6)));
+
+        return a;
+    }
+
+    RealMatrix26 dh_dy(const CameraParams& cam, const RealVector& Xv_km1_k,
+            const RealVector& yi, const RealMatrix21& zi)
+    {
+        RealMatrix26 a = dh_dhrl(cam, Xv_km1_k, yi, zi) * dhrl_dy(Xv_km1_k, yi);
+        return a;
+    }
 }

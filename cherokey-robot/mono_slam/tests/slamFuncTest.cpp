@@ -987,7 +987,7 @@ void slamFuncTest::testdh_dqwrFunction()
     auto res = mslam::dh_dqwr(cam, Xv_km1_k, yi, zi);
     
     CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
-            cv::abs(cv::Mat(res - Hi12)) > 1e-13));
+            cv::abs(cv::Mat(res - Hi12)) > 2e-13));
 }
 
 void slamFuncTest::testdhrl_drwFunction()
@@ -1155,7 +1155,7 @@ void slamFuncTest::testdh_dxvFunction()
     auto res = mslam::dh_dxv(cam, Xv_km1_k, yi, zi);
 
     CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
-            cv::abs(cv::Mat(res - H1)) > 1e-13));
+            cv::abs(cv::Mat(res - H1)) > 2e-13));
 }
 
 void slamFuncTest::testdhrl_dyFunction()
@@ -1194,7 +1194,10 @@ void slamFuncTest::testdhrl_dyFunction()
     };
     mslam::RealMatrix36 a(aData);
     
-    CPPUNIT_FAIL("Not implemented yet");
+    auto res = mslam::dhrl_dy(Xv_km1_k, yi);
+
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
+            cv::abs(cv::Mat(res - a)) > 1e-15));
 }
 
 void slamFuncTest::testdh_dyFunction()
@@ -1249,5 +1252,8 @@ void slamFuncTest::testdh_dyFunction()
     };
     mslam::RealMatrix26 Hii(HiiData);
     
-    CPPUNIT_FAIL("Not implemented yet");
+    auto res = mslam::dh_dy(cam, Xv_km1_k, yi, zi);
+
+    CPPUNIT_ASSERT_EQUAL(0, cv::countNonZero(
+            cv::abs(cv::Mat(res - Hii)) > 1e-13));
 }
