@@ -26,6 +26,17 @@ namespace mslam
     RealType norm(const RealVector& v);
     RealVector v2q(const RealVector& v);
     RealVector qconj(const RealVector& q);
+    
+    template<typename T> T sum(const std::vector<T>& v)
+    {
+        T r = 0;
+        for (size_t i = 0; i < v.size(); i++)
+        {
+            r += v[i];
+        }
+        
+        return r;
+    }
 }
 
 #endif	/* MSLAM_VECTOR_FUNCTION_HPP */

@@ -818,4 +818,46 @@ namespace mslam
         RealMatrix26 a = dh_dhrl(cam, Xv_km1_k, yi, zi) * dhrl_dy(Xv_km1_k, yi);
         return a;
     }
+
+    RealMatrix calculate_Hi_inverse_depth(const RealVector& Xv_km1_k,
+            const RealVector& yi, const CameraParams& cam,
+            int i, const std::vector<FeatureInfo>& features_info)
+    {
+        RealMatrix21 zi = features_info[i].h;
+        size_t number_of_features = features_info.size();
+        std::vector<int> inverse_depth_features_index(number_of_features, 0);
+        std::vector<int> cartesian_features_index(number_of_features, 0);
+        
+        for (size_t j = 0; j < number_of_features; j++)
+        {
+            switch (features_info[j].type)
+            {
+                case cartesian:
+                    cartesian_features_index[j] = 1;
+                    break;
+                case inversedepth:
+                    inverse_depth_features_index[j] = 1;
+                    break;
+            }
+        }
+        
+        RealMatrix Hi = RealMatrix::zeros(2, 13 + 3 * 
+                sum(cartesian_features_index) + 6 * 
+                sum(inverse_depth_features_index));
+        RealMatrix tmp = dh_dxv(cam, Xv_km1_k, yi, zi);
+        tmp.copyTo(Hi(cv::Range(0, 2), cv::Range(0, 13)));
+        
+        int index_of_insertion = 13;
+        for (int j = 0; j < i - 1; j++)
+        {
+            index_of_insertion += 3 * cartesian_features_index[j] +
+                    6 * inverse_depth_features_index[j];
+        }
+        
+        tmp = RealMatrix(dh_dy(cam, Xv_km1_k, yi, zi));
+        tmp.copyTo(Hi(cv::Range(0, 2), cv::Range(index_of_insertion, 
+                index_of_insertion + 6)));
+        
+        return Hi;
+    }
 }
