@@ -20,10 +20,12 @@ namespace mslam
     typedef cv::Matx<RealType, 6, 1> RealMatrix61;
     typedef cv::Matx<RealType, 3, 3> RealMatrix33;
     typedef cv::Matx<RealType, 3, 4> RealMatrix34;
+    typedef cv::Matx<RealType, 3, 6> RealMatrix36;
     typedef cv::Matx<RealType, 2, 1> RealMatrix21;
     typedef cv::Matx<RealType, 2, 2> RealMatrix22;
     typedef cv::Matx<RealType, 2, 3> RealMatrix23;
     typedef cv::Matx<RealType, 2, 4> RealMatrix24;
+    typedef cv::Matx<RealType, 2, 6> RealMatrix26;
     typedef cv::Matx<RealType, 4, 4> RealMatrix44;
     typedef cv::Matx<RealType, 4, 3> RealMatrix43;
     

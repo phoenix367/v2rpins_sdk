@@ -65,6 +65,12 @@ namespace mslam
             const RealVector& yi);
     RealMatrix24 dh_dqwr(const CameraParams& cam, const RealVector& Xv_km1_k,
             const RealVector& yi, const RealMatrix21& zi);
+    RealMatrix33 dhrl_drw(const RealVector& Xv_km1_k,
+            const RealVector& yi);
+    RealMatrix23 dh_drw(const CameraParams& cam, const RealVector& Xv_km1_k,
+            const RealVector& yi, const RealMatrix21& zi);
+    RealMatrix dh_dxv(const CameraParams& cam, const RealVector& Xv_km1_k,
+            const RealVector& yi, const RealMatrix21& zi);
 }
 
 #endif	/* SLAM_FUNCTIONS_HPP */

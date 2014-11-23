@@ -666,8 +666,8 @@ namespace mslam
         RealType qz = q[3];
 
         RealMatrix33 dR_by_dqxRES(2 * qx,  2 * qy,  2 * qz,
-		                          2 * qy, -2 * qx, -2 * q0,
-		                          2 * qz,  2 * q0, -2 * qx);
+	                          2 * qy, -2 * qx, -2 * q0,
+	                          2 * qz,  2 * q0, -2 * qx);
         return dR_by_dqxRES;
     }
 
@@ -679,8 +679,8 @@ namespace mslam
         RealType qz = q[3];
 
         RealMatrix33 dR_by_dq0RES( 2 * q0, -2 * qz,  2 * qy,
-		                           2 * qz,  2 * q0, -2 * qx,
-		                          -2 * qy,  2 * qx,  2 * q0);
+	                           2 * qz,  2 * q0, -2 * qx,
+	                          -2 * qy,  2 * qx,  2 * q0);
         return dR_by_dq0RES;
     }
 
@@ -744,5 +744,45 @@ namespace mslam
         auto Hi12 = dh_dhrl( cam, Xv_km1_k, yi, zi ) * 
             dhrl_dqwr( Xv_km1_k, yi );
         return Hi12;
+    }
+
+    RealMatrix33 dhrl_drw(const RealVector& Xv_km1_k,
+            const RealVector& yi)
+    {
+        RealMatrix a = -q2r( Xv_km1_k(cv::Range(3, 7))).inv() * yi[5];
+        
+        return a;
+    }
+    
+    RealMatrix23 dh_drw(const CameraParams& cam, const RealVector& Xv_km1_k,
+            const RealVector& yi, const RealMatrix21& zi)
+    {
+        auto Hi11 = dh_dhrl( cam, Xv_km1_k, yi, zi ) * 
+            dhrl_drw( Xv_km1_k, yi );
+        return Hi11;
+    }
+
+    RealMatrix dh_dxv(const CameraParams& cam, const RealVector& Xv_km1_k,
+            const RealVector& yi, const RealMatrix21& zi)
+    {
+        RealMatrix H1 = RealMatrix::zeros(2, 13);
+        
+        auto H11 = dh_drw(cam, Xv_km1_k, yi, zi);
+        auto H12 = dh_dqwr(cam, Xv_km1_k, yi, zi);
+        
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < H11.cols; j++)
+            {
+                H1(i, j) = H11(i, j);
+            }
+
+            for (int j = 0; j < H12.cols; j++)
+            {
+                H1(i, j + H11.cols) = H12(i, j);
+            }
+        }
+        
+        return H1;
     }
 }

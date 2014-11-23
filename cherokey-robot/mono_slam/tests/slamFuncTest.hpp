@@ -38,6 +38,11 @@ class slamFuncTest : public CPPUNIT_NS::TestFixture {
     CPPUNIT_TEST(testdRq_times_a_by_dqFunction);
     CPPUNIT_TEST(testdhrl_dqwrFunction);
     CPPUNIT_TEST(testdh_dqwrFunction);
+    CPPUNIT_TEST(testdhrl_drwFunction);
+    CPPUNIT_TEST(testdh_drwFunction);
+    CPPUNIT_TEST(testdh_dxvFunction);
+    CPPUNIT_TEST(testdhrl_dyFunction);
+    CPPUNIT_TEST(testdh_dyFunction);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -73,6 +78,11 @@ private:
     void testdRq_times_a_by_dqFunction();
     void testdhrl_dqwrFunction();
     void testdh_dqwrFunction();
+    void testdhrl_drwFunction();
+    void testdh_drwFunction();
+    void testdh_dxvFunction();
+    void testdhrl_dyFunction();
+    void testdh_dyFunction();
 };
 
 #endif	/* SLAMFUNCTEST_HPP */
